@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
 import ServiceDetailPage from "@/views/ServiceDetailPage";
 import { services } from "@/data/services";
 import { buildMetadata } from "@/core/seo/metadata";
@@ -12,15 +13,16 @@ export function generateStaticParams() {
   return ["en", "ar"].flatMap((locale) => services.map((s) => ({ locale, slug: s.slug })));
 }
 
-type Props = { params: { locale: "en" | "ar"; slug: string } };
+type Props = { params: Promise<{ locale: "en" | "ar"; slug: string }> };
 
 function dedupe(list: string[]): string[] {
   return Array.from(new Set(list.filter(Boolean)));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale: raw, slug  } = params;
+  const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const s = services.find((x) => x.slug === slug);
 
   if (!s) {
@@ -32,7 +34,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     });
   }
 
-  const focus = (s.focusKeyword[locale] || s.title[locale]).trim();
+  const title = (s.title?.[locale] || "").trim();
+  const description = (s.summary?.[locale] || "").trim(); // ✅ ServiceItem has summary, not description
+  const focus = (s.focusKeyword?.[locale] || title || "").trim();
+
   const keywords = {
     en: dedupe([focus, ...PAGE_KEYWORDS.services.en]),
     ar: dedupe([focus, ...PAGE_KEYWORDS.services.ar]),
@@ -41,17 +46,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMetadata(locale, {
     pathname: `/services/${s.slug}`,
     title: { en: s.title.en, ar: s.title.ar },
-    description: { en: s.summary.en, ar: s.summary.ar },
+    description: { en: description || s.summary.en, ar: description || s.summary.ar },
     keywords,
   });
 }
 
 export default async function Page({ params }: Props) {
-  const { locale: raw, slug  } = params;
+  const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const s = services.find((x) => x.slug === slug);
   if (!s) return notFound();
 
+  // ملاحظة: serviceSchema الأصلية بتعمل URL فيه #slug، ده مش بيكسر أي شيء
   const jsonLd = [
     serviceSchema(locale, s, `/services/${s.slug}`),
     breadcrumbList(locale, [

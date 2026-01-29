@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
 import ProjectDetailPage from "@/views/ProjectDetailPage";
 import { projects } from "@/data/projects";
 import { buildMetadata } from "@/core/seo/metadata";
@@ -12,15 +13,16 @@ export function generateStaticParams() {
   return ["en", "ar"].flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
 }
 
-type Props = { params: { locale: "en" | "ar"; slug: string } };
+type Props = { params: Promise<{ locale: "en" | "ar"; slug: string }> };
 
 function dedupe(list: string[]): string[] {
   return Array.from(new Set(list.filter(Boolean)));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale: raw, slug  } = params;
+  const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const p = projects.find((x) => x.slug === slug);
 
   if (!p) {
@@ -32,35 +34,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     });
   }
 
-  const title = p.seoTitle?.[locale] || p.name[locale];
-  const description = p.seoDescription?.[locale] || p.description[locale];
+  const title = (p.seoTitle?.[locale] || p.name?.[locale] || "").trim();
+  const description = (p.seoDescription?.[locale] || p.description?.[locale] || "").trim();
   const focus = (p.focusKeyword?.[locale] || "").trim();
 
   const keywords = {
-    en: dedupe([focus, ...p.tags, ...PAGE_KEYWORDS.projects.en]),
-    ar: dedupe([focus, ...p.tags, ...PAGE_KEYWORDS.projects.ar]),
+    en: dedupe([focus, ...(p.tags || []), ...PAGE_KEYWORDS.projects.en]),
+    ar: dedupe([focus, ...(p.tags || []), ...PAGE_KEYWORDS.projects.ar]),
   };
 
   return buildMetadata(locale, {
     pathname: `/projects/${p.slug}`,
-    title: { en: p.seoTitle?.en || p.name.en, ar: p.seoTitle?.ar || p.name.ar },
-    description: { en: p.seoDescription?.en || p.description.en, ar: p.seoDescription?.ar || p.description.ar },
+    title: {
+      en: (p.seoTitle?.en || p.name?.en || title || "Project").trim(),
+      ar: (p.seoTitle?.ar || p.name?.ar || title || "مشروع").trim(),
+    },
+    description: {
+      en: (p.seoDescription?.en || p.description?.en || description || "").trim(),
+      ar: (p.seoDescription?.ar || p.description?.ar || description || "").trim(),
+    },
     keywords,
   });
 }
 
 export default async function Page({ params }: Props) {
-  const { locale: raw, slug  } = params;
+  const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const p = projects.find((x) => x.slug === slug);
   if (!p) return notFound();
+
+  const pageTitle = (p.seoTitle?.[locale] || p.name?.[locale] || "").trim();
 
   const jsonLd = [
     projectCaseStudySchema(locale, p),
     breadcrumbList(locale, [
       { name: locale === "ar" ? "الرئيسية" : "Home", path: "/" },
       { name: locale === "ar" ? "المشاريع" : "Projects", path: "/projects" },
-      { name: p.seoTitle?.[locale] || p.name[locale], path: `/projects/${p.slug}` },
+      { name: pageTitle || (locale === "ar" ? "تفاصيل المشروع" : "Project"), path: `/projects/${p.slug}` },
     ]),
   ];
 
