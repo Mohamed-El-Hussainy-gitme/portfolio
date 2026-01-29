@@ -4,10 +4,11 @@ import { buildMetadata } from "@/core/seo/metadata";
 import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { breadcrumbList, personSchema } from "@/core/seo/schema";
 
-type Props = { params: { locale: "en" | "ar" } };
+type Props = { params: Promise<{ locale: "en" | "ar" }> };
 
-export function generateMetadata({ params }: Props): Metadata {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
   return buildMetadata(locale, {
     pathname: "/about",
     title: { en: "About Mohamed El-Hussainy", ar: "من أنا" },
@@ -19,8 +20,9 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function Page({ params }: Props) {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export default async function Page({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
 
   const jsonLd = [
     personSchema(locale),

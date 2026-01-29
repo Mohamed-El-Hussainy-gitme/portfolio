@@ -4,10 +4,11 @@ import { buildMetadata } from "@/core/seo/metadata";
 import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { breadcrumbList, personSchema, websiteSchema } from "@/core/seo/schema";
 
-type Props = { params: { locale: "en" | "ar" } };
+type Props = { params: Promise<{ locale: "en" | "ar" }> };
 
-export function generateMetadata({ params }: Props): Metadata {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
   return buildMetadata(locale, {
     pathname: "/",
     title: { en: "Website Development and SEO", ar: "إنشاء مواقع وتحسين محركات البحث" },
@@ -19,8 +20,9 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function Page({ params }: Props) {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export default async function Page({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
 
   const jsonLd = [
     websiteSchema(locale),

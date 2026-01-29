@@ -5,10 +5,11 @@ import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { blogPosts } from "@/data/blog";
 import { blogItemListSchema, breadcrumbList } from "@/core/seo/schema";
 
-type Props = { params: { locale: "en" | "ar" } };
+type Props = { params: Promise<{ locale: "en" | "ar" }> };
 
-export function generateMetadata({ params }: Props): Metadata {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
   return buildMetadata(locale, {
     pathname: "/blog",
     title: { en: "Technical Blog", ar: "المدونة التقنية" },
@@ -20,8 +21,9 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function Page({ params }: Props) {
-  const locale = params.locale === "ar" ? "ar" : "en";
+export default async function Page({ params }: Props) {
+  const { locale: raw } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
 
   const jsonLd = [
     blogItemListSchema(locale, blogPosts),

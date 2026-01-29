@@ -12,15 +12,16 @@ export function generateStaticParams() {
   return ["en", "ar"].flatMap((locale) => services.map((s) => ({ locale, slug: s.slug })));
 }
 
-type Props = { params: { locale: "en" | "ar"; slug: string } };
+type Props = { params: Promise<{ locale: "en" | "ar"; slug: string }> };
 
 function dedupe(list: string[]): string[] {
   return Array.from(new Set(list.filter(Boolean)));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const locale = params.locale === "ar" ? "ar" : "en";
-  const s = services.find((x) => x.slug === params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: raw, slug } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
+  const s = services.find((x) => x.slug === slug);
 
   if (!s) {
     return buildMetadata(locale, {
@@ -45,9 +46,10 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function Page({ params }: Props) {
-  const locale = params.locale === "ar" ? "ar" : "en";
-  const s = services.find((x) => x.slug === params.slug);
+export default async function Page({ params }: Props) {
+  const { locale: raw, slug } = await params;
+  const locale = raw === "ar" ? "ar" : "en";
+  const s = services.find((x) => x.slug === slug);
   if (!s) return notFound();
 
   const jsonLd = [
