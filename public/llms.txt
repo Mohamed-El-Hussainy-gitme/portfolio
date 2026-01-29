@@ -1,0 +1,52 @@
+# elhussainy.pages.dev
+
+This is a bilingual portfolio (English/Arabic). Canonical routes are prefixed with `/en` and `/ar`.
+
+## Key pages (English)
+- https://elhussainy.pages.dev/en
+- https://elhussainy.pages.dev/en/projects
+- https://elhussainy.pages.dev/en/services
+- https://elhussainy.pages.dev/en/blog
+- https://elhussainy.pages.dev/en/contact
+
+## الصفحات الأساسية (عربي)
+- https://elhussainy.pages.dev/ar
+- https://elhussainy.pages.dev/ar/projects
+- https://elhussainy.pages.dev/ar/services
+- https://elhussainy.pages.dev/ar/blog
+- https://elhussainy.pages.dev/ar/contact
+
+## Projects (slugs)
+- /en/projects/project-1
+- /en/projects/project-2
+- /en/projects/project-3
+- /en/projects/project-4
+- /en/projects/project-5
+- /en/projects/project-6
+- /en/projects/project-7
+- /en/projects/rose-ecommerce-website-development
+- /en/projects/growlik
+
+## Services (slugs)
+- /en/services/landing-page
+- /en/services/company-website
+- /en/services/ecommerce
+- /en/services/dashboard
+- /en/services/seo-performance
+- /en/services/maintenance
+
+## Blog (slugs)
+- /en/blog/nextjs-performance-patterns
+- /en/blog/technical-seo-foundations
+- /en/blog/rtl-ui-best-practices
+- /en/blog/dashboard-ui-patterns
+- /en/blog/react-component-architecture
+- /en/blog/api-integration-patterns
+- /en/blog/image-optimization-lcp
+- /en/blog/form-handling-validation
+- /en/blog/auth-route-protection
+- /en/blog/deploy-ci-maintainability
+
+## Machine-readable discovery
+- Sitemap: https://elhussainy.pages.dev/sitemap.xml
+- Robots: https://elhussainy.pages.dev/robots.txt

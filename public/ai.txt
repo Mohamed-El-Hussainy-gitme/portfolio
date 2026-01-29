@@ -1,0 +1,19 @@
+AI Usage Policy (ai.txt)
+Site: https://elhussainy.pages.dev
+
+This is an experimental, human-readable policy for AI/LLM systems.
+It does not replace robots.txt.
+
+Allowed:
+- Crawling for indexing and link discovery
+- Short summaries/snippets WITH attribution and a link back
+
+Not allowed without explicit written permission:
+- Training / fine-tuning on this content
+- Republishing full pages or large extracts
+
+Preferred discovery:
+- Sitemap: https://elhussainy.pages.dev/sitemap.xml
+
+Contact:
+- Email: mohamed.noda.b2@gmail.com
