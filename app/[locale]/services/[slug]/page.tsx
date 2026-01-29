@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const title = (s.title?.[locale] || "").trim();
-  const description = (s.summary?.[locale] || "").trim(); // ✅ ServiceItem has summary, not description
+  const description = (s.summary?.[locale] || "").trim();
   const focus = (s.focusKeyword?.[locale] || title || "").trim();
 
   const keywords = {
@@ -58,9 +58,8 @@ export default async function Page({ params }: Props) {
   const s = services.find((x) => x.slug === slug);
   if (!s) return notFound();
 
-  // ملاحظة: serviceSchema الأصلية بتعمل URL فيه #slug، ده مش بيكسر أي شيء
   const jsonLd = [
-    serviceSchema(locale, s, `/services/${s.slug}`),
+    serviceSchema(locale, s, "/services"),
     breadcrumbList(locale, [
       { name: locale === "ar" ? "الرئيسية" : "Home", path: "/" },
       { name: locale === "ar" ? "الخدمات" : "Services", path: "/services" },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import ProjectsPage from "@/views/ProjectsPage";
 import { buildMetadata } from "@/core/seo/metadata";
 import { PAGE_KEYWORDS } from "@/core/seo/keywords";
@@ -13,11 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildMetadata(locale, {
     pathname: "/projects",
-    title: { en: "Projects and Case Studies", ar: "أعمال ومشاريع" },
-    description: {
-      en: "Selected web development projects with SEO and performance focus.",
-      ar: "مشاريع وأعمال بتركيز على SEO والأداء.",
-    },
+    title: { en: "Projects", ar: "المشاريع" },
+    description: { en: "Selected projects and case studies.", ar: "مختارات من المشاريع ودراسات الحالة." },
     keywords: PAGE_KEYWORDS.projects,
   });
 }

@@ -1,6 +1,7 @@
-import RedirectClient from "./RedirectClient";
 import { Suspense } from "react";
+
 import { services } from "@/data/services";
+import RedirectClient from "./RedirectClient";
 
 export const dynamicParams = false;
 
@@ -8,10 +9,11 @@ export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export default async function Page({ params }: Props) {
-  const { slug  } = params;
+  const { slug } = await params;
+
   return (
     <Suspense fallback={null}>
       <RedirectClient slug={slug} />

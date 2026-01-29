@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
 import BlogPostPage from "@/views/BlogPostPage";
 import { blogPosts } from "@/data/blog";
 import { buildMetadata } from "@/core/seo/metadata";
@@ -21,13 +22,14 @@ function dedupe(list: string[]): string[] {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     return buildMetadata(locale, {
       pathname: "/blog",
       title: { en: "Post Not Found", ar: "المقال غير موجود" },
-      description: { en: "The requested post was not found.", ar: "لم يتم العثور على هذا المقال." },
+      description: { en: "This post does not exist.", ar: "هذا المقال غير موجود." },
       keywords: PAGE_KEYWORDS.blog,
     });
   }
@@ -38,6 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ar: dedupe([focus, ...post.tags, ...PAGE_KEYWORDS.blog.ar]),
   };
 
+  // ✅ BlogPost has title + description (no seoTitle/seoDescription)
   return buildMetadata(locale, {
     pathname: `/blog/${post.slug}`,
     title: { en: post.title.en, ar: post.title.ar },
@@ -49,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { locale: raw, slug } = await params;
   const locale = raw === "ar" ? "ar" : "en";
+
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) return notFound();
 
@@ -64,7 +68,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <BlogPostPage slug={post.slug} />
+      <BlogPostPage />
     </>
   );
 }

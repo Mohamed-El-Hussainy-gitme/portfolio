@@ -1,23 +1,19 @@
-// app/blog/[slug]/page.tsx
-import { blogPosts } from "@/data/blog";
 import { Suspense } from "react";
+
+import { blogPosts } from "@/data/blog";
 import BlogDetailsClient from "./BlogDetailsClient";
 
-// مهم مع output: "export"
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
-  }));
+  return blogPosts.map((post) => ({ slug: post.slug }));
 }
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export default async function Page({ params }: Props) {
-  const { slug  } = params;
-  // الصفحة دي غالبًا عندك هدفها "Redirect" للـ locale route
-  // فهنستخدم Client component يعمل redirect
+  const { slug } = await params;
+
   return (
     <Suspense fallback={null}>
       <BlogDetailsClient slug={slug} />
