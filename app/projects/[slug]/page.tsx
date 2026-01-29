@@ -8,10 +8,13 @@ export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
 
-export default function Page({ params }: { params: { slug: string } }) {
+type Props = { params: Promise<{ slug: string }> };
+
+export default async function Page({ params }: Props) {
+  const { slug } = await params;
   return (
     <Suspense fallback={null}>
-      <RedirectClient slug={params.slug} />
+      <RedirectClient slug={slug} />
     </Suspense>
   );
 }

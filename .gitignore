@@ -1,1 +1,24 @@
+# dependencies
 node_modules
+
+# Next.js
+.next
+out
+
+# Vercel / Cloudflare outputs
+.vercel
+.wrangler
+
+# env
+.env.local
+.env.*.local
+.dev.vars
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
