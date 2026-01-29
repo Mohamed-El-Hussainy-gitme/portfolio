@@ -3,7 +3,7 @@ export type SiteLocale = "en" | "ar";
 export const SITE_NAME = "Mohamed El-Hussainy";
 export const SITE_EMAIL = "mohamed.noda.b2@gmail.com";
 
-export const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://elhussainy-portfolio.pages.dev").replace(
+export const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://elhussainy.pages.dev").replace(
   /\/$/,
   ""
 );

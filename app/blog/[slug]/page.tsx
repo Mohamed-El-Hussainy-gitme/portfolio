@@ -12,10 +12,10 @@ export function generateStaticParams() {
   }));
 }
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: { slug: string } };
 
 export default async function Page({ params }: Props) {
-  const { slug } = await params;
+  const { slug  } = params;
   // الصفحة دي غالبًا عندك هدفها "Redirect" للـ locale route
   // فهنستخدم Client component يعمل redirect
   return (

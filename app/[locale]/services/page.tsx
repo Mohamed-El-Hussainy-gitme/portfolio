@@ -5,10 +5,10 @@ import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { services } from "@/data/services";
 import { breadcrumbList, servicesItemListSchema } from "@/core/seo/schema";
 
-type Props = { params: Promise<{ locale: "en" | "ar" }> };
+type Props = { params: { locale: "en" | "ar" } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale: raw } = await params;
+  const { locale: raw  } = params;
   const locale = raw === "ar" ? "ar" : "en";
   return buildMetadata(locale, {
     pathname: "/services",
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const { locale: raw } = await params;
+  const { locale: raw  } = params;
   const locale = raw === "ar" ? "ar" : "en";
 
   const jsonLd = [

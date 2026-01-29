@@ -4,15 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.9"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "pages:build": "next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy"
+    "preview": "npm run build && wrangler pages dev out",
+    "deploy": "npm run build && wrangler pages deploy out"
   },
   "dependencies": {
     "next": "15.5.2",
@@ -22,7 +21,6 @@
     "gsap": "3.13.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "1.13.16",
     "wrangler": "^3.0.0",
     "typescript": "^5.3.3",
     "@types/node": "^20.11.0",
