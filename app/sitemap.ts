@@ -5,6 +5,8 @@ import { services } from "@/data/services";
 import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
 
+export const dynamic = "force-static";
+
 type Locale = "en" | "ar";
 
 function buildUrl(locale: Locale, path: string): string {
