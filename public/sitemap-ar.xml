@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/about"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en/about"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar/projects</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en/projects"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en/services"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en/blog"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <url>
+    <loc>https://elhussainy.pages.dev/ar/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elhussainy.pages.dev/en/contact"/>
+    <lastmod>2026-01-31</lastmod>
+  </url>
+
+  <!-- Projects -->
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-1</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-1"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-1"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-2</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-2"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-2"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-3</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-3"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-3"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-4</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-4"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-4"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-5</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-5"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-5"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-6</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-6"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-6"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/project-7</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/project-7"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/project-7"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/rose-ecommerce-website-development</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/rose-ecommerce-website-development"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/rose-ecommerce-website-development"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/projects/growlik</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/projects/growlik"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/projects/growlik"/><lastmod>2026-01-31</lastmod></url>
+
+  <!-- Services -->
+  <url><loc>https://elhussainy.pages.dev/ar/services/landing-page</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/landing-page"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/landing-page"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/services/company-website</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/company-website"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/company-website"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/services/ecommerce</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/ecommerce"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/ecommerce"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/services/dashboard</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/dashboard"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/dashboard"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/services/seo-performance</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/seo-performance"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/seo-performance"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/services/maintenance</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/services/maintenance"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/services/maintenance"/><lastmod>2026-01-31</lastmod></url>
+
+  <!-- Blog -->
+  <url><loc>https://elhussainy.pages.dev/ar/blog/nextjs-performance-patterns</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/nextjs-performance-patterns"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/nextjs-performance-patterns"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/technical-seo-foundations</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/technical-seo-foundations"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/technical-seo-foundations"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/rtl-ui-best-practices</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/rtl-ui-best-practices"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/rtl-ui-best-practices"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/dashboard-ui-patterns</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/dashboard-ui-patterns"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/dashboard-ui-patterns"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/react-component-architecture</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/react-component-architecture"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/react-component-architecture"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/api-integration-patterns</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/api-integration-patterns"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/api-integration-patterns"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/image-optimization-lcp</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/image-optimization-lcp"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/image-optimization-lcp"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/form-handling-validation</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/form-handling-validation"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/form-handling-validation"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/auth-route-protection</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/auth-route-protection"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/auth-route-protection"/><lastmod>2026-01-31</lastmod></url>
+  <url><loc>https://elhussainy.pages.dev/ar/blog/deploy-ci-maintainability</loc><xhtml:link rel="alternate" hreflang="en" href="https://elhussainy.pages.dev/en/blog/deploy-ci-maintainability"/><xhtml:link rel="alternate" hreflang="ar" href="https://elhussainy.pages.dev/ar/blog/deploy-ci-maintainability"/><lastmod>2026-01-31</lastmod></url>
+
+</urlset>
