@@ -10,8 +10,8 @@ const BASE = "https://elhussainy.pages.dev";
 const LOCALES = ["en", "ar"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const seen = new Set<string>();
   const out: MetadataRoute.Sitemap = [];
+  const seen = new Set<string>();
 
   const push = (url: string, lastModified?: Date) => {
     if (seen.has(url)) return;
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     out.push({ url, lastModified: lastModified ?? new Date("2026-01-31") });
   };
 
-  // Static pages
+  // صفحات ثابتة (لا تضف root "/" إطلاقًا)
   const staticPaths = ["", "/about", "/projects", "/services", "/blog", "/contact"] as const;
 
   for (const locale of LOCALES) {
