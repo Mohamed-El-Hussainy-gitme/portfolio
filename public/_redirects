@@ -1,18 +1,28 @@
-/sitemap.xml/  /sitemap.xml  301
-/robots.txt/   /robots.txt   301
-/llms.txt/     /llms.txt     301
-/ai.txt/       /ai.txt       301
+# --- SEO / Sitemaps ---
+/sitemap.xml/        /sitemap.xml        301
+/sitemap-index.xml   /sitemap.xml        301
+/sitemap-index.xml/  /sitemap.xml        301
+/robots.txt/         /robots.txt         301
+/llms.txt/           /llms.txt           301
+/ai.txt/             /ai.txt             301
 
-/              /en           302
+# --- Canonical structure: always use locale prefix ---
+/                  /en                  301
 
-/about         /en/about     301
-/contact       /en/contact   301
+/about             /en/about             301
+/about/            /en/about             301
 
-/projects      /en/projects  301
-/projects/*    /en/projects/:splat 301
+/contact           /en/contact           301
+/contact/          /en/contact           301
 
-/services      /en/services  301
-/services/*    /en/services/:splat 301
+/projects          /en/projects          301
+/projects/         /en/projects          301
+/projects/*        /en/projects/:splat   301
 
-/blog          /en/blog      301
-/blog/*        /en/blog/:splat 301
+/services          /en/services          301
+/services/         /en/services          301
+/services/*        /en/services/:splat   301
+
+/blog              /en/blog              301
+/blog/             /en/blog              301
+/blog/*            /en/blog/:splat       301

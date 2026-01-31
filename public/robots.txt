@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Stop crawling legacy query-param language URLs
+Disallow: /*?lang=
+Disallow: /*&lang=
+
 Sitemap: https://elhussainy.pages.dev/sitemap.xml

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-
+  // ❌ لا تضع canonical ثابت هنا
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
