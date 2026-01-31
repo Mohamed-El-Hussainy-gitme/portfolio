@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Providers from "./providers";
 import { SITE_ORIGIN } from "@/core/seo/siteMeta";
 
-// Global styles (required for consistent layout across all routes)
 import "@/styles/globals.css";
 import "@/styles/animations.css";
 
@@ -22,12 +21,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-  alternates: { canonical: SITE_ORIGIN },
+
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>
