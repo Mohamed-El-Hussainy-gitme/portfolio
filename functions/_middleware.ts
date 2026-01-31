@@ -113,6 +113,19 @@ function redirect(origin: string, pathname: string, search: string, status: 301 
 
 export async function onRequest(context: PagesContext) {
   const url = new URL(context.request.url);
+  // Force all legacy sitemap endpoints to the single canonical sitemap
+const LEGACY_SITEMAPS = new Set([
+  "/sitemap-index.xml",
+  "/sitemap-en.xml",
+  "/sitemap-ar.xml",
+  "/en/sitemap.xml",
+  "/ar/sitemap.xml",
+]);
+
+if (LEGACY_SITEMAPS.has(url.pathname)) {
+  return Response.redirect(`${url.origin}/sitemap.xml`, 301);
+}
+
 
   const originalPath = url.pathname;
   const originalSearch = url.search;
