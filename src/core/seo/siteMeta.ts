@@ -20,7 +20,7 @@ export const SITE_DESCRIPTION =
 // NOTE: keep this in-sync with /public/_headers (cache rules) and /public assets.
 // SVG is fine for in-browser previews; if you later add a PNG for social crawlers,
 // update this to "/og-cover.png".
-export const OG_IMAGE_PATH = "/og-cover.svg";
+export const OG_IMAGE_PATH = "/og-cover.png";
 export const FAVICON_PATH = "/favicon.svg";
 
 function normalizePath(path: string): string {

@@ -992,7 +992,7 @@ export const projects: ProjectDefinition[] = [
       en: "A full e-commerce build that includes a customer-facing storefront, an admin dashboard for products/orders, and a structured database layer. The goal was to reduce friction in the buying flow while keeping daily operations simple for the business team.",
       ar: "مشروع متجر إلكتروني متكامل يشمل واجهة العميل، لوحة تحكم لإدارة المنتجات والطلبات، وقاعدة بيانات منظمة. الهدف كان تقليل الاحتكاك في رحلة الشراء مع الحفاظ على إدارة يومية سهلة وسريعة لفريق العمل.",
     },
-    liveUrl: "",
+    liveUrl: "https://roselady.lovestoblog.com/",
     repoUrl: "",
     techStack: ["E-commerce", "Admin Dashboard", "Database"],
     tags: ["ecommerce", "admin", "database", "seo"],
