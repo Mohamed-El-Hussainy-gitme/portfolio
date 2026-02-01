@@ -9,13 +9,12 @@ import { services } from "@/data/services";
 const STATIC_PATHS = ["/", "/about", "/contact", "/services", "/projects", "/blog"] as const;
 
 // Required for `output: "export"`.
-// Without this, Next.js treats /sitemap.xml as a dynamic route and fails the
-// static export during "Collecting page data".
 export const dynamic = "force-static";
 export const revalidate = 0;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  // Use stable ISO string (better compatibility with parsers/GSC)
+  const nowISO = new Date().toISOString();
 
   const entries: MetadataRoute.Sitemap = [];
 
@@ -24,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const path of STATIC_PATHS) {
       entries.push({
         url: buildLangUrl(locale, path),
-        lastModified: now,
+        lastModified: nowISO,
       });
     }
 
@@ -32,23 +31,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const s of services) {
       entries.push({
         url: buildLangUrl(locale, `/services/${s.slug}`),
-        lastModified: now,
+        lastModified: nowISO,
       });
     }
 
-    // Projects
+    // Projects (use date if you have one, else build time)
     for (const p of projects) {
+      // If your project has a date field, swap it here (e.g. p.dateISO)
       entries.push({
         url: buildLangUrl(locale, `/projects/${p.slug}`),
-        lastModified: now,
+        lastModified: nowISO,
       });
     }
 
-    // Blog posts
+    // Blog posts (use post.dateISO when valid)
     for (const post of blogPosts) {
+      const d = new Date(post.dateISO);
       entries.push({
         url: buildLangUrl(locale, `/blog/${post.slug}`),
-        lastModified: new Date(post.dateISO),
+        lastModified: Number.isNaN(d.getTime()) ? nowISO : d.toISOString(),
       });
     }
   }
