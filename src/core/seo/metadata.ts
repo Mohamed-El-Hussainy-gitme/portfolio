@@ -5,7 +5,10 @@ export type SeoInput = {
   pathname: string; // locale-less: "/" | "/about" | "/blog/x"
   title: { en: string; ar: string };
   description: { en: string; ar: string };
+
+  // Accept readonly arrays (works with "as const")
   keywords?: { en: ReadonlyArray<string>; ar: ReadonlyArray<string> };
+
   ogImage?: string; // absolute or "/file"
 };
 
@@ -18,8 +21,10 @@ function toAbs(urlOrPath: string): string {
 
 export function buildMetadata(locale: SiteLocale, input: SeoInput): Metadata {
   // IMPORTANT:
-  // Do NOT append SITE_NAME here because app/layout.tsx already has title.template
+  // - Keep <title> clean: RootLayout already applies the "%s | SITE_NAME" template.
+  // - For OG/Twitter titles, it's fine to include the site name.
   const pageTitle = input.title[locale];
+  const socialTitle = `${pageTitle} | ${SITE_NAME}`;
   const description = input.description[locale];
 
   const canonical = buildLangUrl(input.pathname, locale);
@@ -29,10 +34,9 @@ export function buildMetadata(locale: SiteLocale, input: SeoInput): Metadata {
   };
 
   const ogImage = input.ogImage ? toAbs(input.ogImage) : `${SITE_ORIGIN}/og-cover.svg`;
-  const keywords = input.keywords ? [...input.keywords[locale]] : undefined;
 
-  // OpenGraph/Twitter titles can include SITE_NAME safely (no template applied)
-  const socialTitle = `${pageTitle} | ${SITE_NAME}`;
+  // Next Metadata expects mutable string[]
+  const keywords = input.keywords ? [...input.keywords[locale]] : undefined;
 
   return {
     metadataBase: new URL(SITE_ORIGIN),

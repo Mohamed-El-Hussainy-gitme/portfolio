@@ -45,7 +45,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
 
-  const [language, setLanguageState] = useState<Language>(() => getLocaleFromPath(pathname) || "en");
+  const [language, setLanguageState] = useState<Language>(() => getLocaleFromPath(pathname) || "ar");
 
   useEffect(() => {
     const fromPath = getLocaleFromPath(pathname);

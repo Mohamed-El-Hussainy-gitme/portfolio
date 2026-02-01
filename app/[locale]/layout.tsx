@@ -3,7 +3,13 @@
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "ar" }];
+  return [{ locale: "ar" }, { locale: "en" }];
+}
+
+type Locale = "ar" | "en";
+
+function normalizeLocale(locale: string): Locale {
+  return locale === "en" ? "en" : "ar"; // default ar for anything else
 }
 
 export default async function LocaleLayout({
@@ -15,12 +21,11 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  const isAr = locale === "ar";
-  const lang = isAr ? "ar" : "en";
-  const dir = isAr ? "rtl" : "ltr";
+  const loc = normalizeLocale(locale);
+  const dir = loc === "ar" ? "rtl" : "ltr";
 
   return (
-    <div lang={lang} dir={dir}>
+    <div lang={loc} dir={dir} data-locale={loc} suppressHydrationWarning>
       {children}
     </div>
   );

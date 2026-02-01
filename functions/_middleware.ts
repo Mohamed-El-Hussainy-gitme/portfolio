@@ -1,8 +1,13 @@
-// functions/_middleware.ts
+// Cloudflare Pages Functions Middleware
+// - Force default locale to Arabic (/ar)
+// - Remove ?lang and marketing params to prevent duplicate URLs
+// - Normalize trailing slashes + /index.html
+// - Keep SEO/system files at root: /sitemap.xml, /robots.txt, /llms.txt, /ai.txt, etc.
 
 type PagesContext = { request: Request; next: () => Promise<Response> };
 
 type Locale = "en" | "ar";
+const DEFAULT_LOCALE: Locale = "ar";
 
 const LOCALELESS_PREFIXES = new Set(["about", "contact", "projects", "services", "blog"]);
 
@@ -19,8 +24,7 @@ const STRIP_QUERY_KEYS = new Set([
   "mc_eid",
 ]);
 
-// System / SEO files that must never be locale-rewritten
-const SEO_BYPASS = new Set([
+const SEO_BYPASS_PATHS = new Set([
   "/sitemap.xml",
   "/robots.txt",
   "/favicon.svg",
@@ -28,15 +32,6 @@ const SEO_BYPASS = new Set([
   "/llms.txt",
   "/ai.txt",
   "/og-cover.svg",
-]);
-
-// Legacy / duplicate sitemap paths → force single canonical sitemap
-const LEGACY_SITEMAPS = new Set([
-  "/sitemap-index.xml",
-  "/sitemap-en.xml",
-  "/sitemap-ar.xml",
-  "/en/sitemap.xml",
-  "/ar/sitemap.xml",
 ]);
 
 function collapseSlashes(pathname: string): string {
@@ -48,6 +43,7 @@ function stripTrailingSlash(pathname: string): string {
   return pathname;
 }
 
+// Only touch index.html (do NOT touch google-site-verification html file)
 function stripIndexHtml(pathname: string): string {
   if (pathname === "/index.html") return "/";
   if (pathname.endsWith("/index.html")) return pathname.slice(0, -"/index.html".length) || "/";
@@ -81,6 +77,7 @@ function isLocaleLessKnownRoute(pathname: string): boolean {
 }
 
 function isAssetOrNext(pathname: string): boolean {
+  // Don't touch assets (some filenames may contain spaces/case-sensitive parts)
   return (
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/assets/") ||
@@ -106,78 +103,42 @@ function addSecurityHeaders(res: Response): Response {
   return out;
 }
 
-function redirect(origin: string, pathname: string, search: string, status: 301 | 302 = 301) {
-  const url = `${origin}${pathname}${search}`;
-  return Response.redirect(url, status);
-}
-
 export async function onRequest(context: PagesContext) {
-  const url = new URL(context.request.url);
-  // Force all legacy sitemap endpoints to the single canonical sitemap
-const LEGACY_SITEMAPS = new Set([
-  "/sitemap-index.xml",
-  "/sitemap-en.xml",
-  "/sitemap-ar.xml",
-  "/en/sitemap.xml",
-  "/ar/sitemap.xml",
-]);
+  const req = context.request;
 
-if (LEGACY_SITEMAPS.has(url.pathname)) {
-  return Response.redirect(`${url.origin}/sitemap.xml`, 301);
-}
+  // Avoid redirecting non-GET/HEAD requests
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    return addSecurityHeaders(await context.next());
+  }
 
+  const url = new URL(req.url);
 
   const originalPath = url.pathname;
   const originalSearch = url.search;
 
-  // ---- A) Normalize path (canonical) ----
+  // ---- A) Normalize pathname ----
   let pathname = collapseSlashes(url.pathname);
   pathname = stripIndexHtml(pathname);
   pathname = stripTrailingSlash(pathname);
 
-  // ---- B) Force single sitemap URL (kills duplicates forever) ----
-  if (LEGACY_SITEMAPS.has(pathname)) {
-    return redirect(url.origin, "/sitemap.xml", "", 301);
+  // ---- B) Canonicalize sitemap aliases (keep ONE sitemap URL) ----
+  // Old/alias sitemap locations -> /sitemap.xml
+  if (
+    pathname === "/sitemap-index.xml" ||
+    pathname === "/sitemap-en.xml" ||
+    pathname === "/sitemap-ar.xml" ||
+    pathname === "/en/sitemap.xml" ||
+    pathname === "/ar/sitemap.xml"
+  ) {
+    pathname = "/sitemap.xml";
   }
 
-  // ---- C) System/SEO files: strip ANY query then pass-through ----
-  if (SEO_BYPASS.has(pathname)) {
-    // also canonicalize if user hits /sitemap.xml?x or /robots.txt?x
-    if (url.search) {
-      return redirect(url.origin, pathname, "", 301);
-    }
-    // if path got normalized (index.html or trailing slash), redirect to canonical
-    if (pathname !== originalPath) {
-      return redirect(url.origin, pathname, "", 301);
-    }
-    return context.next();
-  }
-
-  // ---- D) Assets pass-through ----
-  if (isAssetOrNext(pathname)) {
-    return context.next();
-  }
-
-  // ---- E) Detect desired locale from ?lang= (legacy) ----
-  // We keep this ONLY to migrate old links. We will REMOVE the parameter from the final URL.
+  // ---- C) Detect desired locale from ?lang= (if present) ----
   let desiredLocale: Locale | null = null;
   const langParam = url.searchParams.get("lang");
   if (langParam === "en" || langParam === "ar") desiredLocale = langParam;
 
-  // ---- F) Canonicalize root + locale-less known routes ----
-  if (pathname === "/") {
-    pathname = `/${desiredLocale ?? "en"}`;
-  }
-
-  if (!isLocalePath(pathname) && isLocaleLessKnownRoute(pathname)) {
-    pathname = `/${desiredLocale ?? "en"}${pathname}`;
-  }
-
-  if (desiredLocale && isLocalePath(pathname)) {
-    pathname = withLocale(pathname, desiredLocale);
-  }
-
-  // ---- G) Strip query params (lang + tracking) ----
+  // ---- D) Strip query params (lang + tracking) ----
   let changedQuery = false;
   for (const key of Array.from(url.searchParams.keys())) {
     if (STRIP_QUERY_KEYS.has(key)) {
@@ -189,14 +150,55 @@ if (LEGACY_SITEMAPS.has(url.pathname)) {
   const newSearch = url.searchParams.toString();
   const rebuiltSearch = newSearch ? `?${newSearch}` : "";
 
-  const changedPath = pathname !== originalPath;
-  const changedSearch = originalSearch !== rebuiltSearch;
+  // ---- E) If it's an SEO/system file, NEVER apply locale redirects ----
+  if (SEO_BYPASS_PATHS.has(pathname)) {
+    const changedPath = pathname !== originalPath;
+    const changed = changedPath || changedQuery || originalSearch !== rebuiltSearch;
 
-  if (changedPath || changedQuery || changedSearch) {
-    return redirect(url.origin, pathname, rebuiltSearch, 301);
+    if (changed) {
+      const redirectUrl = `${url.origin}${pathname}${rebuiltSearch}`;
+      return addSecurityHeaders(Response.redirect(redirectUrl, 301));
+    }
+
+    return addSecurityHeaders(await context.next());
   }
 
-  // ---- H) Pass-through ----
-  const res = await context.next();
-  return addSecurityHeaders(res);
+  // ---- F) If it’s an asset path, do not apply locale logic ----
+  // We still allow stripping tracking params above.
+  if (isAssetOrNext(pathname)) {
+    const changed = changedQuery || originalSearch !== rebuiltSearch || pathname !== originalPath;
+    if (changed) {
+      const redirectUrl = `${url.origin}${pathname}${rebuiltSearch}`;
+      return addSecurityHeaders(Response.redirect(redirectUrl, 301));
+    }
+    return addSecurityHeaders(await context.next());
+  }
+
+  // ---- G) Canonicalize root + locale-less known routes ----
+  // Root:
+  if (pathname === "/") {
+    pathname = `/${desiredLocale ?? DEFAULT_LOCALE}`;
+  }
+
+  // Locale-less known routes (/about, /blog/x, ...)
+  if (!isLocalePath(pathname) && isLocaleLessKnownRoute(pathname)) {
+    pathname = `/${desiredLocale ?? DEFAULT_LOCALE}${pathname}`;
+  }
+
+  // If it's already a locale path but ?lang says otherwise, move to the right locale
+  if (desiredLocale && isLocalePath(pathname)) {
+    pathname = withLocale(pathname, desiredLocale);
+  }
+
+  // ---- H) Redirect if anything changed ----
+  const changedPath = pathname !== originalPath;
+  const changed = changedPath || changedQuery || originalSearch !== rebuiltSearch;
+
+  if (changed) {
+    const redirectUrl = `${url.origin}${pathname}${rebuiltSearch}`;
+    return addSecurityHeaders(Response.redirect(redirectUrl, 301));
+  }
+
+  // ---- I) Pass-through ----
+  return addSecurityHeaders(await context.next());
 }
