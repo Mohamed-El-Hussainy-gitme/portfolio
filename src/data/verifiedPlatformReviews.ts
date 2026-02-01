@@ -37,7 +37,7 @@ export const verifiedPlatformReviews: VerifiedPlatformReview[] = [
       en: "Screenshot of a LinkedIn recommendation mentioning delivery quality and communication",
       ar: "لقطة شاشة لتوصية على LinkedIn تتحدث عن جودة التسليم والتواصل",
     },
-    sourceUrl: "https://www.linkedin.com/", // ضع رابط التوصية الحقيقي
+    sourceUrl: "https://www.linkedin.com/in/mohamed-el-hussainy",
     dateISO: "2024-11-05",
   },
   {
@@ -51,7 +51,7 @@ export const verifiedPlatformReviews: VerifiedPlatformReview[] = [
       en: "Screenshot of an Upwork client feedback with rating and review text",
       ar: "لقطة شاشة لتقييم على Upwork يظهر التقييم ونص المراجعة",
     },
-    sourceUrl: "https://www.upwork.com/", // ضع رابط الصفحة الأصلية
+    sourceUrl: "https://www.upwork.com/freelancers/~013703cd025bad427c", 
     dateISO: "2025-01-10",
   },
 ];

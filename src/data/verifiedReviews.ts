@@ -12,7 +12,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1114962",
     platform: "Khamsat",
     platformUrl:
-      "https://khamsat.com/user/mohamed_elhussainy?published-only=true",
+      "https://khamsat.com/user/mohamed_hussainy/reviews/1114962",
     rating: 5,
     reviewText: {
       ar: "تنفيذ ممتاز و سرعة في التسليم. شكراً لك.",
@@ -28,7 +28,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1203871",
     platform: "Khamsat",
     platformUrl:
-      "https://khamsat.com/user/mohamed_elhussainy?published-only=true",
+      "https://khamsat.com/user/mohamed_hussainy/reviews/1115268",
     rating: 5,
     reviewText: {
       ar: "متميز جداً. أنصح بالتعامل معه.",

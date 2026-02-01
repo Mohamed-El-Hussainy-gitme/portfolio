@@ -10,7 +10,7 @@ export const CONTACT_EMAIL_COMPOSE_URL =
 export const CONTACT_GITHUB = "https://github.com/Mohamed-El-Hussainy-gitme";
 
 export const CONTACT_LINKEDIN =
-  "https://www.linkedin.com/in/mohamed-el-hussainy-b50449399/";
+  "https://www.linkedin.com/in/mohamed-el-hussainy";
 
 export const WHATSAPP_NUMBER = "201018557413";
 
