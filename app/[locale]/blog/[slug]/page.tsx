@@ -46,7 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { en: post.title.en, ar: post.title.ar },
     description: { en: post.description.en, ar: post.description.ar },
     keywords,
-    ogType: "article",
   });
 }
 
@@ -69,7 +68,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <BlogPostPage slug={slug} locale={locale} />
+      <BlogPostPage />
     </>
   );
 }

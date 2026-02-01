@@ -5,8 +5,12 @@ import { DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "../src/core/
 const BYPASS = new Set([
   "/sitemap.xml",
   "/robots.txt",
+  // Always allow icons and social preview images at the root. Both SVG and
+  // PNG variants are included to avoid redirects when user agents request
+  // either format.
   "/favicon.svg",
   "/og-cover.png",
+  "/og-cover.svg",
   "/llms.txt",
   "/ai.txt",
   "/googlebfee5bd7eb86337c.html",

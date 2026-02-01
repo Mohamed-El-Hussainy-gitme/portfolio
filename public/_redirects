@@ -1,0 +1,28 @@
+# --- SEO / Sitemaps ---
+/sitemap.xml/        /sitemap.xml        301
+/sitemap-index.xml   /sitemap.xml        301
+/sitemap-index.xml/  /sitemap.xml        301
+/robots.txt/         /robots.txt         301
+/llms.txt/           /llms.txt           301
+/ai.txt/             /ai.txt             301
+
+# --- Canonical structure: always use locale prefix ---
+/                  /ar                  301
+
+/about             /ar/about             301
+/about/            /ar/about             301
+
+/contact           /ar/contact           301
+/contact/          /ar/contact           301
+
+/projects          /ar/projects          301
+/projects/         /ar/projects          301
+/projects/*        /ar/projects/:splat   301
+
+/services          /ar/services          301
+/services/         /ar/services          301
+/services/*        /ar/services/:splat   301
+
+/blog              /ar/blog              301
+/blog/             /ar/blog              301
+/blog/*            /ar/blog/:splat       301

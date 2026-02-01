@@ -1,16 +1,19 @@
-import { buildLangUrl, getSiteOrigin, SITE_NAME } from "./siteMeta";
-import type { Locale } from "../i18n/locale";
+import { buildLangUrl, getSiteOrigin, type SiteLocale, SITE_NAME } from "./siteMeta";
 import type { BlogPost } from "../../data/blog";
-import type { ServiceDefinition } from "../../data/services";
+import type { ServiceItem } from "../../data/services";
 import type { ProjectDefinition } from "../../data/projects";
 
 export type BreadcrumbCrumb = { name: string; path: string };
 
-export function breadcrumbList(locale: Locale, crumbs: BreadcrumbCrumb[]) {
+export function breadcrumbList(locale: SiteLocale, crumbs: BreadcrumbCrumb[]) {
   const itemListElement = crumbs.map((c, idx) => ({
     "@type": "ListItem",
     position: idx + 1,
     name: c.name,
+    // Build fully qualified URL for each crumb. Note: buildLangUrl accepts
+    // locale first and path second. Passing arguments in the wrong order
+    // produces incorrect URLs (e.g. treating the path as a locale). See
+    // siteMeta.ts for the signature.
     item: buildLangUrl(locale, c.path),
   }));
 
@@ -21,10 +24,9 @@ export function breadcrumbList(locale: Locale, crumbs: BreadcrumbCrumb[]) {
   };
 }
 
-export function blogPostingSchema(locale: Locale, post: BlogPost) {
+export function blogPostingSchema(locale: SiteLocale, post: BlogPost) {
   const origin = getSiteOrigin();
   const url = buildLangUrl(locale, `/blog/${post.slug}`);
-  const focus = (post.focusKeyword?.[locale] || "").trim();
 
   return {
     "@context": "https://schema.org",
@@ -32,7 +34,7 @@ export function blogPostingSchema(locale: Locale, post: BlogPost) {
     headline: post.title[locale],
     description: post.description[locale],
     inLanguage: locale,
-    keywords: [...post.tags, focus].filter(Boolean).join(", "),
+    keywords: [...post.tags, post.focusKeyword[locale]].join(", "),
     datePublished: post.dateISO,
     dateModified: post.dateISO,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -42,7 +44,7 @@ export function blogPostingSchema(locale: Locale, post: BlogPost) {
   };
 }
 
-export function blogItemListSchema(locale: Locale, posts: BlogPost[]) {
+export function blogItemListSchema(locale: SiteLocale, posts: BlogPost[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -60,26 +62,13 @@ export function blogItemListSchema(locale: Locale, posts: BlogPost[]) {
   };
 }
 
-/**
- * Service schema should point to the canonical service detail URL.
- */
-function resolveServicePath(service: ServiceDefinition, baseOrFullPath?: string): string {
-  // Default canonical: /services/{slug}
-  if (!baseOrFullPath) return `/services/${service.slug}`;
-
-  // If caller already passed a full path that contains the slug, trust it.
-  if (baseOrFullPath.includes(service.slug)) return baseOrFullPath;
-
-  // Treat it as a base path (e.g. "/services") and append slug.
-  const p = baseOrFullPath.endsWith("/") ? baseOrFullPath.slice(0, -1) : baseOrFullPath;
-  return `${p}/${service.slug}`;
-}
-
-export function serviceSchema(locale: Locale, service: ServiceDefinition, baseOrFullPath?: string) {
+export function serviceSchema(locale: SiteLocale, service: ServiceItem, pagePath: string) {
   const origin = getSiteOrigin();
-  const url = buildLangUrl(locale, resolveServicePath(service, baseOrFullPath));
-
-  const serviceType = (service.focusKeyword?.[locale] || service.title[locale]).trim();
+  // The pagePath should include the slug (e.g. "/services/landing-page"). We do
+  // not append a fragment (#slug) here because each service has its own
+  // dedicated page. Using a fragment would point crawlers back to the index
+  // page instead of the detail page.
+  const url = buildLangUrl(locale, pagePath);
 
   return {
     "@context": "https://schema.org",
@@ -89,11 +78,13 @@ export function serviceSchema(locale: Locale, service: ServiceDefinition, baseOr
     url,
     provider: { "@type": "Person", name: SITE_NAME, url: origin },
     areaServed: "Worldwide",
-    serviceType,
+    // serviceType should be a short descriptive phrase. When a service does not
+    // define a dedicated focus keyword, fall back to its title.
+    serviceType: service.focusKeyword?.[locale] ?? service.title[locale],
   };
 }
 
-export function servicesItemListSchema(locale: Locale, services: ServiceDefinition[], basePath?: string) {
+export function servicesItemListSchema(locale: SiteLocale, services: ServiceItem[], pagePath: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -102,12 +93,16 @@ export function servicesItemListSchema(locale: Locale, services: ServiceDefiniti
     itemListElement: services.map((s, idx) => ({
       "@type": "ListItem",
       position: idx + 1,
-      item: serviceSchema(locale, s, basePath),
+      // Provide a path including the service slug when delegating to
+      // serviceSchema. Without the slug the schema would construct a URL with a
+      // fragment (#) which points back to the service index. See serviceSchema
+      // for details.
+      item: serviceSchema(locale, s, `${pagePath}/${s.slug}`),
     })),
   };
 }
 
-export function projectCaseStudySchema(locale: Locale, project: ProjectDefinition) {
+export function projectCaseStudySchema(locale: SiteLocale, project: ProjectDefinition) {
   const origin = getSiteOrigin();
   const url = buildLangUrl(locale, `/projects/${project.slug}`);
 
@@ -127,7 +122,7 @@ export function projectCaseStudySchema(locale: Locale, project: ProjectDefinitio
   };
 }
 
-export function projectsItemListSchema(locale: Locale, projects: ProjectDefinition[]) {
+export function projectsItemListSchema(locale: SiteLocale, projects: ProjectDefinition[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -145,7 +140,7 @@ export function projectsItemListSchema(locale: Locale, projects: ProjectDefiniti
   };
 }
 
-export function websiteSchema(locale: Locale) {
+export function websiteSchema(locale: SiteLocale) {
   const origin = getSiteOrigin();
   return {
     "@context": "https://schema.org",
@@ -161,7 +156,7 @@ export function websiteSchema(locale: Locale) {
   };
 }
 
-export function personSchema(locale: Locale) {
+export function personSchema(locale: SiteLocale) {
   const origin = getSiteOrigin();
   const name = locale === "ar" ? "محمد الحسيني" : "Mohamed El-Husseiny";
 

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import HomePage from "@/views/HomePage";
 import { buildMetadata } from "@/core/seo/metadata";
-import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/core/i18n/locale";
-import { personSchema, websiteSchema } from "@/core/seo/schema";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -19,19 +17,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? "مشاريع، خدمات، ومدونة — SEO تقني وأداء وتجربة عربية/إنجليزية بدون خلط."
       : "Projects, services, and blog — technical SEO, performance, and bilingual (AR/EN) UX.";
 
-  return buildMetadata(locale, { title, description, keywords: PAGE_KEYWORDS.home, path: "/" });
+  return buildMetadata(locale, { title, description });
 }
 
 export default async function Page({ params }: Props) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
 
-  const jsonLd = [websiteSchema(locale), personSchema(locale)];
-
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <HomePage locale={locale} />
-    </>
-  );
+  return <HomePage locale={locale} />;
 }

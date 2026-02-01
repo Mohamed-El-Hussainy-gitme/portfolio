@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContactPage from "@/views/ContactPage";
 import { buildMetadata } from "@/core/seo/metadata";
-import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/core/i18n/locale";
 
 type Props = {
@@ -18,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? "تواصل لطلب عرض سعر أو خطة تنفيذ: مواقع شركات، متاجر إلكترونية، لوحات تحكم، وSEO تقني."
       : "Contact me for a quote or an execution plan: company sites, e-commerce, dashboards, and technical SEO.";
 
-  return buildMetadata(locale, { title, description, keywords: PAGE_KEYWORDS.contact, path: "/contact" });
+  return buildMetadata(locale, { title, description, path: "/contact" });
 }
 
 export default async function Page({ params }: Props) {

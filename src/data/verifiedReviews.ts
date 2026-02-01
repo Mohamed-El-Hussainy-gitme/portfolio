@@ -40,15 +40,4 @@ export const verifiedReviews: VerifiedReview[] = [
       height: 444,
     },
   },
-  {
-    id: "upwork-01",
-    platform: "Upwork",
-    platformUrl: "https://www.upwork.com/freelancers/~0123456789",
-    rating: 5,
-    reviewText: {
-      ar: "تواصل ممتاز، ونتيجة احترافية.",
-      en: "Great communication and professional results.",
-    },
-    // screenshot removed لأن ملف الصورة غير موجود في public حاليا
-  },
 ];

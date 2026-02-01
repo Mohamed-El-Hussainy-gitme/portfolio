@@ -14,6 +14,11 @@ export const CONTACT_LINKEDIN =
 
 export const WHATSAPP_NUMBER = "201018557413";
 
+// Backward-compatible aliases used in some views/pages
+export const CONTACT_WHATSAPP_PHONE = WHATSAPP_NUMBER;
+export const GITHUB_URL = CONTACT_GITHUB;
+export const LINKEDIN_URL = CONTACT_LINKEDIN;
+
 export function buildWhatsAppLink(message: string): string {
   const encoded = encodeURIComponent(message);
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;

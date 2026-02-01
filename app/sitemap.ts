@@ -1,41 +1,55 @@
 import type { MetadataRoute } from "next";
-import { LOCALES, type Locale } from "@/core/i18n/locale";
+
+import { LOCALES } from "@/core/i18n/locale";
 import { buildLangUrl } from "@/core/seo/siteMeta";
-
 import { projects } from "@/data/projects";
-import { SERVICES } from "@/data/services";
 import { blogPosts } from "@/data/blog";
+import { services } from "@/data/services";
 
+const STATIC_PATHS = ["/", "/about", "/contact", "/services", "/projects", "/blog"] as const;
+
+// Required for `output: "export"`.
+// Without this, Next.js treats /sitemap.xml as a dynamic route and fails the
+// static export during "Collecting page data".
 export const dynamic = "force-static";
-export const revalidate = false;
-
-const STATIC_PATHS = ["/", "/about", "/contact", "/projects", "/services", "/blog"] as const;
-
-function asDate(v: string | Date): Date {
-  return v instanceof Date ? v : new Date(v);
-}
+export const revalidate = 0;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   const entries: MetadataRoute.Sitemap = [];
 
-  const addPath = (locale: Locale, path: string, lastModified: Date) => {
-    entries.push({
-      url: buildLangUrl(locale, path),
-      lastModified,
-    });
-  };
-
   for (const locale of LOCALES) {
-    for (const p of STATIC_PATHS) addPath(locale, p, now);
+    // Static pages
+    for (const path of STATIC_PATHS) {
+      entries.push({
+        url: buildLangUrl(locale, path),
+        lastModified: now,
+      });
+    }
 
-    for (const s of SERVICES) addPath(locale, `/services/${s.slug}`, now);
+    // Services
+    for (const s of services) {
+      entries.push({
+        url: buildLangUrl(locale, `/services/${s.slug}`),
+        lastModified: now,
+      });
+    }
 
-    for (const pr of projects) addPath(locale, `/projects/${pr.slug}`, now);
+    // Projects
+    for (const p of projects) {
+      entries.push({
+        url: buildLangUrl(locale, `/projects/${p.slug}`),
+        lastModified: now,
+      });
+    }
 
+    // Blog posts
     for (const post of blogPosts) {
-      addPath(locale, `/blog/${post.slug}`, asDate(post.dateISO));
+      entries.push({
+        url: buildLangUrl(locale, `/blog/${post.slug}`),
+        lastModified: new Date(post.dateISO),
+      });
     }
   }
 

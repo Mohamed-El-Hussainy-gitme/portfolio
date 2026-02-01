@@ -55,7 +55,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ar: (p.seoDescription?.ar || p.description?.ar || description || "").trim(),
     },
     keywords,
-    ogType: "article",
   });
 }
 
