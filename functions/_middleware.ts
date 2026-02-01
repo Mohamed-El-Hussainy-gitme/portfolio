@@ -1,18 +1,15 @@
-type PagesContext = { request: Request; next: () => Promise<Response> };
+import { DEFAULT_LOCALE, isLocale, type Locale } from "../src/core/i18n/locale";
 
-import { DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "../src/core/i18n/locale";
+type PagesContext = { request: Request; next: (req?: Request) => Promise<Response> };
 
 const BYPASS = new Set([
   "/sitemap.xml",
   "/robots.txt",
-  // Always allow icons and social preview images at the root. Both SVG and
-  // PNG variants are included to avoid redirects when user agents request
-  // either format.
-  "/favicon.svg",
-  "/og-cover.png",
-  "/og-cover.svg",
   "/llms.txt",
   "/ai.txt",
+  "/favicon.svg",
+  "/og-cover.svg",
+  "/og-cover.png",
   "/googlebfee5bd7eb86337c.html",
 ]);
 
@@ -58,6 +55,15 @@ function firstSeg(pathname: string): string | null {
   return parts[0] ?? null;
 }
 
+function stripConditionalHeaders(headers: Headers) {
+  headers.delete("if-none-match");
+  headers.delete("if-modified-since");
+  headers.delete("if-match");
+  headers.delete("if-unmodified-since");
+  headers.delete("if-range");
+  return headers;
+}
+
 export async function onRequest(context: PagesContext) {
   const url = new URL(context.request.url);
 
@@ -66,8 +72,39 @@ export async function onRequest(context: PagesContext) {
 
   let pathname = normalize(url.pathname);
 
-  // 1) BYPASS system SEO files + assets
-  if (BYPASS.has(pathname) || isAsset(pathname)) {
+  // 0) SYSTEM FILES: rewrite داخلي + امنع 304 + امنع 301 للـ / في آخر الرابط
+  if (BYPASS.has(pathname)) {
+    const nextUrl = new URL(context.request.url);
+    nextUrl.pathname = pathname; // يضمن أن /sitemap.xml/ تصبح /sitemap.xml بدون Redirect
+
+    const headers = stripConditionalHeaders(new Headers(context.request.headers));
+
+    // keep method (GET/HEAD) كما هو
+    const nextReq = new Request(nextUrl.toString(), {
+      method: context.request.method,
+      headers,
+    });
+
+    const res = await context.next(nextReq);
+    return addSecurityHeaders(res);
+  }
+
+  // 1) BYPASS assets (بدون لمس locale redirects)
+  if (isAsset(pathname)) {
+    // لو فيه تطبيع (//, index.html, trailing slash) نعمل rewrite داخلي بدل redirect
+    if (pathname !== originalPath) {
+      const nextUrl = new URL(context.request.url);
+      nextUrl.pathname = pathname;
+
+      const nextReq = new Request(nextUrl.toString(), {
+        method: context.request.method,
+        headers: new Headers(context.request.headers),
+      });
+
+      const res = await context.next(nextReq);
+      return addSecurityHeaders(res);
+    }
+
     const res = await context.next();
     return addSecurityHeaders(res);
   }
@@ -81,7 +118,7 @@ export async function onRequest(context: PagesContext) {
   const desiredLocale: Locale | null = isLocale(langParam) ? langParam : null;
 
   let targetLocale: Locale = DEFAULT_LOCALE;
-  if (hasLocale) targetLocale = (seg as Locale);
+  if (hasLocale) targetLocale = seg as Locale;
   if (desiredLocale) targetLocale = desiredLocale;
 
   // If no locale in path → redirect to /{targetLocale}{pathname}
@@ -93,8 +130,18 @@ export async function onRequest(context: PagesContext) {
     pathname = rest === "/" ? `/${desiredLocale}` : `/${desiredLocale}${rest}`;
   }
 
-  // 3) Strip tracking params (keep it minimal — لا تلمس حاجات تانية)
-  const STRIP = new Set(["lang", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"]);
+  // 3) Strip tracking params
+  const STRIP = new Set([
+    "lang",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "gclid",
+    "fbclid",
+  ]);
+
   let changedQuery = false;
   for (const k of Array.from(url.searchParams.keys())) {
     if (STRIP.has(k)) {
@@ -116,6 +163,5 @@ export async function onRequest(context: PagesContext) {
   }
 
   const res = await context.next();
-  // (اختياري) تقدر تضيف هيدر dir/lang لكن الأفضل HtmlLangSync داخل Next
   return addSecurityHeaders(res);
 }
