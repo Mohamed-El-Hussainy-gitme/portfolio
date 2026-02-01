@@ -27,7 +27,7 @@ export function buildMetadata(locale: SiteLocale, input: SeoInput): Metadata {
     ar: buildLangUrl(input.pathname, "ar"),
   };
 
-  const ogImage = input.ogImage ? toAbs(input.ogImage) : `${SITE_ORIGIN}/og-cover.svg`;
+  const ogImage = input.ogImage ? toAbs(input.ogImage) : `${SITE_ORIGIN}/og-cover.png`;
   const keywords = input.keywords ? [...input.keywords[locale]] : undefined;
 
   return {
