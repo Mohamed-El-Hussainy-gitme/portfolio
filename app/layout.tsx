@@ -7,19 +7,27 @@ import "@/styles/animations.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
+
   title: {
-    default: `${SITE_NAME} | Web Developer Portfolio`,
+    default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,
   },
+
   description: "Portfolio website — projects, services, and blog.",
+
+  // ✅ FIX: Explicit favicon (you only have favicon.svg in /public)
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: ["/favicon.svg"],
+  },
+
+  // (Optional but safe) keep OG default image absolute via metadataBase
   openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    images: [`${SITE_ORIGIN}/og-cover.svg`],
+    images: ["/og-cover.png"],
   },
   twitter: {
     card: "summary_large_image",
-    images: [`${SITE_ORIGIN}/og-cover.svg`],
+    images: ["/og-cover.png"],
   },
 };
 
