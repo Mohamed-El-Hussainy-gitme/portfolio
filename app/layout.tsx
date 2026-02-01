@@ -12,7 +12,6 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: "Portfolio website — projects, services, and blog.",
-  alternates: { canonical: SITE_ORIGIN },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
