@@ -1,17 +1,12 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
-  X-Content-Type-Options: nosniff
-  Cache-Control: public, max-age=0, must-revalidate
+
+/sitemap-index.xml
+  Content-Type: application/xml; charset=utf-8
 
 /robots.txt
   Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-  Cache-Control: public, max-age=0, must-revalidate
-
-/llms.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/ai.txt
-  Content-Type: text/plain; charset=utf-8
-  X-Content-Type-Options: nosniff

@@ -1,31 +1,24 @@
-// app/[locale]/layout.tsx
+import type { ReactNode } from "react";
+import { normalizeLocale, LOCALES } from "@/core/i18n/locale";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return [{ locale: "ar" }, { locale: "en" }];
+  // Arabic first (primary audience), then English
+  return LOCALES.map((locale) => ({ locale }));
 }
 
-type Locale = "ar" | "en";
-
-function normalizeLocale(locale: string): Locale {
-  return locale === "en" ? "en" : "ar"; // default ar for anything else
-}
-
-export default async function LocaleLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
+type Props = {
+  children: ReactNode;
   params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+};
 
-  const loc = normalizeLocale(locale);
-  const dir = loc === "ar" ? "rtl" : "ltr";
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale: raw } = await params;
+  const locale = normalizeLocale(raw);
 
   return (
-    <div lang={loc} dir={dir} data-locale={loc} suppressHydrationWarning>
+    <div lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       {children}
     </div>
   );

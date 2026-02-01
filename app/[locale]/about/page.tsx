@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+
 import AboutPage from "@/views/AboutPage";
 import { buildMetadata } from "@/core/seo/metadata";
 import { PAGE_KEYWORDS } from "@/core/seo/keywords";
 import { breadcrumbList, personSchema } from "@/core/seo/schema";
+import { normalizeLocale } from "@/core/i18n/locale";
 
-type Props = { params: Promise<{ locale: "en" | "ar" }> };
+type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: raw } = await params;
-  const locale = raw === "ar" ? "ar" : "en";
+  const locale = normalizeLocale(raw);
 
   return buildMetadata(locale, {
     pathname: "/about",
@@ -23,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { locale: raw } = await params;
-  const locale = raw === "ar" ? "ar" : "en";
+  const locale = normalizeLocale(raw);
 
   const jsonLd = [
     personSchema(locale),
