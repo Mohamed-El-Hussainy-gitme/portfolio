@@ -1,16 +1,13 @@
-// app/robots.ts
 import type { MetadataRoute } from "next";
+import { SITE_ORIGIN } from "@/core/seo/siteMeta";
 
 export const dynamic = "force-static";
-
-const BASE = "https://elhussainy.pages.dev";
+export const revalidate = false;
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: `${BASE}/sitemap.xml`,
+    rules: [{ userAgent: "*", allow: "/" }],
+    sitemap: `${SITE_ORIGIN}/sitemap.xml`,
+    host: new URL(SITE_ORIGIN).host,
   };
 }

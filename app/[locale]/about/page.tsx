@@ -1,44 +1,29 @@
 import type { Metadata } from "next";
-
 import AboutPage from "@/views/AboutPage";
 import { buildMetadata } from "@/core/seo/metadata";
 import { PAGE_KEYWORDS } from "@/core/seo/keywords";
-import { breadcrumbList, personSchema } from "@/core/seo/schema";
-import { normalizeLocale } from "@/core/i18n/locale";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/core/i18n/locale";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: raw } = await params;
-  const locale = normalizeLocale(raw);
+  const locale: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
 
-  return buildMetadata(locale, {
-    pathname: "/about",
-    title: { en: "About Mohamed El-Hussainy", ar: "من أنا" },
-    description: {
-      en: "Full-stack web developer focused on Next.js, SEO, and high-performance UI.",
-      ar: "مطور فل ستاك متخصص في Next.js و SEO تقني وتحسين سرعة الموقع.",
-    },
-    keywords: PAGE_KEYWORDS.about,
-  });
+  const title = locale === "ar" ? "من أنا" : "About";
+  const description =
+    locale === "ar"
+      ? "نبذة عني، المهارات، وطريقة العمل لبناء مواقع سريعة ومحسنة لمحركات البحث."
+      : "About me, skills, and my approach to building fast, SEO-friendly websites.";
+
+  return buildMetadata(locale, { title, description, keywords: PAGE_KEYWORDS.about, path: "/about" });
 }
 
 export default async function Page({ params }: Props) {
   const { locale: raw } = await params;
-  const locale = normalizeLocale(raw);
+  const locale: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
 
-  const jsonLd = [
-    personSchema(locale),
-    breadcrumbList(locale, [
-      { name: locale === "ar" ? "الرئيسية" : "Home", path: "/" },
-      { name: locale === "ar" ? "من أنا" : "About", path: "/about" },
-    ]),
-  ];
-
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <AboutPage />
-    </>
-  );
+  return <AboutPage locale={locale} />;
 }

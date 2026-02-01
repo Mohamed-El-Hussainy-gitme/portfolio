@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = raw === "ar" ? "ar" : "en";
 
   return buildMetadata(locale, {
-    pathname: "/projects",
+    path: "/projects",
     title: { en: "Projects", ar: "المشاريع" },
     description: { en: "Selected projects and case studies.", ar: "مختارات من المشاريع ودراسات الحالة." },
     keywords: PAGE_KEYWORDS.projects,

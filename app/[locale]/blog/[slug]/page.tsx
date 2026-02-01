@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) {
     return buildMetadata(locale, {
-      pathname: "/blog",
+      path: "/blog",
       title: { en: "Post Not Found", ar: "المقال غير موجود" },
       description: { en: "This post does not exist.", ar: "هذا المقال غير موجود." },
       keywords: PAGE_KEYWORDS.blog,
@@ -42,10 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // ✅ BlogPost has title + description (no seoTitle/seoDescription)
   return buildMetadata(locale, {
-    pathname: `/blog/${post.slug}`,
+    path: `/blog/${post.slug}`,
     title: { en: post.title.en, ar: post.title.ar },
     description: { en: post.description.en, ar: post.description.ar },
     keywords,
+    ogType: "article",
   });
 }
 
@@ -68,7 +69,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <BlogPostPage />
+      <BlogPostPage slug={slug} locale={locale} />
     </>
   );
 }

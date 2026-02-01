@@ -1,16 +1,17 @@
-import { buildLangUrl, getSiteOrigin, type SiteLocale, SITE_NAME } from "./siteMeta";
+import { buildLangUrl, getSiteOrigin, SITE_NAME } from "./siteMeta";
+import type { Locale } from "../i18n/locale";
 import type { BlogPost } from "../../data/blog";
-import type { ServiceItem } from "../../data/services";
+import type { ServiceDefinition } from "../../data/services";
 import type { ProjectDefinition } from "../../data/projects";
 
 export type BreadcrumbCrumb = { name: string; path: string };
 
-export function breadcrumbList(locale: SiteLocale, crumbs: BreadcrumbCrumb[]) {
+export function breadcrumbList(locale: Locale, crumbs: BreadcrumbCrumb[]) {
   const itemListElement = crumbs.map((c, idx) => ({
     "@type": "ListItem",
     position: idx + 1,
     name: c.name,
-    item: buildLangUrl(c.path, locale),
+    item: buildLangUrl(locale, c.path),
   }));
 
   return {
@@ -20,9 +21,10 @@ export function breadcrumbList(locale: SiteLocale, crumbs: BreadcrumbCrumb[]) {
   };
 }
 
-export function blogPostingSchema(locale: SiteLocale, post: BlogPost) {
+export function blogPostingSchema(locale: Locale, post: BlogPost) {
   const origin = getSiteOrigin();
-  const url = buildLangUrl(`/blog/${post.slug}`, locale);
+  const url = buildLangUrl(locale, `/blog/${post.slug}`);
+  const focus = (post.focusKeyword?.[locale] || "").trim();
 
   return {
     "@context": "https://schema.org",
@@ -30,7 +32,7 @@ export function blogPostingSchema(locale: SiteLocale, post: BlogPost) {
     headline: post.title[locale],
     description: post.description[locale],
     inLanguage: locale,
-    keywords: [...post.tags, post.focusKeyword[locale]].join(", "),
+    keywords: [...post.tags, focus].filter(Boolean).join(", "),
     datePublished: post.dateISO,
     dateModified: post.dateISO,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -40,7 +42,7 @@ export function blogPostingSchema(locale: SiteLocale, post: BlogPost) {
   };
 }
 
-export function blogItemListSchema(locale: SiteLocale, posts: BlogPost[]) {
+export function blogItemListSchema(locale: Locale, posts: BlogPost[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -52,15 +54,32 @@ export function blogItemListSchema(locale: SiteLocale, posts: BlogPost[]) {
       item: {
         "@type": "WebPage",
         name: p.title[locale],
-        url: buildLangUrl(`/blog/${p.slug}`, locale),
+        url: buildLangUrl(locale, `/blog/${p.slug}`),
       },
     })),
   };
 }
 
-export function serviceSchema(locale: SiteLocale, service: ServiceItem, pagePath: string) {
+/**
+ * Service schema should point to the canonical service detail URL.
+ */
+function resolveServicePath(service: ServiceDefinition, baseOrFullPath?: string): string {
+  // Default canonical: /services/{slug}
+  if (!baseOrFullPath) return `/services/${service.slug}`;
+
+  // If caller already passed a full path that contains the slug, trust it.
+  if (baseOrFullPath.includes(service.slug)) return baseOrFullPath;
+
+  // Treat it as a base path (e.g. "/services") and append slug.
+  const p = baseOrFullPath.endsWith("/") ? baseOrFullPath.slice(0, -1) : baseOrFullPath;
+  return `${p}/${service.slug}`;
+}
+
+export function serviceSchema(locale: Locale, service: ServiceDefinition, baseOrFullPath?: string) {
   const origin = getSiteOrigin();
-  const url = buildLangUrl(`${pagePath}#${service.slug}`, locale);
+  const url = buildLangUrl(locale, resolveServicePath(service, baseOrFullPath));
+
+  const serviceType = (service.focusKeyword?.[locale] || service.title[locale]).trim();
 
   return {
     "@context": "https://schema.org",
@@ -70,11 +89,11 @@ export function serviceSchema(locale: SiteLocale, service: ServiceItem, pagePath
     url,
     provider: { "@type": "Person", name: SITE_NAME, url: origin },
     areaServed: "Worldwide",
-    serviceType: service.focusKeyword[locale],
+    serviceType,
   };
 }
 
-export function servicesItemListSchema(locale: SiteLocale, services: ServiceItem[], pagePath: string) {
+export function servicesItemListSchema(locale: Locale, services: ServiceDefinition[], basePath?: string) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -83,14 +102,14 @@ export function servicesItemListSchema(locale: SiteLocale, services: ServiceItem
     itemListElement: services.map((s, idx) => ({
       "@type": "ListItem",
       position: idx + 1,
-      item: serviceSchema(locale, s, pagePath),
+      item: serviceSchema(locale, s, basePath),
     })),
   };
 }
 
-export function projectCaseStudySchema(locale: SiteLocale, project: ProjectDefinition) {
+export function projectCaseStudySchema(locale: Locale, project: ProjectDefinition) {
   const origin = getSiteOrigin();
-  const url = buildLangUrl(`/projects/${project.slug}`, locale);
+  const url = buildLangUrl(locale, `/projects/${project.slug}`);
 
   const focusKeyword = (project.focusKeyword?.[locale] || "").trim();
 
@@ -108,7 +127,7 @@ export function projectCaseStudySchema(locale: SiteLocale, project: ProjectDefin
   };
 }
 
-export function projectsItemListSchema(locale: SiteLocale, projects: ProjectDefinition[]) {
+export function projectsItemListSchema(locale: Locale, projects: ProjectDefinition[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -120,13 +139,13 @@ export function projectsItemListSchema(locale: SiteLocale, projects: ProjectDefi
       item: {
         "@type": "WebPage",
         name: p.seoTitle?.[locale] || p.name[locale],
-        url: buildLangUrl(`/projects/${p.slug}`, locale),
+        url: buildLangUrl(locale, `/projects/${p.slug}`),
       },
     })),
   };
 }
 
-export function websiteSchema(locale: SiteLocale) {
+export function websiteSchema(locale: Locale) {
   const origin = getSiteOrigin();
   return {
     "@context": "https://schema.org",
@@ -142,7 +161,7 @@ export function websiteSchema(locale: SiteLocale) {
   };
 }
 
-export function personSchema(locale: SiteLocale) {
+export function personSchema(locale: Locale) {
   const origin = getSiteOrigin();
   const name = locale === "ar" ? "محمد الحسيني" : "Mohamed El-Husseiny";
 

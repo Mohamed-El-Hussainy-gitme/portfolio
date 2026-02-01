@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = projects.find((x) => x.slug === slug);
   if (!p) {
     return buildMetadata(locale, {
-      pathname: "/projects",
+      path: "/projects",
       title: { en: "Project Not Found", ar: "المشروع غير موجود" },
       description: { en: "This project does not exist.", ar: "هذا المشروع غير موجود." },
       keywords: PAGE_KEYWORDS.projects,
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 
   return buildMetadata(locale, {
-    pathname: `/projects/${p.slug}`,
+    path: `/projects/${p.slug}`,
     title: {
       en: (p.seoTitle?.en || p.name?.en || title || "Project").trim(),
       ar: (p.seoTitle?.ar || p.name?.ar || title || "مشروع").trim(),
@@ -55,6 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ar: (p.seoDescription?.ar || p.description?.ar || description || "").trim(),
     },
     keywords,
+    ogType: "article",
   });
 }
 

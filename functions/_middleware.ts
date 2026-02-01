@@ -1,73 +1,25 @@
-// functions/_middleware.ts
-
 type PagesContext = { request: Request; next: () => Promise<Response> };
 
-type Locale = "en" | "ar";
-const LOCALES = new Set<Locale>(["en", "ar"]);
+import { DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "../src/core/i18n/locale";
 
-const LOCALELESS_PREFIXES = new Set(["about", "contact", "projects", "services", "blog"]);
-
-const STRIP_QUERY_KEYS = new Set([
-  "lang",
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_term",
-  "utm_content",
-  "gclid",
-  "fbclid",
-  "mc_cid",
-  "mc_eid",
+const BYPASS = new Set([
+  "/sitemap.xml",
+  "/robots.txt",
+  "/favicon.svg",
+  "/og-cover.png",
+  "/llms.txt",
+  "/ai.txt",
+  "/googlebfee5bd7eb86337c.html",
 ]);
 
-function collapseSlashes(pathname: string): string {
-  return pathname.replace(/\/{2,}/g, "/");
-}
+function isAsset(pathname: string): boolean {
+  if (pathname.startsWith("/_next/")) return true;
+  if (pathname.startsWith("/assets/")) return true;
+  if (pathname.startsWith("/brand/")) return true;
+  if (pathname.startsWith("/reviews/")) return true;
+  if (pathname.startsWith("/skills/")) return true;
 
-function stripTrailingSlash(pathname: string): string {
-  if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
-  return pathname;
-}
-
-function stripIndexHtml(pathname: string): string {
-  if (pathname === "/index.html") return "/";
-  if (pathname.endsWith("/index.html")) return pathname.slice(0, -"/index.html".length) || "/";
-  return pathname;
-}
-
-function firstSegment(pathname: string): string | null {
-  const parts = pathname.split("/").filter(Boolean);
-  return parts[0] || null;
-}
-
-function stripLocalePrefix(pathname: string): string {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts[0] === "en" || parts[0] === "ar") parts.shift();
-  return parts.length ? `/${parts.join("/")}` : "/";
-}
-
-function withLocale(pathname: string, locale: Locale): string {
-  const clean = stripLocalePrefix(pathname);
-  return clean === "/" ? `/${locale}` : `/${locale}${clean}`;
-}
-
-function isLocalePath(pathname: string): boolean {
-  const seg = firstSegment(pathname);
-  return !!seg && (seg === "en" || seg === "ar");
-}
-
-function isLocaleLessKnownRoute(pathname: string): boolean {
-  const seg = firstSegment(pathname);
-  return !!seg && LOCALELESS_PREFIXES.has(seg);
-}
-
-function isAssetOrNext(pathname: string): boolean {
   return (
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/assets/") ||
-    pathname.startsWith("/brand/") ||
-    pathname.startsWith("/reviews/") ||
-    pathname.startsWith("/skills/") ||
     pathname.endsWith(".png") ||
     pathname.endsWith(".jpg") ||
     pathname.endsWith(".jpeg") ||
@@ -76,8 +28,18 @@ function isAssetOrNext(pathname: string): boolean {
     pathname.endsWith(".ico") ||
     pathname.endsWith(".css") ||
     pathname.endsWith(".js") ||
-    pathname.endsWith(".map")
+    pathname.endsWith(".map") ||
+    pathname.endsWith(".txt") ||
+    pathname.endsWith(".xml")
   );
+}
+
+function normalize(pathname: string): string {
+  let p = pathname.replace(/\/{2,}/g, "/");
+  if (p === "/index.html") p = "/";
+  if (p.endsWith("/index.html")) p = p.slice(0, -"/index.html".length) || "/";
+  if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+  return p;
 }
 
 function addSecurityHeaders(res: Response): Response {
@@ -87,100 +49,56 @@ function addSecurityHeaders(res: Response): Response {
   return out;
 }
 
+function firstSeg(pathname: string): string | null {
+  const parts = pathname.split("/").filter(Boolean);
+  return parts[0] ?? null;
+}
+
 export async function onRequest(context: PagesContext) {
   const url = new URL(context.request.url);
 
   const originalPath = url.pathname;
   const originalSearch = url.search;
 
-  // ---- A) Normalize pathname ----
-  let pathname = collapseSlashes(url.pathname);
-  pathname = stripIndexHtml(pathname);
-  pathname = stripTrailingSlash(pathname);
+  let pathname = normalize(url.pathname);
 
-  // ✅ FIX 1: favicon.ico fallback -> favicon.svg
-  if (pathname === "/favicon.ico") {
-    const res = Response.redirect(`${url.origin}/favicon.svg`, 301);
-    return addSecurityHeaders(res);
-  }
-
-  // ✅ FIX 2: hard bypass for system/seo files + og-cover + favicon
-  const BYPASS = new Set([
-    "/sitemap.xml",
-    "/robots.txt",
-    "/llms.txt",
-    "/ai.txt",
-    "/googlebfee5bd7eb86337c.html",
-    "/favicon.svg",
-    "/og-cover.png",
-  ]);
-
-  if (BYPASS.has(pathname)) {
-    // still strip tracking params if present
-    let changedQuery = false;
-    for (const key of Array.from(url.searchParams.keys())) {
-      if (STRIP_QUERY_KEYS.has(key)) {
-        url.searchParams.delete(key);
-        changedQuery = true;
-      }
-    }
-    const newSearch = url.searchParams.toString();
-    const rebuiltSearch = newSearch ? `?${newSearch}` : "";
-
-    const changed = pathname !== originalPath || changedQuery || originalSearch !== rebuiltSearch;
-    if (changed) {
-      const res = Response.redirect(`${url.origin}${pathname}${rebuiltSearch}`, 301);
-      return addSecurityHeaders(res);
-    }
-
+  // 1) BYPASS system SEO files + assets
+  if (BYPASS.has(pathname) || isAsset(pathname)) {
     const res = await context.next();
     return addSecurityHeaders(res);
   }
 
-  // ---- B) Detect desired locale from ?lang= (if present) ----
-  let desiredLocale: Locale | null = null;
+  // 2) Force locale prefix for all non-asset pages
+  const seg = firstSeg(pathname);
+  const hasLocale = isLocale(seg);
+
+  // Optional: allow ?lang=en|ar to switch
   const langParam = url.searchParams.get("lang");
-  if (langParam === "en" || langParam === "ar") desiredLocale = langParam;
+  const desiredLocale: Locale | null = isLocale(langParam) ? langParam : null;
 
-  // ---- C) Canonicalize root + locale-less known routes ----
-  if (pathname === "/") {
-    // أنت قلت الأغلبية عربي — خلي الافتراضي ar (أو غيّرها لو تحب)
-    pathname = `/${desiredLocale ?? "ar"}`;
+  let targetLocale: Locale = DEFAULT_LOCALE;
+  if (hasLocale) targetLocale = (seg as Locale);
+  if (desiredLocale) targetLocale = desiredLocale;
+
+  // If no locale in path → redirect to /{targetLocale}{pathname}
+  if (!hasLocale) {
+    pathname = pathname === "/" ? `/${targetLocale}` : `/${targetLocale}${pathname}`;
+  } else if (desiredLocale && hasLocale && (seg as Locale) !== desiredLocale) {
+    // Replace locale prefix
+    const rest = `/${pathname.split("/").filter(Boolean).slice(1).join("/")}`;
+    pathname = rest === "/" ? `/${desiredLocale}` : `/${desiredLocale}${rest}`;
   }
 
-  if (!isLocalePath(pathname) && isLocaleLessKnownRoute(pathname)) {
-    pathname = `/${desiredLocale ?? "ar"}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
-  }
-
-  if (desiredLocale && isLocalePath(pathname)) {
-    pathname = withLocale(pathname, desiredLocale);
-  }
-
-  // ---- D) Strip query params (lang + tracking) ----
+  // 3) Strip tracking params (keep it minimal — لا تلمس حاجات تانية)
+  const STRIP = new Set(["lang", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"]);
   let changedQuery = false;
-  for (const key of Array.from(url.searchParams.keys())) {
-    if (STRIP_QUERY_KEYS.has(key)) {
-      url.searchParams.delete(key);
+  for (const k of Array.from(url.searchParams.keys())) {
+    if (STRIP.has(k)) {
+      url.searchParams.delete(k);
       changedQuery = true;
     }
   }
 
-  // ---- E) Asset pass-through (after normalization) ----
-  if (isAssetOrNext(pathname)) {
-    const newSearch = url.searchParams.toString();
-    const rebuiltSearch = newSearch ? `?${newSearch}` : "";
-    const changed = pathname !== originalPath || changedQuery || originalSearch !== rebuiltSearch;
-
-    if (changed) {
-      const res = Response.redirect(`${url.origin}${pathname}${rebuiltSearch}`, 301);
-      return addSecurityHeaders(res);
-    }
-
-    const res = await context.next();
-    return addSecurityHeaders(res);
-  }
-
-  // ---- F) Redirect if changed ----
   const newSearch = url.searchParams.toString();
   const rebuiltSearch = newSearch ? `?${newSearch}` : "";
 
@@ -188,11 +106,12 @@ export async function onRequest(context: PagesContext) {
   const changed = changedPath || changedQuery || originalSearch !== rebuiltSearch;
 
   if (changed) {
-    const res = Response.redirect(`${url.origin}${pathname}${rebuiltSearch}`, 301);
+    const redirectUrl = `${url.origin}${pathname}${rebuiltSearch}`;
+    const res = Response.redirect(redirectUrl, 301);
     return addSecurityHeaders(res);
   }
 
-  // ---- G) Pass-through ----
   const res = await context.next();
+  // (اختياري) تقدر تضيف هيدر dir/lang لكن الأفضل HtmlLangSync داخل Next
   return addSecurityHeaders(res);
 }

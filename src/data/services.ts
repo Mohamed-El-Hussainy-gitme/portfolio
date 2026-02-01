@@ -1,165 +1,260 @@
-export type LocalizedText = { en: string; ar: string };
+import type { Locale } from "@/core/i18n/locale";
 
-export type ServiceItem = {
-  id: string;
+export type ServiceDefinition = {
   slug: string;
-  focusKeyword: LocalizedText;
-  title: LocalizedText;
-  summary: LocalizedText;
-  deliverables: LocalizedText[];
-  outcomes: LocalizedText[];
-  process: LocalizedText[];
+  icon: string;
+  title: Record<Locale, string>;
+  summary: Record<Locale, string>;
+  bullets: Record<Locale, string[]>;
+  focusKeyword?: Record<Locale, string>;
 };
 
-export const services: ServiceItem[] = [
+export const SERVICES: ServiceDefinition[] = [
   {
-    id: "landing",
     slug: "landing-page",
-    focusKeyword: { en: "landing page", ar: "صفحة هبوط" },
-    title: { en: "Landing Page (Ads & Campaigns)", ar: "صفحة هبوط (إعلانات وحملات)" },
-    summary: {
-      en: "A conversion-first landing page for ads and campaigns—fast, focused, and tracking-ready.",
-      ar: "صفحة هبوط للإعلانات والحملات: CTA واضح، سرعة عالية، وتتبع جاهز لقياس التحويل.",
+    icon: "landing page",
+    title: {
+      en: "Landing Page (Ads & Campaigns)",
+      ar: "صفحة هبوط (إعلانات وحملات)",
     },
-    deliverables: [
-      { en: "One-page conversion funnel", ar: "صفحة واحدة بمسار تحويل واضح" },
-      { en: "Tracking-ready (GA4 / Pixel)", ar: "جاهزة للتتبع (GA4 / Pixel)" },
-      { en: "Fast load + clean SEO signals", ar: "تحميل سريع + إشارات SEO نظيفة" },
-    ],
-    outcomes: [
-      { en: "Higher CTR-to-lead", ar: "تحويل أفضل من النقر إلى عميل" },
-      { en: "Lower bounce on paid traffic", ar: "تقليل ارتداد زيارات الإعلانات" },
-      { en: "Clear A/B test foundation", ar: "أساس قوي لاختبارات A/B" },
-    ],
-    process: [
-      { en: "Message & offer mapping", ar: "تحديد الرسالة والعرض" },
-      { en: "Design + copy draft", ar: "تصميم وصياغة المحتوى" },
-      { en: "Build + QA + launch", ar: "تنفيذ + اختبار + إطلاق" },
-    ],
+    summary: {
+      en: "Create an online landing page that attracts customers and converts clicks into leads—fast, responsive, tracking-ready, and built with technical SEO foundations.",
+      ar: "صفحة هبوط سريعة تركز على التحويل: CTA واضح، تتبع جاهز، وتجهيز SEO تقني يساعدك تظهر وتجمع عملاء.",
+    },
+    bullets: {
+      en: [
+        "Conversion-first layout and clear CTA",
+        "Fast performance + Core Web Vitals focus",
+        "Analytics/Pixel/UTM tracking setup",
+        "Technical SEO (indexing, meta, schema basics)",
+      ],
+      ar: [
+        "تصميم يركز على التحويل وCTA واضح",
+        "أداء عالي وتحسين Core Web Vitals",
+        "تجهيز التتبع (Analytics / Pixel / UTM)",
+        "SEO تقني (فهرسة + ميتا + Schema أساسيات)",
+      ],
+    },
+    focusKeyword: {
+      en: "create online website attract customers",
+      ar: "إنشاء صفحة هبوط لجذب العملاء وزيادة التحويل",
+    },
   },
+
   {
-    id: "company",
     slug: "company-website",
-    focusKeyword: { en: "business website", ar: "موقع شركة" },
-    title: { en: "Company Website (Brand & Leads)", ar: "موقع شركة (براند وعملاء)" },
-    summary: {
-      en: "A modern company website that builds trust, explains your offer, and ranks for core services.",
-      ar: "موقع شركة يعزز الثقة ويشرح الخدمات ويستهدف كلمات بحث واضحة لكل خدمة.",
+    icon: "business website",
+    title: {
+      en: "Company Website (Brand & Leads)",
+      ar: "موقع شركة (براند وعملاء)",
     },
-    deliverables: [
-      { en: "Service pages by intent", ar: "صفحات خدمات حسب نية البحث" },
-      { en: "Trust blocks (proof, FAQs)", ar: "أقسام ثقة (إثباتات/أسئلة)" },
-      { en: "Schema + internal linking", ar: "سكيما + ربط داخلي" },
-    ],
-    outcomes: [
-      { en: "Clear positioning", ar: "تموضع واضح" },
-      { en: "More qualified organic leads", ar: "عملاء من البحث بجودة أعلى" },
-      { en: "Stronger credibility signals", ar: "إشارات مصداقية أقوى" },
-    ],
-    process: [
-      { en: "Keyword + competitor scan", ar: "تحليل كلمات + منافسين" },
-      { en: "Information architecture", ar: "بناء هيكل الصفحات" },
-      { en: "Build + SEO polish", ar: "تنفيذ + ضبط SEO" },
-    ],
+    summary: {
+      en: "Develop a professional company website that builds trust, ranks for core services, and attracts customers—responsive UI, clean UX, and technical SEO from day one.",
+      ar: "موقع شركة احترافي يعزز الثقة ويستهدف كلمات بحث واضحة لخدماتك—واجهة Responsive وتجربة عربية/إنجليزية بدون أخطاء اتجاه مع SEO تقني.",
+    },
+    bullets: {
+      en: [
+        "Modern responsive UI + clean information architecture",
+        "Technical SEO setup (crawl/index, canonicals, hreflang)",
+        "Performance optimisation (Core Web Vitals)",
+        "Lead capture (forms, WhatsApp, CRM integrations)",
+      ],
+      ar: [
+        "واجهة حديثة Responsive + بنية صفحات واضحة",
+        "SEO تقني (زحف/فهرسة، canonical، hreflang)",
+        "تحسين الأداء (Core Web Vitals)",
+        "تجهيز جمع العملاء (نماذج/واتساب/تكاملات)",
+      ],
+    },
+    focusKeyword: {
+      en: "develop professional websites",
+      ar: "تطوير موقع شركة احترافي مع SEO وأداء عالي",
+    },
   },
+
   {
-    id: "ecommerce",
     slug: "ecommerce",
-    focusKeyword: { en: "online store", ar: "متجر إلكتروني" },
-    title: { en: "E-commerce Store (Catalog & Checkout)", ar: "متجر إلكتروني (كتالوج وشراء)" },
-    summary: {
-      en: "An e-commerce storefront optimized for product discovery, SEO templates, and a clean checkout flow.",
-      ar: "متجر إلكتروني مُهيأ لعرض المنتجات + SEO للأقسام والمنتجات + مسار شراء واضح.",
+    icon: "online store",
+    title: {
+      en: "E-commerce Store (Catalog & Checkout)",
+      ar: "متجر إلكتروني (كتالوج وشراء)",
     },
-    deliverables: [
-      { en: "Product listing + smart filters", ar: "قائمة منتجات + فلاتر ذكية" },
-      { en: "Checkout UX + order states", ar: "تجربة شراء + حالات الطلب" },
-      { en: "SEO-ready templates", ar: "قوالب جاهزة لـSEO" },
-    ],
-    outcomes: [
-      { en: "Faster purchase journey", ar: "شراء أسرع" },
-      { en: "More product pages indexed", ar: "فهرسة أفضل لصفحات المنتجات" },
-      { en: "Higher add-to-cart rate", ar: "رفع معدل الإضافة للسلة" },
-    ],
-    process: [
-      { en: "Catalog + user flow", ar: "تحديد الكتالوج ومسار المستخدم" },
-      { en: "UI build + testing", ar: "تنفيذ الواجهة + الاختبارات" },
-      { en: "Launch + improvements", ar: "إطلاق + تحسينات" },
-    ],
+    summary: {
+      en: "Build a complete e-commerce website (frontend + backend + database) with product SEO templates, fast browsing, secure checkout flow, and clean tracking.",
+      ar: "تطوير متجر إلكتروني كامل (واجهة + لوحة تحكم + قاعدة بيانات) مع قوالب SEO للمنتجات والأقسام ومسار شراء واضح وآمن.",
+    },
+    bullets: {
+      en: [
+        "Catalog, product pages, filters, and search UX",
+        "SEO templates for categories/products + schema",
+        "Checkout flow + integrations (payments/shipping)",
+        "Admin dashboard + database (SQL/NoSQL) when needed",
+      ],
+      ar: [
+        "كتالوج + صفحات منتجات + فلاتر + بحث",
+        "قوالب SEO للأقسام/المنتجات + Schema",
+        "شراء + تكاملات (دفع/شحن)",
+        "لوحة تحكم + قاعدة بيانات (SQL/NoSQL) حسب الحاجة",
+      ],
+    },
+    focusKeyword: {
+      en: "build complete website frontend backend database",
+      ar: "تطوير متجر إلكتروني كامل بواجهة ولوحة تحكم وقاعدة بيانات",
+    },
   },
+
   {
-    id: "dashboard",
     slug: "dashboard",
-    focusKeyword: { en: "admin dashboard", ar: "لوحة تحكم" },
-    title: { en: "Dashboard UI (Tables & Roles)", ar: "لوحة تحكم (جداول وصلاحيات)" },
-    summary: {
-      en: "Data-heavy dashboard UI with tables, filters, and safe state management.",
-      ar: "لوحة تحكم احترافية للبيانات: جداول، فلاتر، وإدارة حالة منظمة.",
+    icon: "admin dashboard",
+    title: {
+      en: "Dashboard UI (Tables & Roles)",
+      ar: "لوحة تحكم (جداول وصلاحيات)",
     },
-    deliverables: [
-      { en: "Tables + filters + exports", ar: "جداول + فلاتر + تصدير" },
-      { en: "Role-based access patterns", ar: "صلاحيات حسب الدور" },
-      { en: "Reusable UI system", ar: "نظام مكونات قابل لإعادة الاستخدام" },
-    ],
-    outcomes: [
-      { en: "Fewer operational errors", ar: "أخطاء تشغيل أقل" },
-      { en: "Faster workflows", ar: "مهام أسرع" },
-      { en: "Maintainable UI system", ar: "نظام واجهة قابل للصيانة" },
-    ],
-    process: [
-      { en: "Model the entities", ar: "نمذجة البيانات" },
-      { en: "Build UI patterns", ar: "تنفيذ أنماط الواجهة" },
-      { en: "Polish + QA", ar: "ضبط التفاصيل + اختبار" },
-    ],
+    summary: {
+      en: "Build full dashboard UI for data-heavy systems—tables, filters, roles, and state management—ready for REST API integration and authentication.",
+      ar: "لوحة تحكم احترافية للبيانات: جداول وفلاتر وصلاحيات وإدارة حالة منظمة—جاهزة للتكامل مع REST API والمصادقة.",
+    },
+    bullets: {
+      en: [
+        "Tables, filters, pagination, exports",
+        "Role-based access (RBAC) + auth-ready UX",
+        "REST API integrations + error-safe state",
+        "Performance and accessibility best practices",
+      ],
+      ar: [
+        "جداول + فلاتر + Pagination + تصدير",
+        "صلاحيات (RBAC) وتجربة جاهزة للمصادقة",
+        "تكاملات REST API وإدارة حالة آمنة",
+        "أداء وإتاحة وصول (Accessibility) بشكل صحيح",
+      ],
+    },
+    focusKeyword: {
+      en: "build full dashboard responsive UI rest api auth integrations",
+      ar: "تطوير لوحة تحكم احترافية مع تكامل API وصلاحيات",
+    },
   },
+
   {
-    id: "seo",
+    slug: "fullstack-system",
+    icon: "full system",
+    title: {
+      en: "Full-Stack System (Web App + API + Database)",
+      ar: "نظام كامل (ويب + API + قاعدة بيانات)",
+    },
+    summary: {
+      en: "Build complete websites and systems (frontend, backend, database) with responsive UI, technical SEO, performance, REST APIs, auth, integrations, and SQL/NoSQL—deployment and maintenance included.",
+      ar: "بناء نظام كامل (Frontend + Backend + Database): واجهة Responsive + SEO + Performance + REST API + Auth + Integrations + SQL/NoSQL + نشر وصيانة.",
+    },
+    bullets: {
+      en: [
+        "Frontend: responsive UI + clean UX",
+        "Backend: REST API, auth, roles, integrations",
+        "Database: SQL/NoSQL design + migrations",
+        "Deployment, monitoring, and maintenance plan",
+      ],
+      ar: [
+        "Frontend: واجهة Responsive وتجربة UX واضحة",
+        "Backend: REST API + Auth + Roles + Integrations",
+        "Database: تصميم SQL/NoSQL + Migrations",
+        "نشر ومتابعة وصيانة بشكل منظم",
+      ],
+    },
+    focusKeyword: {
+      en: "build complete websites frontend backend database responsive UI SEO performance REST API auth SQL NoSQL deployment maintenance",
+      ar: "بناء موقع/نظام كامل Frontend Backend Database مع SEO وأداء وAPI ومصادقة",
+    },
+  },
+
+  {
+    slug: "wordpress-website",
+    icon: "wordpress",
+    title: {
+      en: "WordPress Website (Professional & SEO-ready)",
+      ar: "موقع ووردبريس (احترافي وجاهز للسيو)",
+    },
+    summary: {
+      en: "Create a professional website on WordPress—clean theme setup, performance optimisation, technical SEO, and a structured content system that attracts customers.",
+      ar: "إنشاء موقع ووردبريس احترافي: إعداد قالب نظيف، تحسين الأداء، SEO تقني، ونظام محتوى منظم يساعدك تجذب العملاء.",
+    },
+    bullets: {
+      en: [
+        "Theme setup + child theme (when needed)",
+        "Performance + caching + Core Web Vitals",
+        "Technical SEO (sitemap, robots, schema basics)",
+        "Forms, tracking, and integrations",
+      ],
+      ar: [
+        "إعداد قالب + Child Theme عند الحاجة",
+        "تحسين أداء + كاش + Core Web Vitals",
+        "SEO تقني (Sitemap/Robots/Schema أساسيات)",
+        "نماذج + تتبع + تكاملات",
+      ],
+    },
+    focusKeyword: {
+      en: "create a professional website on wordpress",
+      ar: "إنشاء موقع ووردبريس احترافي مع SEO وأداء",
+    },
+  },
+
+  {
     slug: "seo-performance",
-    focusKeyword: { en: "SEO audit", ar: "سيو تقني" },
-    title: { en: "SEO & Performance (Core Web Vitals)", ar: "SEO وأداء (Core Web Vitals)" },
-    summary: {
-      en: "Technical SEO + performance work focused on crawling, indexing, and Core Web Vitals.",
-      ar: "SEO تقني + تحسين الأداء: فهرسة، زحف، وCore Web Vitals.",
+    icon: "SEO audit",
+    title: {
+      en: "SEO & Performance (Core Web Vitals)",
+      ar: "SEO وأداء (Core Web Vitals)",
     },
-    deliverables: [
-      { en: "Indexing basics (robots/sitemap)", ar: "أساسيات الفهرسة (robots/sitemap)" },
-      { en: "Schema + internal linking", ar: "سكيما + ربط داخلي" },
-      { en: "Core Web Vitals fixes", ar: "إصلاحات Core Web Vitals" },
-    ],
-    outcomes: [
-      { en: "Better crawl & clarity", ar: "وضوح أفضل لمحركات البحث" },
-      { en: "Faster pages", ar: "صفحات أسرع" },
-      { en: "Cleaner ranking signals", ar: "إشارات ترتيب أقوى" },
-    ],
-    process: [
-      { en: "Audit", ar: "تحليل" },
-      { en: "Fix + validate", ar: "إصلاح + تحقق" },
-      { en: "Monitor & iterate", ar: "مراقبة + تحسين" },
-    ],
+    summary: {
+      en: "Technical SEO + performance work focused on crawling, indexing, sitemap/robots correctness, and Core Web Vitals improvements.",
+      ar: "SEO تقني + تحسين أداء: زحف وفهرسة، صحة sitemap/robots، وتحسين Core Web Vitals وقراءة محركات البحث.",
+    },
+    bullets: {
+      en: [
+        "Crawl/index diagnostics + fix priorities",
+        "Sitemap/robots/canonicals/hreflang correctness",
+        "Core Web Vitals optimisation",
+        "Schema + snippet improvements",
+      ],
+      ar: [
+        "تشخيص الزحف والفهرسة وترتيب الأولويات",
+        "تصحيح sitemap/robots/canonicals/hreflang",
+        "تحسين Core Web Vitals",
+        "Schema وتحسين المقتطفات",
+      ],
+    },
+    focusKeyword: {
+      en: "technical SEO performance core web vitals",
+      ar: "سيو تقني وتحسين أداء Core Web Vitals",
+    },
   },
+
   {
-    id: "maintenance",
     slug: "maintenance",
-    focusKeyword: { en: "website maintenance", ar: "صيانة موقع" },
-    title: { en: "Maintenance (Fixes & Content)", ar: "صيانة (إصلاحات ومحتوى)" },
-    summary: {
-      en: "Keep your website stable: fixes, content updates, and small iterations.",
-      ar: "الحفاظ على موقعك ثابتًا: إصلاحات، تحديث محتوى، وتحسينات صغيرة مستمرة.",
+    icon: "website maintenance",
+    title: {
+      en: "Maintenance (Fixes & Content)",
+      ar: "صيانة (إصلاحات ومحتوى)",
     },
-    deliverables: [
-      { en: "Bug fixes + small features", ar: "إصلاحات + إضافات صغيرة" },
-      { en: "Content publishing", ar: "نشر وتحديث المحتوى" },
-      { en: "Performance & security checks", ar: "فحوصات أداء وأمان" },
-    ],
-    outcomes: [
-      { en: "Less downtime", ar: "تعطل أقل" },
-      { en: "Consistent updates", ar: "تحديثات مستمرة" },
-      { en: "Peace of mind", ar: "راحة بال" },
-    ],
-    process: [
-      { en: "Monthly plan", ar: "خطة شهرية" },
-      { en: "Prioritize requests", ar: "تحديد الأولويات" },
-      { en: "Deploy changes", ar: "نشر التحديثات" },
-    ],
+    summary: {
+      en: "Keep your website stable: fixes, content updates, monitoring, and small iterations—SEO and performance kept healthy over time.",
+      ar: "حافظ على موقعك ثابتًا: إصلاحات وتحديث محتوى ومتابعة وتحسينات صغيرة—مع الحفاظ على SEO والأداء بشكل مستمر.",
+    },
+    bullets: {
+      en: [
+        "Bug fixes + content updates",
+        "Monitoring + deployment safety checks",
+        "Ongoing SEO + performance hygiene",
+        "Security updates and hardening",
+      ],
+      ar: [
+        "إصلاح أخطاء + تحديث محتوى",
+        "متابعة + فحوصات نشر آمنة",
+        "تحسين SEO وأداء بشكل مستمر",
+        "تحديثات أمنية وتقوية الموقع",
+      ],
+    },
+    focusKeyword: {
+      en: "website maintenance security updates",
+      ar: "صيانة مواقع وتحديثات أمنية وتحسين SEO",
+    },
   },
 ];

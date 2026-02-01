@@ -1,61 +1,84 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
+import Link from "next/link";
 import { useLanguage } from "../core/i18n/LanguageContext";
-import { Seo } from "../core/seo/Seo";
-import { breadcrumbList } from "../core/seo/schema";
-import { buildWhatsAppLink } from "../data/contact";
+import type { Locale } from "../core/i18n/locale";
+import { PROFILE } from "../data/profile";
+import { ICONS } from "../data/icons";
+import Container from "../components/layout/Container";
+import SectionHeading from "../components/ui/SectionHeading";
+import Tag from "../components/ui/Tag";
+import { GlowCard } from "../components/ui/GlowCard";
 
-export default function AboutPage() {
-  const { language, direction } = useLanguage();
+type Props = { locale?: Locale };
+
+export default function AboutPage({ locale }: Props) {
+  const ctx = useLanguage();
+  const language = locale ?? ctx.language;
+  const direction = language === "ar" ? "rtl" : "ltr";
   const isArabic = language === "ar";
 
-  const focusKeyword = isArabic ? "مطور مواقع" : "web developer";
-  const title = isArabic ? "مطور مواقع: خبرة React وSEO وRTL" : "Web developer: React, SEO, and RTL";
-  const description = isArabic
-    ? "نبذة عن محمد: مطور مواقع Full-stack، متخصص React/TypeScript، SEO تقني، وتجربة RTL نظيفة لمواقع الشركات والمتاجر ولوحات التحكم."
-    : "About Mohamed: a full-stack web developer focused on React/TypeScript, technical SEO, and clean RTL UX for business sites, e-commerce, and dashboards.";
+  const about = useMemo(() => {
+    return isArabic ? PROFILE.about.ar : PROFILE.about.en;
+  }, [isArabic]);
 
-  const wa = buildWhatsAppLink(
-    isArabic ? `مرحبًا محمد، أريد بناء ويب سايت وأرغب في معرفة أفضل خطة.` : `Hi Mohamed, I need website development and want the best plan.`
-  );
+  const tech = useMemo(() => {
+    return isArabic ? PROFILE.techStack.ar : PROFILE.techStack.en;
+  }, [isArabic]);
 
   return (
-    <div dir={direction} className="mx-auto max-w-4xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
-      <Seo
-        title={title}
-        description={description}
-        focusKeyword={focusKeyword}
-        schema={[
-          breadcrumbList(isArabic ? "ar" : "en", [
-            { name: isArabic ? "الرئيسية" : "Home", path: "/" },
-            { name: isArabic ? "من أنا" : "About", path: "/about" },
-          ]),
-        ]}
-      />
+    <main dir={direction} className="py-12">
+      <Container>
+        <SectionHeading
+          title={isArabic ? "من أنا" : "About"}
+          subtitle={
+            isArabic
+              ? "مطور ويب Full-Stack يركز على الأداء وSEO وتجربة مستخدم مرتبة."
+              : "Full-Stack web developer focused on performance, SEO, and clean UX."
+          }
+        />
 
-      <header className={direction === "rtl" ? "text-right" : "text-left"}>
-        <p className="mb-3 text-[11px] font-medium tracking-[0.28em] text-cyan-100/85">{isArabic ? "من أنا" : "About"}</p>
-        <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl">
-          {isArabic ? "مطور مواقع يهتم بالنتيجة" : "A web developer focused on outcomes"}
-        </h1>
-        <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
-          {isArabic
-            ? "أركز على بناء مواقع سريعة وواضحة تساعدك على التحويل والظهور: هيكلة محتوى صحيحة، SEO تقني، وتجربة RTL/LTR بدون خلط."
-            : "I build fast, clear websites designed for conversion and visibility: clean structure, technical SEO, and RTL/LTR without language mixing."}
-        </p>
-      </header>
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <GlowCard>
+            <h2 className="text-lg font-semibold text-white">{isArabic ? "نبذة" : "Bio"}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">{about}</p>
+          </GlowCard>
 
-      <div className="mt-8">
-        <a
-          href={wa}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 px-6 py-2.5 text-sm font-semibold text-slate-950"
-        >
-          {isArabic ? "تواصل على واتساب" : "Chat on WhatsApp"}
-        </a>
-      </div>
-    </div>
+          <GlowCard>
+            <h2 className="text-lg font-semibold text-white">{isArabic ? "التقنيات" : "Tech Stack"}</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {tech.map((t) => (
+                <Tag key={t}>{t}</Tag>
+              ))}
+            </div>
+          </GlowCard>
+        </div>
+
+        <div className="mt-10">
+          <GlowCard>
+            <h2 className="text-lg font-semibold text-white">{isArabic ? "روابط" : "Links"}</h2>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                href={ICONS.github.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-slate-300 underline-offset-4 hover:underline"
+              >
+                GitHub
+              </Link>
+              <Link
+                href={ICONS.linkedin.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-slate-300 underline-offset-4 hover:underline"
+              >
+                LinkedIn
+              </Link>
+            </div>
+          </GlowCard>
+        </div>
+      </Container>
+    </main>
   );
 }

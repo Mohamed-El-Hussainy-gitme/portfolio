@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = raw === "ar" ? "ar" : "en";
 
   return buildMetadata(locale, {
-    pathname: "/blog",
+    path: "/blog",
     title: { en: "Technical Blog", ar: "المدونة التقنية" },
     description: {
       en: "Practical articles on Next.js, performance, and technical SEO.",
