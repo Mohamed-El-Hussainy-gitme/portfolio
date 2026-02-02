@@ -1,167 +1,122 @@
-import { DEFAULT_LOCALE, isLocale, type Locale } from "../src/core/i18n/locale";
+interface Env {}
 
-type PagesContext = { request: Request; next: (req?: Request) => Promise<Response> };
+type PagesContext = {
+  request: Request;
+  next: () => Promise<Response>;
+  env: Env;
+};
 
-const BYPASS = new Set([
-  "/sitemap.xml",
-  "/robots.txt",
-  "/llms.txt",
-  "/ai.txt",
-  "/favicon.svg",
-  "/og-cover.svg",
-  "/og-cover.png",
-  "/googlebfee5bd7eb86337c.html",
-]);
+const LOCALES = ["en", "ar"] as const;
+type Locale = (typeof LOCALES)[number];
 
-function isAsset(pathname: string): boolean {
-  if (pathname.startsWith("/_next/")) return true;
-  if (pathname.startsWith("/assets/")) return true;
-  if (pathname.startsWith("/brand/")) return true;
-  if (pathname.startsWith("/reviews/")) return true;
-  if (pathname.startsWith("/skills/")) return true;
+const DEFAULT_LOCALE: Locale = "en";
+const LOCALE_COOKIE = "LANG";
 
-  return (
-    pathname.endsWith(".png") ||
-    pathname.endsWith(".jpg") ||
-    pathname.endsWith(".jpeg") ||
-    pathname.endsWith(".webp") ||
-    pathname.endsWith(".svg") ||
-    pathname.endsWith(".ico") ||
-    pathname.endsWith(".css") ||
-    pathname.endsWith(".js") ||
-    pathname.endsWith(".map") ||
-    pathname.endsWith(".txt") ||
-    pathname.endsWith(".xml")
-  );
+const BYPASS_PREFIXES = ["/_next/", "/api/", "/static/", "/images/", "/favicon"];
+const BYPASS_EXT = /\.(?:png|jpg|jpeg|gif|svg|webp|ico|css|js|map|json|xml|txt)$/i;
+
+function isLocale(value: string): value is Locale {
+  return (LOCALES as readonly string[]).includes(value);
 }
 
-function normalize(pathname: string): string {
-  let p = pathname.replace(/\/{2,}/g, "/");
-  if (p === "/index.html") p = "/";
-  if (p.endsWith("/index.html")) p = p.slice(0, -"/index.html".length) || "/";
-  if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
-  return p;
+function getLocaleFromPathname(pathname: string): Locale | null {
+  const seg = pathname.split("/").filter(Boolean)[0] ?? "";
+  return isLocale(seg) ? seg : null;
 }
 
-function addSecurityHeaders(res: Response): Response {
-  const out = new Response(res.body, res);
-  out.headers.set("X-Content-Type-Options", "nosniff");
-  out.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+function getCookieLocale(cookieHeader: string | null): Locale | null {
+  if (!cookieHeader) return null;
+  const match = cookieHeader.match(/(?:^|;\s*)LANG=([^;]+)/);
+  if (!match) return null;
+  const val = decodeURIComponent(match[1] ?? "").trim();
+  return isLocale(val) ? val : null;
+}
+
+function getBestLocale(request: Request): Locale {
+  const cookieLocale = getCookieLocale(request.headers.get("Cookie"));
+  if (cookieLocale) return cookieLocale;
+
+  const accept = request.headers.get("Accept-Language");
+  if (!accept) return DEFAULT_LOCALE;
+
+  const candidates = accept
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const [tagRaw, ...params] = part.split(";").map((x) => x.trim());
+      const tag = (tagRaw || "").toLowerCase();
+      let q = 1;
+      for (const p of params) {
+        if (p.startsWith("q=")) {
+          const v = Number(p.slice(2));
+          if (!Number.isNaN(v)) q = v;
+        }
+      }
+      return { tag, q };
+    })
+    .sort((a, b) => b.q - a.q);
+
+  for (const c of candidates) {
+    const base = c.tag.split("-")[0] ?? "";
+    if (isLocale(base)) return base;
+  }
+  return DEFAULT_LOCALE;
+}
+
+function shouldBypass(pathname: string): boolean {
+  if (BYPASS_EXT.test(pathname)) return true;
+  return BYPASS_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
+function normalizePathname(pathname: string): string {
+  let out = pathname.replace(/\/{2,}/g, "/");
+  if (out.length > 1) out = out.replace(/\/+$/, "");
   return out;
 }
 
-function firstSeg(pathname: string): string | null {
-  const parts = pathname.split("/").filter(Boolean);
-  return parts[0] ?? null;
+function redirectWithLangCookie(url: URL, pathname: string, locale: Locale): Response {
+  const target = new URL(url.toString());
+  target.pathname = pathname;
+
+  const res = Response.redirect(target.toString(), 302);
+  res.headers.append(
+    "Set-Cookie",
+    `${LOCALE_COOKIE}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`
+  );
+  res.headers.set("Vary", "Accept-Language, Cookie");
+  return res;
 }
 
-function stripConditionalHeaders(headers: Headers) {
-  headers.delete("if-none-match");
-  headers.delete("if-modified-since");
-  headers.delete("if-match");
-  headers.delete("if-unmodified-since");
-  headers.delete("if-range");
-  return headers;
-}
+export const onRequest = async (context: PagesContext): Promise<Response> => {
+  const { request, next } = context;
 
-export async function onRequest(context: PagesContext) {
-  const url = new URL(context.request.url);
-
+  const url = new URL(request.url);
   const originalPath = url.pathname;
-  const originalSearch = url.search;
 
-  let pathname = normalize(url.pathname);
-
-  // 0) SYSTEM FILES: rewrite داخلي + امنع 304 + امنع 301 للـ / في آخر الرابط
-  if (BYPASS.has(pathname)) {
-    const nextUrl = new URL(context.request.url);
-    nextUrl.pathname = pathname; // يضمن أن /sitemap.xml/ تصبح /sitemap.xml بدون Redirect
-
-    const headers = stripConditionalHeaders(new Headers(context.request.headers));
-
-    // keep method (GET/HEAD) كما هو
-    const nextReq = new Request(nextUrl.toString(), {
-      method: context.request.method,
-      headers,
-    });
-
-    const res = await context.next(nextReq);
-    return addSecurityHeaders(res);
+  if (shouldBypass(originalPath)) {
+    return next();
   }
 
-  // 1) BYPASS assets (بدون لمس locale redirects)
-  if (isAsset(pathname)) {
-    // لو فيه تطبيع (//, index.html, trailing slash) نعمل rewrite داخلي بدل redirect
-    if (pathname !== originalPath) {
-      const nextUrl = new URL(context.request.url);
-      nextUrl.pathname = pathname;
-
-      const nextReq = new Request(nextUrl.toString(), {
-        method: context.request.method,
-        headers: new Headers(context.request.headers),
-      });
-
-      const res = await context.next(nextReq);
-      return addSecurityHeaders(res);
-    }
-
-    const res = await context.next();
-    return addSecurityHeaders(res);
+  // Canonicalize path shape (permanent)
+  const normalized = normalizePathname(originalPath);
+  if (normalized !== originalPath) {
+    url.pathname = normalized;
+    return Response.redirect(url.toString(), 308);
   }
 
-  // 2) Force locale prefix for all non-asset pages
-  const seg = firstSeg(pathname);
-  const hasLocale = isLocale(seg);
-
-  // Optional: allow ?lang=en|ar to switch
-  const langParam = url.searchParams.get("lang");
-  const desiredLocale: Locale | null = isLocale(langParam) ? langParam : null;
-
-  let targetLocale: Locale = DEFAULT_LOCALE;
-  if (hasLocale) targetLocale = seg as Locale;
-  if (desiredLocale) targetLocale = desiredLocale;
-
-  // If no locale in path → redirect to /{targetLocale}{pathname}
-  if (!hasLocale) {
-    pathname = pathname === "/" ? `/${targetLocale}` : `/${targetLocale}${pathname}`;
-  } else if (desiredLocale && hasLocale && (seg as Locale) !== desiredLocale) {
-    // Replace locale prefix
-    const rest = `/${pathname.split("/").filter(Boolean).slice(1).join("/")}`;
-    pathname = rest === "/" ? `/${desiredLocale}` : `/${desiredLocale}${rest}`;
+  // Already locale-prefixed
+  const localeInPath = getLocaleFromPathname(normalized);
+  if (localeInPath) {
+    return next();
   }
 
-  // 3) Strip tracking params
-  const STRIP = new Set([
-    "lang",
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_term",
-    "utm_content",
-    "gclid",
-    "fbclid",
-  ]);
+  // Enforce locale prefix
+  const best = getBestLocale(request);
 
-  let changedQuery = false;
-  for (const k of Array.from(url.searchParams.keys())) {
-    if (STRIP.has(k)) {
-      url.searchParams.delete(k);
-      changedQuery = true;
-    }
+  if (normalized === "/") {
+    return redirectWithLangCookie(url, `/${best}`, best);
   }
 
-  const newSearch = url.searchParams.toString();
-  const rebuiltSearch = newSearch ? `?${newSearch}` : "";
-
-  const changedPath = pathname !== originalPath;
-  const changed = changedPath || changedQuery || originalSearch !== rebuiltSearch;
-
-  if (changed) {
-    const redirectUrl = `${url.origin}${pathname}${rebuiltSearch}`;
-    const res = Response.redirect(redirectUrl, 301);
-    return addSecurityHeaders(res);
-  }
-
-  const res = await context.next();
-  return addSecurityHeaders(res);
-}
+  return redirectWithLangCookie(url, `/${best}${normalized}`, best);
+};
