@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/styles/globals.css";
+import "@/styles/animations.css";
 import HtmlLangSync from "./HtmlLangSync";
 import { DEFAULT_LOCALE, localeToDir } from "@/core/i18n/locale";
 

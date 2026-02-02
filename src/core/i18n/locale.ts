@@ -2,6 +2,11 @@ export type Locale = "en" | "ar";
 
 export const SUPPORTED_LOCALES: Locale[] = ["en", "ar"];
 
+// Backwards-compat alias (older code imports LOCALES).
+// Keep as a direct alias so there's a single source of truth.
+export const LOCALES = SUPPORTED_LOCALES;
+
+
 /**
  * The locale used when we can't infer a valid locale from the URL.
  * IMPORTANT: Keep this aligned with the platform redirect logic (Cloudflare Pages middleware).
