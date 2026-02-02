@@ -11,16 +11,24 @@ export default function WhyChooseSection() {
   const title = isArabic ? "لماذا تختارني؟" : "Why choose me?";
   const items = [
     {
-      t: isArabic ? "SEO تقني صحيح" : "Clean technical SEO",
-      d: isArabic ? "Canonical، hreflang، Sitemap، وبنية صفحات واضحة للفهرسة." : "Canonical, hreflang, sitemap, and indexable structure.",
+      t: isArabic ? "•	إدارة المشروع بمراحل" : "•	Milestone-Based Project Management",
+      d: isArabic ? "أعتمد خطة عمل مقسّمة إلى مراحل (Milestones) بحيث يمكنك متابعة التقدم ومراجعة كل مرحلة لضمان تلبية جميع المتطلبات" : "I offer a milestone-based workflow, so you can review progress in stages and ensure your requirements are met at every step.",
     },
     {
-      t: isArabic ? "أداء وسرعة" : "Performance",
-      d: isArabic ? "LCP/CLS أفضل وتجربة مستخدم أسرع على الموبايل." : "Better Core Web Vitals and faster UX on mobile.",
+      t: isArabic ? "•	دعم ما بعد التسليم" : "•	Post-Delivery Support",
+      d: isArabic ? "أقدّم دعمًا وصيانة لمدة 30 يومًا بعد تسليم المشروع، لمعالجة أي مشاكل أو تعديلات بسيطة عند الحاجة." : "I provide 30 days of maintenance and support after the project is delivered, helping fix any issues or make minor adjustments if needed.",
     },
     {
-      t: isArabic ? "محتوى قوي" : "Strong content",
-      d: isArabic ? "تركيز على كلمات بحث قصيرة وقابلة للتحويل." : "Short, intent-based keywords that convert.",
+      t: isArabic ? "•	كود نظيف ومُوثّق" : "•	Clean and Well-Documented Code",
+      d: isArabic ? "سيكون كود المشروع مكتوبًا بشكل نظيف ومنظم مع تعليقات توضيحية لتسهيل الصيانة أو التحديثات المستقبلية." : "Your project’s source code will be clean, well-structured, and commented for easier future maintenance or updates.",
+    },
+      {
+      t: isArabic ? "•	تسليم ملفات التصميم" : "•	Design Deliverables",
+      d: isArabic ? "سَيتم تسليم ملفات التصميم الأصلية (مثل Figma) عند إكمال المشروع." : "If the project involves design work, I will share the original Figma design files or prototypes upon completion.",
+    },
+      {
+      t: isArabic ? "•	تواصل واضح وفعّال" : "•	Clear and Effective Communication",
+      d: isArabic ? "أنا مُتقن اللغة الإنجليزية والعربية، مما يضمن تواصلًا واضحًا وسلسًا. يمكننا مناقشة تفاصيل مشروعك باللغة التي تشعر بالراحة بها." : "I am fluent in English and Arabic, ensuring smooth communication and understanding. We can discuss your project details in the language you’re most comfortable with.",
     },
   ];
 
