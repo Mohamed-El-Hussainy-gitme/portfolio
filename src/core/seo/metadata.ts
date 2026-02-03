@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/core/i18n/locale";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from "@/core/i18n/locale";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -11,7 +11,7 @@ import {
 
 // Accept metadata configuration for a page. When working with localized
 // metadata we allow consumers to provide either simple strings or per-locale
-// records. The `path` property identifies the locale‑less portion of the
+// records. The `path` property identifies the locale-less portion of the
 // route (e.g. "/", "/about", "/services/my-service"). It is optional and
 // defaults to the root path when omitted. To support richer SERP display we
 // also expose a `keywords` property; callers may supply either a flat array
@@ -22,7 +22,7 @@ export type MetadataInput = {
   title: LocalizedText;
   description?: LocalizedText;
   /**
-   * Locale‑less path, like "/", "/about", "/services/landing-page". When
+   * Locale-less path, like "/", "/about", "/services/landing-page". When
    * undefined the path defaults to "/".
    */
   path?: string;
@@ -42,12 +42,7 @@ function resolveText(input: LocalizedText | undefined, locale: Locale): string {
   if (typeof input === "string") return input;
 
   // Prefer exact locale, then default locale, then any available value.
-  return (
-    input[locale] ??
-    input[DEFAULT_LOCALE] ??
-    Object.values(input).find(Boolean) ??
-    ""
-  );
+  return input[locale] ?? input[DEFAULT_LOCALE] ?? Object.values(input).find(Boolean) ?? "";
 }
 
 function resolveKeywords(input: MetadataInput["keywords"], locale: Locale): string[] {
@@ -79,7 +74,7 @@ export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
   const canonical = buildLangUrl(locale, path);
 
   const languages: Record<string, string> = {};
-  for (const l of LOCALES) {
+  for (const l of SUPPORTED_LOCALES) {
     languages[l] = buildLangUrl(l, path);
   }
   languages["x-default"] = buildLangUrl(DEFAULT_LOCALE, path);
@@ -99,9 +94,7 @@ export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
       canonical,
       languages,
     },
-    robots: input.noIndex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: input.noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
       type: "website",
       url: canonical,
@@ -121,11 +114,13 @@ export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
       icon: FAVICON_PATH,
     },
   };
+
   // Only add keywords when provided.
   if (keywords.length > 0) {
     // Next.js metadata supports keywords as string[]; convert any readonly
     // tuples/arrays to a mutable array.
     metadata.keywords = keywords;
   }
+
   return metadata;
 }

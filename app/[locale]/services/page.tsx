@@ -1,3 +1,8 @@
+import { LOCALES } from "@/core/i18n/locale";
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
 import type { Metadata } from "next";
 import ServicesPage from "@/views/ServicesPage";
 import { buildMetadata } from "@/core/seo/metadata";

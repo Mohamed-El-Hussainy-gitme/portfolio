@@ -4,71 +4,59 @@ import { notFound } from "next/navigation";
 import BlogPostPage from "@/views/BlogPostPage";
 import { blogPosts } from "@/data/blog";
 import { buildMetadata } from "@/core/seo/metadata";
-import { PAGE_KEYWORDS } from "@/core/seo/keywords";
-import { blogPostingSchema, breadcrumbList } from "@/core/seo/schema";
+import { DEFAULT_LOCALE, isLocale, SUPPORTED_LOCALES, type Locale } from "@/core/i18n/locale";
 
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return ["en", "ar"].flatMap((locale) => blogPosts.map((p) => ({ locale, slug: p.slug })));
+export function generateStaticParams(): Array<{ locale: string; slug: string }> {
+  const params: Array<{ locale: string; slug: string }> = [];
+
+  for (const locale of SUPPORTED_LOCALES) {
+    for (const post of blogPosts) {
+      params.push({ locale, slug: post.slug });
+    }
+  }
+
+  return params;
 }
 
-type Props = { params: Promise<{ locale: "en" | "ar"; slug: string }> };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
 
-function dedupe(list: string[]): string[] {
-  return Array.from(new Set(list.filter(Boolean)));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale: raw, slug } = await params;
-  const locale = raw === "ar" ? "ar" : "en";
+  const safeLocale: Locale = isLocale(locale) ? locale : DEFAULT_LOCALE;
 
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
-    return buildMetadata(locale, {
-      path: "/blog",
-      title: { en: "Post Not Found", ar: "المقال غير موجود" },
-      description: { en: "This post does not exist.", ar: "هذا المقال غير موجود." },
-      keywords: PAGE_KEYWORDS.blog,
+    // امنع الأرشفة في حالة slug غلط بدل ما تعمل صفحة تتفهرس
+    return buildMetadata(safeLocale, {
+      title: "Blog",
+      noIndex: true,
+      path: `/blog/${slug}`,
     });
   }
 
-  const focus = (post.focusKeyword?.[locale] || "").trim();
-  const keywords = {
-    en: dedupe([focus, ...post.tags, ...PAGE_KEYWORDS.blog.en]),
-    ar: dedupe([focus, ...post.tags, ...PAGE_KEYWORDS.blog.ar]),
-  };
-
-  // ✅ BlogPost has title + description (no seoTitle/seoDescription)
-  return buildMetadata(locale, {
-    path: `/blog/${post.slug}`,
-    title: { en: post.title.en, ar: post.title.ar },
-    description: { en: post.description.en, ar: post.description.ar },
-    keywords,
+  return buildMetadata(safeLocale, {
+    title: post.title,
+    description: post.description, // ✅ مفيش excerpt في BlogPost عندك
+    path: `/blog/${slug}`,
   });
 }
 
-export default async function Page({ params }: Props) {
-  const { locale: raw, slug } = await params;
-  const locale = raw === "ar" ? "ar" : "en";
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { slug } = await params;
 
-  const post = blogPosts.find((p) => p.slug === slug);
-  if (!post) return notFound();
+  const exists = blogPosts.some((p) => p.slug === slug);
+  if (!exists) notFound();
 
-  const jsonLd = [
-    blogPostingSchema(locale, post),
-    breadcrumbList(locale, [
-      { name: locale === "ar" ? "الرئيسية" : "Home", path: "/" },
-      { name: locale === "ar" ? "المدونة" : "Blog", path: "/blog" },
-      { name: post.title[locale], path: `/blog/${post.slug}` },
-    ]),
-  ];
-
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <BlogPostPage />
-    </>
-  );
+  // ✅ BlogPostPage بياخد prop اسمها slug مش initialSlug
+  return <BlogPostPage slug={slug} />;
 }

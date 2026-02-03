@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { LOCALES } from "@/core/i18n/locale";
+
 
 import ServiceDetailPage from "@/views/ServiceDetailPage";
 import { services } from "@/data/services";

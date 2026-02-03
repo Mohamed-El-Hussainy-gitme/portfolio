@@ -1,28 +1,25 @@
 import type { ReactNode } from "react";
-import { LOCALES, DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "@/core/i18n/locale";
+import { notFound } from "next/navigation";
 
-export const dynamic = "force-static";
+import LocaleProviders from "./providers";
+import { SUPPORTED_LOCALES, isLocale, type Locale } from "@/core/i18n/locale";
 
-export function generateStaticParams() {
-  return LOCALES.map((locale) => ({ locale }));
+export const dynamicParams = false;
+
+export function generateStaticParams(): Array<{ locale: string }> {
+  return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
-type Props = {
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
   children: ReactNode;
-  // Next.js 15 types this as a Promise
   params: Promise<{ locale: string }>;
-};
+}) {
+  const { locale } = await params;
 
-export default async function LocaleLayout({ children, params }: Props) {
-  const { locale: raw } = await params;
-  const locale: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
-  const dir = localeToDir(locale);
+  if (!isLocale(locale)) notFound();
 
-  // Root <html> stays in app/layout.tsx.
-  // We still add correct lang/dir for content + accessibility.
-  return (
-    <div lang={locale} dir={dir} className="min-h-screen">
-      {children}
-    </div>
-  );
+  return <LocaleProviders locale={locale as Locale}>{children}</LocaleProviders>;
 }

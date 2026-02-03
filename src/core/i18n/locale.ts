@@ -1,47 +1,20 @@
-export type Locale = "en" | "ar";
+export const SUPPORTED_LOCALES = ["en", "ar"] as const;
 
-export const SUPPORTED_LOCALES: Locale[] = ["en", "ar"];
-
-// Backwards-compat alias (older code imports LOCALES).
-// Keep as a direct alias so there's a single source of truth.
 export const LOCALES = SUPPORTED_LOCALES;
 
+export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
-/**
- * The locale used when we can't infer a valid locale from the URL.
- * IMPORTANT: Keep this aligned with the platform redirect logic (Cloudflare Pages middleware).
- */
 export const DEFAULT_LOCALE: Locale = "en";
 
-export const LOCALE_COOKIE_NAME = "LANG";
+export const DIR_BY_LOCALE: Record<Locale, "ltr" | "rtl"> = {
+  en: "ltr",
+  ar: "rtl",
+};
 
 export function isLocale(value: string): value is Locale {
-  return SUPPORTED_LOCALES.includes(value as Locale);
-}
-
-export function getLocaleFromPathname(pathname: string): Locale | null {
-  const seg = pathname.split("/").filter(Boolean)[0] ?? "";
-  return isLocale(seg) ? seg : null;
-}
-
-export function stripLocaleFromPathname(pathname: string): string {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts.length === 0) return "/";
-  if (isLocale(parts[0]!)) parts.shift();
-  return "/" + parts.join("/");
+  return (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
 export function localeToDir(locale: Locale): "ltr" | "rtl" {
-  return locale === "ar" ? "rtl" : "ltr";
-}
-
-/**
- * Normalize a pathname to a single canonical shape:
- * - collapse duplicate slashes
- * - remove trailing slash for non-root
- */
-export function normalizePathname(pathname: string): string {
-  let out = pathname.replace(/\/{2,}/g, "/");
-  if (out.length > 1) out = out.replace(/\/+$/, "");
-  return out;
+  return DIR_BY_LOCALE[locale];
 }

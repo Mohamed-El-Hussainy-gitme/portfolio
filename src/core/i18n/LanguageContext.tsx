@@ -3,86 +3,117 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-export type Language = "en" | "ar";
-export type Direction = "ltr" | "rtl";
+import { DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "./locale";
+import { withLocale } from "./links";
 
-type LanguageContextValue = {
-  language: Language;
+export type Direction = "ltr" | "rtl";
+export type Language = Locale;
+
+type LangPathInfo = {
+  locale: Locale;
+  restPath: string;
+};
+
+export type LanguageContextValue = {
+  language: Locale;
   direction: Direction;
+
+  setLanguage: (next: Locale) => void;
   toggleLanguage: () => void;
-  setLanguage: (lang: Language) => void;
+
   href: (path: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-function isSupportedLocale(v: string): v is Language {
-  return v === "en" || v === "ar";
+function parsePathname(pathname: string | null): LangPathInfo {
+  const path = pathname ?? "/";
+  const parts = path.split("/").filter(Boolean);
+
+  const maybeLocale = parts[0];
+  if (maybeLocale && isLocale(maybeLocale)) {
+    const rest = "/" + parts.slice(1).join("/");
+    return { locale: maybeLocale, restPath: rest === "/" ? "/" : rest };
+  }
+
+  return { locale: DEFAULT_LOCALE, restPath: path.startsWith("/") ? path : `/${path}` };
 }
 
-function getLocaleFromPath(pathname: string): Language | null {
-  const first = pathname.split("/").filter(Boolean)[0];
-  return first && isSupportedLocale(first) ? first : null;
+function normalizePath(input: string): string {
+  if (!input) return "/";
+  if (input.startsWith("http://") || input.startsWith("https://")) return input;
+  if (input.startsWith("#") || input.startsWith("mailto:") || input.startsWith("tel:")) return input;
+  return input.startsWith("/") ? input : `/${input}`;
 }
 
-function stripLocalePrefix(pathname: string): string {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts.length === 0) return "/";
-  if (isSupportedLocale(parts[0])) parts.shift();
-  return `/${parts.join("/")}` || "/";
+function stripLocalePrefix(path: string): string {
+  const parts = path.split("/").filter(Boolean);
+  const maybeLocale = parts[0];
+  if (maybeLocale && isLocale(maybeLocale)) {
+    const rest = "/" + parts.slice(1).join("/");
+    return rest === "/" ? "/" : rest;
+  }
+  return path;
 }
 
-function withLocale(pathname: string, locale: Language): string {
-  const clean = stripLocalePrefix(pathname);
-  return clean === "/" ? `/${locale}` : `/${locale}${clean}`;
-}
-
-function isExternalUrl(value: string): boolean {
-  return /^https?:\/\//i.test(value) || /^mailto:/i.test(value) || /^tel:/i.test(value);
-}
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname() || "/";
+export function LanguageProvider({
+  children,
+  initialLanguage,
+}: {
+  children: React.ReactNode;
+  initialLanguage?: Locale;
+}) {
   const router = useRouter();
+  const pathname = usePathname();
 
-  const [language, setLanguageState] = useState<Language>(() => getLocaleFromPath(pathname) || "ar");
+  const initial = useMemo(() => {
+    if (initialLanguage) return initialLanguage;
+    return parsePathname(pathname).locale;
+  }, [initialLanguage, pathname]);
+
+  const [language, setLanguageState] = useState<Locale>(initial);
 
   useEffect(() => {
-    const fromPath = getLocaleFromPath(pathname);
-    if (fromPath && fromPath !== language) setLanguageState(fromPath);
-  }, [pathname, language]);
+    const parsed = parsePathname(pathname);
+    if (parsed.locale !== language) setLanguageState(parsed.locale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
-  const direction: Direction = language === "ar" ? "rtl" : "ltr";
+  const direction = useMemo(() => localeToDir(language), [language]);
 
-  const href = useMemo(() => {
-    return (to: string) => {
-      if (!to) return withLocale(pathname, language);
-      if (isExternalUrl(to)) return to;
-
-      if (to.startsWith("#")) return withLocale(pathname, language) + to;
-
-      const base = to.startsWith("/") ? to : `/${to}`;
-      return withLocale(base, language);
-    };
-  }, [language, pathname]);
-
-  const setLanguage = (lang: Language) => setLanguageState(lang);
-
-  const toggleLanguage = () => {
-    const next = language === "ar" ? "en" : "ar";
+  const setLanguage = (next: Locale) => {
     setLanguageState(next);
 
-    if (typeof window === "undefined") return;
-    const u = new URL(window.location.href);
+    const path = normalizePath(pathname ?? "/");
+    if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("#")) return;
 
-    u.pathname = withLocale(u.pathname, next);
-    u.searchParams.delete("lang");
-    router.push(u.pathname + u.search + u.hash);
+    const rest = stripLocalePrefix(path);
+    const target = rest === "/" ? `/${next}` : `/${next}${rest}`;
+    router.push(target);
+  };
+
+  const toggleLanguage = () => setLanguage(language === "en" ? "ar" : "en");
+
+  const href = (path: string) => {
+    const normalized = normalizePath(path);
+
+    if (
+      normalized.startsWith("http://") ||
+      normalized.startsWith("https://") ||
+      normalized.startsWith("#") ||
+      normalized.startsWith("mailto:") ||
+      normalized.startsWith("tel:")
+    ) {
+      return normalized;
+    }
+
+    const rest = stripLocalePrefix(normalized);
+    return withLocale(language, rest);
   };
 
   const value = useMemo<LanguageContextValue>(
-    () => ({ language, direction, toggleLanguage, setLanguage, href }),
-    [language, direction, href]
+    () => ({ language, direction, setLanguage, toggleLanguage, href }),
+    [language, direction],
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

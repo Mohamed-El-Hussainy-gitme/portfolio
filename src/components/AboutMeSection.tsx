@@ -10,7 +10,7 @@ export default function AboutMeSection() {
   const isArabic = language === "ar";
   const pathname = usePathname() || "";
 
-  const isOnAboutPage = pathname === `/${language}/about` || pathname === "/about";
+const isOnAboutPage = pathname === `/${language}/about` || pathname === "/about";
 
   const focusKeyword = isArabic ? "إنشاء موقع" : "website development";
 
