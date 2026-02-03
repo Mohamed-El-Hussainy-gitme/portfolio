@@ -10,7 +10,8 @@ export default function AboutMeSection() {
   const isArabic = language === "ar";
   const pathname = usePathname() || "";
 
-const isOnAboutPage = pathname === `/${language}/about` || pathname === "/about";
+  // بعد توحيد الروابط، المسار الصحيح دائمًا يكون /{locale}/about
+  const isOnAboutPage = pathname === `/${language}/about`;
 
   const focusKeyword = isArabic ? "إنشاء موقع" : "website development";
 

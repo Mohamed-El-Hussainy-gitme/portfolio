@@ -3,6 +3,7 @@ import { SITE_ORIGIN } from "@/core/seo/siteMeta";
 
 // Required for output: "export"
 export const dynamic = "force-static";
+export const revalidate = 0;
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -13,6 +14,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${SITE_ORIGIN}/sitemap.xml`,
-    host: SITE_ORIGIN,
   };
 }

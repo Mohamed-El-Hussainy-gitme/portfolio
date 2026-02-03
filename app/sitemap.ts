@@ -7,15 +7,17 @@ import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
 import { services } from "@/data/services";
 
+// Required for output: "export"
 export const dynamic = "force-static";
+export const revalidate = 0;
 
 const STATIC_PATHS = ["/", "/about", "/projects", "/services", "/blog", "/contact"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  const lastModified = new Date().toISOString();
   const entries: MetadataRoute.Sitemap = [];
 
-  // IMPORTANT: no root without locale. Only canonical locale URLs.
+  // لا نضيف أي رابط بدون locale (منع دوبلكيت)
   for (const locale of SUPPORTED_LOCALES) {
     const l = locale as Locale;
 
