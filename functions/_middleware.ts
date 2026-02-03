@@ -18,9 +18,14 @@ const PASSTHROUGH_PATHS = new Set([
 ]);
 
 function isAssetPath(pathname: string): boolean {
-  // any file with extension -> treat as asset (e.g. .png, .css, .js, .xml, .txt)
+  // Treat typical static assets as pass-through, BUT NOT ".html"
   const last = pathname.split("/").pop() || "";
-  return last.includes(".") && !last.startsWith("."); // ignore "/.well-known" patterns
+  if (!last.includes(".") || last.startsWith(".")) return false;
+
+  // we will redirect .html to clean URLs
+  if (last.toLowerCase().endsWith(".html")) return false;
+
+  return true;
 }
 
 function stripTrailingSlash(pathname: string): string {
@@ -29,11 +34,9 @@ function stripTrailingSlash(pathname: string): string {
 }
 
 function normalizePathname(pathname: string): string {
-  // collapse multiple slashes, ensure leading slash
   let p = pathname || "/";
   if (!p.startsWith("/")) p = `/${p}`;
   p = p.replace(/\/{2,}/g, "/");
-  // remove trailing slash except root
   p = stripTrailingSlash(p);
   return p;
 }
@@ -55,9 +58,6 @@ function stripLocalePrefix(pathname: string): string {
 }
 
 function stripIndexHtml(pathname: string): string | null {
-  // "/en/index.html" -> "/en"
-  // "/en/projects/index.html" -> "/en/projects"
-  // "/index.html" -> "/"
   if (pathname === "/index.html") return "/";
   if (pathname.endsWith("/index.html")) {
     const base = pathname.slice(0, -"/index.html".length);
@@ -66,15 +66,26 @@ function stripIndexHtml(pathname: string): string | null {
   return null;
 }
 
+function stripHtmlExtension(pathname: string): string | null {
+  if (!pathname.toLowerCase().endsWith(".html")) return null;
+
+  // keep Google verification files intact
+  if (/^\/google[a-z0-9]+\.html$/i.test(pathname)) return null;
+
+  // keep 404.html as-is
+  if (pathname === "/404.html") return null;
+
+  const base = pathname.slice(0, -".html".length);
+  return base === "" ? "/" : base;
+}
+
 function buildRedirectResponse(url: URL, targetPathname: string): Response {
   const target = new URL(url.toString());
   target.pathname = targetPathname;
-  // preserve query string
   return new Response(null, {
     status: 301,
     headers: {
       Location: target.toString(),
-      // good practice: avoid caching wrong redirects during tests
       "Cache-Control": "public, max-age=300",
     },
   });
@@ -87,15 +98,18 @@ export async function onRequest(context: PagesContext) {
   const originalPath = url.pathname;
   const pathname = normalizePathname(originalPath);
 
-  // 0) Prevent duplicate URLs: "/.../index.html"
-  // Cloudflare Pages can serve both "/en" and "/en/index.html".
-  // We redirect index.html to the canonical path.
+  // 0) Redirect ".../index.html" -> canonical path
   const withoutIndex = stripIndexHtml(pathname);
   if (withoutIndex !== null) {
-    if (withoutIndex === "/") {
-      return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
-    }
+    if (withoutIndex === "/") return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
     return buildRedirectResponse(url, withoutIndex);
+  }
+
+  // 0.5) Redirect any ".html" -> clean URL (prevents duplicates)
+  const withoutHtml = stripHtmlExtension(pathname);
+  if (withoutHtml !== null) {
+    if (withoutHtml === "/") return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
+    return buildRedirectResponse(url, withoutHtml);
   }
 
   // Pass-through: known system files
@@ -103,9 +117,8 @@ export async function onRequest(context: PagesContext) {
     return context.next();
   }
 
-  // Pass-through: assets and _next (safety)
+  // Pass-through: assets and _next
   if (pathname.startsWith("/_next") || isAssetPath(pathname) || pathname.startsWith("/images")) {
-    // also normalize asset trailing slash (rare)
     if (originalPath !== pathname) return buildRedirectResponse(url, pathname);
     return context.next();
   }
@@ -115,20 +128,19 @@ export async function onRequest(context: PagesContext) {
     return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
   }
 
-  // 2) Canonicalize trailing slashes, multiple slashes, ...
+  // 2) Canonicalize slashes
   if (originalPath !== pathname) {
     return buildRedirectResponse(url, pathname);
   }
 
   const first = getFirstSegment(pathname);
 
-  // 3) Missing locale prefix -> redirect to default locale + same path
+  // 3) Missing locale -> redirect to default locale
   if (!LOCALES.has(first)) {
-    const base = stripLocalePrefix(pathname); // usually same as pathname here
+    const base = stripLocalePrefix(pathname);
     const target = base === "/" ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${base}`;
     return buildRedirectResponse(url, target);
   }
 
-  // 4) Locale-prefixed route: already normalized.
   return context.next();
 }
