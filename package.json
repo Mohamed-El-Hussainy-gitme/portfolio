@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node ./node_modules/next/dist/bin/next dev",
-    "build": "node scripts/clean-out.mjs && node ./node_modules/next/dist/bin/next build",
+    "build": "node scripts/clean-out.mjs && next build && node scripts/generate-seo-files.mjs",
     "start": "node ./node_modules/next/dist/bin/next start",
     "preview": "npm run build && wrangler pages dev out",
     "deploy": "npm run build && wrangler pages deploy out"
