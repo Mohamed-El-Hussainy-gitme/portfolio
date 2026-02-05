@@ -6,4 +6,4 @@ Allowed:
 
 Contact:
 - Use the contact page for permissions/questions:
-  https://elhussainy.pages.dev/en/contact
+  https://elhussainy.pages.dev/contact

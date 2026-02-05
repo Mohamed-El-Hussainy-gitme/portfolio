@@ -2,11 +2,11 @@
 
 This site is a bilingual (English/Arabic) portfolio for a web developer.
 Primary sections:
-- Home: /en , /ar
-- Projects: /en/projects , /ar/projects
-- Services: /en/services , /ar/services
-- Blog: /en/blog , /ar/blog
-- Contact: /en/contact , /ar/contact
+- Home: / , /ar
+- Projects: /projects , /ar/projects
+- Services: /services , /ar/services
+- Blog: /blog , /ar/blog
+- Contact: /contact , /ar/contact
 
 Sitemap:
 - https://elhussainy.pages.dev/sitemap.xml

@@ -5,7 +5,6 @@ export type SiteLocale = Locale;
 const RAW_ORIGIN = process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "https://elhussainy.pages.dev";
 export const SITE_ORIGIN = RAW_ORIGIN.replace(/\/+$/, "");
 
-// ...
 export function getSiteOrigin(): string {
   return SITE_ORIGIN;
 }
@@ -21,25 +20,37 @@ export const FAVICON_PATH = "/favicon.svg";
 function normalizePath(path: string): string {
   if (!path) return "/";
   let p = path.startsWith("/") ? path : `/${path}`;
-  // collapse multiple slashes
   p = p.replace(/\/{2,}/g, "/");
-  // remove trailing slash except root "/"
   if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
   return p;
 }
 
 function stripTrailingSlash(url: string): string {
-  // keep "https://domain.com" but remove ending "/" for paths
   return url.replace(/\/+$/, "");
 }
 
-// 2) Build locale URL without trailing slash (even for "/")
+/**
+ * Canonical URL builder (FINAL RULESET):
+ * - EN is default and lives on root (no /en prefix)
+ *   "/"      -> https://domain
+ *   "/about" -> https://domain/about
+ *
+ * - AR lives under /ar
+ *   "/"      -> https://domain/ar
+ *   "/about" -> https://domain/ar/about
+ *
+ * Always returns NO trailing slash.
+ */
 export function buildLangUrl(locale: Locale, path: string = "/"): string {
   const p = normalizePath(path);
 
-  // Home: "/en" not "/en/"
-  const raw = p === "/" ? `${SITE_ORIGIN}/${locale}` : `${SITE_ORIGIN}/${locale}${p}`;
+  const prefix = locale === "ar" ? "/ar" : ""; // EN root, AR prefixed
 
-  // Safety: ensure no trailing slash at end
+  // Home path:
+  // - EN: origin
+  // - AR: origin/ar
+  const raw =
+    p === "/" ? `${SITE_ORIGIN}${prefix}` : `${SITE_ORIGIN}${prefix}${p}`;
+
   return stripTrailingSlash(raw);
 }

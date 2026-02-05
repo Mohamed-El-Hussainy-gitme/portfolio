@@ -1,16 +1,23 @@
 import type { Locale } from "./locale";
 
 /**
- * Returns a locale-prefixed, root-relative path.
- * Examples:
- * - withLocale("en", "/") -> "/en"
- * - withLocale("ar", "/contact") -> "/ar/contact"
- * - withLocale("en", "projects") -> "/en/projects"
+ * Returns a canonical, root-relative path according to FINAL RULESET:
+ * - EN is default (no /en prefix)
+ *   withLocale("en", "/")        -> "/"
+ *   withLocale("en", "/about")   -> "/about"
+ *
+ * - AR lives under /ar
+ *   withLocale("ar", "/")        -> "/ar"
+ *   withLocale("ar", "/about")   -> "/ar/about"
  */
 export function withLocale(locale: Locale, path: string): string {
-  const trimmed = path.trim();
-  if (trimmed === "" || trimmed === "/") return `/${locale}`;
+  const trimmed = (path ?? "").trim();
+  const normalized = trimmed === "" ? "/" : trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 
-  const normalized = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
-  return `/${locale}${normalized}`;
+  if (locale === "en") {
+    return normalized === "/" ? "/" : normalized;
+  }
+
+  // locale === "ar"
+  return normalized === "/" ? "/ar" : `/ar${normalized}`;
 }

@@ -2,27 +2,41 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const OUT_DIR = path.resolve(process.cwd(), "out");
-const ORIGIN =
-  (process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://elhussainy.pages.dev").replace(/\/+$/, "");
-
-// لو عندك لغات إضافية ضيفها هنا
-const LOCALES = new Set(["en", "ar"]);
-
-// ملفات لازم تتجاهلها من السايت ماب
-const IGNORE_HTML = new Set(["404.html"]);
-const IGNORE_PREFIXES = ["_next/", "assets/", "brand/", "skills/", "reviews/"];
+const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "https://elhussainy.pages.dev").replace(/\/+$/, "");
 
 function toPosix(p) {
   return p.split(path.sep).join("/");
 }
 
-function escapeXml(str) {
-  return str
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
+function normalizePath(p) {
+  if (!p.startsWith("/")) p = `/${p}`;
+  p = p.replace(/\/{2,}/g, "/");
+  if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+  return p;
+}
+
+function stripHtml(fileRel) {
+  if (fileRel.toLowerCase().endsWith(".html")) {
+    return fileRel.slice(0, -".html".length);
+  }
+  return fileRel;
+}
+
+function toCanonicalPath(fileRelPosix) {
+  const rel = fileRelPosix;
+
+  const baseName = rel.split("/").pop() || "";
+  if (/^google[a-z0-9]+\.html$/i.test(baseName)) return null;
+  if (baseName === "404.html") return null;
+
+  if (rel === "index.html") return "/";
+  if (rel.endsWith("/index.html")) {
+    const dir = rel.slice(0, -"/index.html".length);
+    return normalizePath(dir);
+  }
+
+  const noExt = stripHtml(rel);
+  return normalizePath(noExt);
 }
 
 async function walk(dir) {
@@ -30,96 +44,85 @@ async function walk(dir) {
   const files = [];
   for (const e of entries) {
     const full = path.join(dir, e.name);
-    if (e.isDirectory()) {
-      files.push(...(await walk(full)));
-    } else {
-      files.push(full);
-    }
+    if (e.isDirectory()) files.push(...(await walk(full)));
+    else files.push(full);
   }
   return files;
 }
 
-function isLocaleHtml(relPosix) {
-  // يقبل: en.html / ar.html / en/about.html / ar/blog/slug.html
-  const first = relPosix.split("/")[0] || "";
-  const maybeLocale = first.replace(/\.html$/i, "");
-  return LOCALES.has(maybeLocale) || LOCALES.has(first);
+function makeUrl(pathname) {
+  const p = pathname === "/" ? "" : pathname;
+  return `${SITE_ORIGIN}${p}`;
 }
 
-function htmlToCleanPath(relPosix) {
-  // en.html -> /en
-  // en/about.html -> /en/about
-  let p = "/" + relPosix.replace(/\.html$/i, "");
+function isoDate() {
+  return new Date().toISOString();
+}
 
-  // index.html -> /
-  if (p === "/index") p = "/";
-  if (p.endsWith("/index")) p = p.slice(0, -"/index".length) || "/";
+function makeSitemap(urls) {
+  const now = isoDate();
+  const body = urls
+    .map((u) => {
+      return `
+  <url>
+    <loc>${u}</loc>
+    <lastmod>${now}</lastmod>
+  </url>`.trim();
+    })
+    .join("\n");
 
-  return p;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>
+`;
+}
+
+function makeRobots() {
+  return `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_ORIGIN}/sitemap.xml
+`;
 }
 
 async function main() {
-  // 1) اجمع كل ملفات html من out
-  const all = await walk(OUT_DIR);
-  const htmlFiles = all.filter((f) => f.toLowerCase().endsWith(".html"));
+  const htmlFiles = (await walk(OUT_DIR)).filter((f) => f.toLowerCase().endsWith(".html"));
 
-  const urls = new Set();
+  const paths = new Set();
 
-  for (const file of htmlFiles) {
-    const rel = toPosix(path.relative(OUT_DIR, file));
+  for (const f of htmlFiles) {
+    const rel = toPosix(path.relative(OUT_DIR, f));
 
-    // تجاهل مسارات داخلية/أصول
-    if (IGNORE_PREFIXES.some((p) => rel.startsWith(p))) continue;
+    // forbid legacy /en outputs
+    if (rel === "en.html" || rel.startsWith("en/")) continue;
 
-    // تجاهل صفحات معينة
-    if (IGNORE_HTML.has(rel)) continue;
+    const canonicalPath = toCanonicalPath(rel);
+    if (!canonicalPath) continue;
 
-    // تجاهل ملفات تحقق جوجل googlexxxx.html
-    if (/^google[a-z0-9]+\.html$/i.test(rel)) continue;
-
-    // نضيف فقط صفحات اللغات (en/ar)
-    if (!isLocaleHtml(rel)) continue;
-
-    const cleanPath = htmlToCleanPath(rel);
-
-    // لا نضيف "/" لأنه عندك ريديركت إلى /en (تجنب دوبلكيت)
-    if (cleanPath === "/") continue;
-
-    urls.add(`${ORIGIN}${cleanPath}`);
+    paths.add(canonicalPath);
   }
 
-  const sorted = [...urls].sort((a, b) => a.localeCompare(b));
+  // Ensure both homes exist
+  paths.add("/");
+  paths.add("/ar");
 
-  // 2) اكتب sitemap.xml
-  const lastmod = new Date().toISOString();
-  const xmlLines = [
-    `<?xml version="1.0" encoding="UTF-8"?>`,
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
-    ...sorted.map(
-      (u) => `  <url><loc>${escapeXml(u)}</loc><lastmod>${lastmod}</lastmod></url>`
-    ),
-    `</urlset>`,
-    ``,
-  ];
+  const sorted = Array.from(paths).sort((a, b) => {
+    if (a === "/") return -1;
+    if (b === "/") return 1;
+    return a.localeCompare(b);
+  });
 
-  await fs.writeFile(path.join(OUT_DIR, "sitemap.xml"), xmlLines.join("\n"), "utf8");
+  const urls = sorted.map(makeUrl);
 
-  // 3) اكتب robots.txt (بدون Host نهائيًا)
-  const robots = [
-    `User-agent: *`,
-    `Allow: /`,
-    ``,
-    `Sitemap: ${ORIGIN}/sitemap.xml`,
-    ``,
-  ].join("\n");
+  await fs.writeFile(path.join(OUT_DIR, "sitemap.xml"), makeSitemap(urls), "utf8");
+  await fs.writeFile(path.join(OUT_DIR, "robots.txt"), makeRobots(), "utf8");
 
-  await fs.writeFile(path.join(OUT_DIR, "robots.txt"), robots, "utf8");
-
-  console.log(`[seo] wrote: out/sitemap.xml (${sorted.length} urls)`);
-  console.log(`[seo] wrote: out/robots.txt`);
+  console.log(`[seo] sitemap: ${urls.length} urls`);
+  console.log("[seo] wrote out/sitemap.xml and out/robots.txt");
 }
 
-main().catch((err) => {
-  console.error("[seo] failed:", err);
+main().catch((e) => {
+  console.error("[seo] failed:", e);
   process.exit(1);
 });
