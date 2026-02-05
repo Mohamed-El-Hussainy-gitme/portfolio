@@ -2,21 +2,15 @@
   "version": 1,
   "include": ["/*"],
   "exclude": [
+    "/_next/*",
+    "/images/*",
+    "/favicon.ico",
+    "/favicon.svg",
+    "/manifest.json",
     "/robots.txt",
     "/sitemap.xml",
-    "/favicon*",
-    "/_next/*",
-    "/assets/*",
-    "/images/*",
-    "/*.png",
-    "/*.jpg",
-    "/*.jpeg",
-    "/*.webp",
-    "/*.gif",
-    "/*.svg",
-    "/*.ico",
-    "/*.css",
-    "/*.js",
-    "/*.map"
+    "/llms.txt",
+    "/ai.txt",
+    "/google*.html"
   ]
 }

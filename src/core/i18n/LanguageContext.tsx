@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { DEFAULT_LOCALE, isLocale, localeToDir, type Locale } from "./locale";
+import { DEFAULT_LOCALE, localeToDir, type Locale } from "./locale";
 import { withLocale } from "./links";
 
 export type Direction = "ltr" | "rtl";
@@ -26,19 +26,6 @@ export type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-function parsePathname(pathname: string | null): LangPathInfo {
-  const path = pathname ?? "/";
-  const parts = path.split("/").filter(Boolean);
-
-  const maybeLocale = parts[0];
-  if (maybeLocale && isLocale(maybeLocale)) {
-    const rest = "/" + parts.slice(1).join("/");
-    return { locale: maybeLocale, restPath: rest === "/" ? "/" : rest };
-  }
-
-  return { locale: DEFAULT_LOCALE, restPath: path.startsWith("/") ? path : `/${path}` };
-}
-
 function normalizePath(input: string): string {
   if (!input) return "/";
   if (input.startsWith("http://") || input.startsWith("https://")) return input;
@@ -46,14 +33,38 @@ function normalizePath(input: string): string {
   return input.startsWith("/") ? input : `/${input}`;
 }
 
+/**
+ * FINAL ROUTE RULESET parser:
+ * - "/ar" or "/ar/..." => locale=ar, restPath = "/" or "/..."
+ * - otherwise => locale=en, restPath = pathname
+ *
+ * (Also strips legacy "/en" if it ever appears, for safety.)
+ */
+function parsePathname(pathname: string | null): LangPathInfo {
+  const path = normalizePath(pathname ?? "/");
+
+  // Match "/ar" or "/ar/..."
+  if (path === "/ar") return { locale: "ar", restPath: "/" };
+  if (path.startsWith("/ar/")) return { locale: "ar", restPath: path.slice(3) || "/" };
+
+  // Safety: legacy "/en" or "/en/..."
+  if (path === "/en") return { locale: "en", restPath: "/" };
+  if (path.startsWith("/en/")) return { locale: "en", restPath: path.slice(3) || "/" };
+
+  return { locale: DEFAULT_LOCALE, restPath: path };
+}
+
 function stripLocalePrefix(path: string): string {
-  const parts = path.split("/").filter(Boolean);
-  const maybeLocale = parts[0];
-  if (maybeLocale && isLocale(maybeLocale)) {
-    const rest = "/" + parts.slice(1).join("/");
-    return rest === "/" ? "/" : rest;
-  }
-  return path;
+  const p = normalizePath(path);
+
+  if (p === "/ar") return "/";
+  if (p.startsWith("/ar/")) return p.slice(3) || "/";
+
+  // Safety: legacy "/en"
+  if (p === "/en") return "/";
+  if (p.startsWith("/en/")) return p.slice(3) || "/";
+
+  return p;
 }
 
 export function LanguageProvider({
@@ -84,11 +95,11 @@ export function LanguageProvider({
   const setLanguage = (next: Locale) => {
     setLanguageState(next);
 
-    const path = normalizePath(pathname ?? "/");
-    if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("#")) return;
+    const current = normalizePath(pathname ?? "/");
+    if (current.startsWith("http://") || current.startsWith("https://") || current.startsWith("#")) return;
 
-    const rest = stripLocalePrefix(path);
-    const target = rest === "/" ? `/${next}` : `/${next}${rest}`;
+    const rest = stripLocalePrefix(current);
+    const target = withLocale(next, rest);
     router.push(target);
   };
 

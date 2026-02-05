@@ -4,9 +4,8 @@ type PagesContext = {
 };
 
 const DEFAULT_LOCALE = "en";
-const LOCALES = new Set(["en", "ar"]);
 
-// Paths that must never be locale-redirected
+// Paths that must never be redirected by locale logic
 const PASSTHROUGH_PATHS = new Set([
   "/robots.txt",
   "/sitemap.xml",
@@ -41,22 +40,6 @@ function normalizePathname(pathname: string): string {
   return p;
 }
 
-function getFirstSegment(pathname: string): string {
-  const seg = pathname.split("/").filter(Boolean)[0];
-  return seg || "";
-}
-
-function stripLocalePrefix(pathname: string): string {
-  const parts = pathname.split("/").filter(Boolean);
-  if (parts.length === 0) return "/";
-  const first = parts[0];
-  if (LOCALES.has(first)) {
-    const rest = parts.slice(1).join("/");
-    return rest ? `/${rest}` : "/";
-  }
-  return pathname;
-}
-
 function stripIndexHtml(pathname: string): string | null {
   if (pathname === "/index.html") return "/";
   if (pathname.endsWith("/index.html")) {
@@ -82,6 +65,7 @@ function stripHtmlExtension(pathname: string): string | null {
 function buildRedirectResponse(url: URL, targetPathname: string): Response {
   const target = new URL(url.toString());
   target.pathname = targetPathname;
+
   return new Response(null, {
     status: 301,
     headers: {
@@ -89,6 +73,18 @@ function buildRedirectResponse(url: URL, targetPathname: string): Response {
       "Cache-Control": "public, max-age=300",
     },
   });
+}
+
+function stripEnPrefix(pathname: string): string | null {
+  const enRoot = `/${DEFAULT_LOCALE}`; // "/en"
+  if (pathname === enRoot) return "/";
+
+  if (pathname.startsWith(enRoot + "/")) {
+    const rest = pathname.slice(enRoot.length); // "/about", "/projects/x", ...
+    return rest === "" ? "/" : rest;
+  }
+
+  return null;
 }
 
 export async function onRequest(context: PagesContext) {
@@ -101,14 +97,12 @@ export async function onRequest(context: PagesContext) {
   // 0) Redirect ".../index.html" -> canonical path
   const withoutIndex = stripIndexHtml(pathname);
   if (withoutIndex !== null) {
-    if (withoutIndex === "/") return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
     return buildRedirectResponse(url, withoutIndex);
   }
 
   // 0.5) Redirect any ".html" -> clean URL (prevents duplicates)
   const withoutHtml = stripHtmlExtension(pathname);
   if (withoutHtml !== null) {
-    if (withoutHtml === "/") return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
     return buildRedirectResponse(url, withoutHtml);
   }
 
@@ -123,24 +117,17 @@ export async function onRequest(context: PagesContext) {
     return context.next();
   }
 
-  // 1) Root "/" -> "/en"
-  if (pathname === "/") {
-    return buildRedirectResponse(url, `/${DEFAULT_LOCALE}`);
-  }
-
-  // 2) Canonicalize slashes
+  // 1) Canonicalize slashes
   if (originalPath !== pathname) {
     return buildRedirectResponse(url, pathname);
   }
 
-  const first = getFirstSegment(pathname);
-
-  // 3) Missing locale -> redirect to default locale
-  if (!LOCALES.has(first)) {
-    const base = stripLocalePrefix(pathname);
-    const target = base === "/" ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${base}`;
-    return buildRedirectResponse(url, target);
+  // 2) Legacy EN prefix -> root (301)
+  const noEn = stripEnPrefix(pathname);
+  if (noEn !== null) {
+    return buildRedirectResponse(url, noEn);
   }
 
+  // 3) No forcing locale anymore. EN is root. AR is /ar/*
   return context.next();
 }
