@@ -1,22 +1,26 @@
-/// <reference types="@cloudflare/workers-types" />
+type AssetFetcher = {
+  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+};
 
-type Env = { ASSETS: Fetcher };
-type Ctx = { request: Request; env: Env };
+type PagesContext = {
+  request: Request;
+  env: { ASSETS: AssetFetcher };
+};
 
-export async function onRequest(ctx: Ctx): Promise<Response> {
+export async function onRequest(ctx: PagesContext): Promise<Response> {
   const url = new URL(ctx.request.url);
 
-  // fetch the built static asset from Pages (out/sitemap.xml)
-  const assetRes = await ctx.env.ASSETS.fetch(url.toString());
+  // Request جديد بدون If-None-Match / If-Modified-Since => يمنع 304
+  const assetRes = await ctx.env.ASSETS.fetch(new Request(url.toString(), { method: "GET" }));
   const body = ctx.request.method === "HEAD" ? null : await assetRes.text();
 
   return new Response(body, {
-    status: assetRes.ok ? 200 : assetRes.status,
+    status: 200,
     headers: {
       "content-type": "application/xml; charset=utf-8",
-      // مهم لـ GSC: خليه يتجلب كل مرة ومايتحبس على 304 قديم
-      "cache-control": "public, max-age=0, must-revalidate",
-      "x-robots-tag": "all",
+      "cache-control": "no-store, max-age=0",
+      "x-seo-fn": "sitemap",
+      "x-robots-tag": "all"
     },
   });
 }
