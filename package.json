@@ -10,8 +10,10 @@
     "dev": "node ./node_modules/next/dist/bin/next dev",
     "build": "node scripts/clean-out.mjs && next build && node scripts/generate-seo-files.mjs && node scripts/strip-en-output.mjs",
     "start": "node ./node_modules/next/dist/bin/next start",
-    "preview": "npm run build && wrangler pages dev out",
-    "deploy": "npm run build && wrangler pages deploy out"
+    "preview": "npm run build && npm run verify:output && wrangler pages dev out",
+    "deploy": "npm run build && npm run verify:output && wrangler pages deploy out",
+    "verify:output": "node scripts/verify-output.mjs",
+    "smoke:deploy": "node scripts/smoke-deploy.mjs"
   },
   "dependencies": {
     "framer-motion": "12.23.25",

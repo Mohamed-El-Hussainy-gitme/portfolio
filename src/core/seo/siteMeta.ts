@@ -14,6 +14,8 @@ export const SITE_TAGLINE = "Web developer portfolio";
 export const SITE_DESCRIPTION =
   "Web developer portfolio — projects, services, and blog. Technical SEO, performance, and clean bilingual UX.";
 
+export const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim() || undefined;
+
 export const OG_IMAGE_PATH = "/og-cover.png";
 export const FAVICON_PATH = "/favicon.svg";
 

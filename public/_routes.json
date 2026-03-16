@@ -9,6 +9,8 @@
     "/manifest.json",
     "/llms.txt",
     "/ai.txt",
+    "/robots.txt",
+    "/sitemap.xml",
     "/google*.html"
   ]
 }
