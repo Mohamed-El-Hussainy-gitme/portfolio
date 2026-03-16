@@ -4,6 +4,7 @@ import path from "node:path";
 const ROOT = process.cwd();
 const PUBLIC_DIR = path.join(ROOT, "public");
 const DEFAULT_ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "https://elhussainy.pages.dev").replace(/\/+$/, "");
+const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 const origin = (process.argv[2] ?? DEFAULT_ORIGIN).replace(/\/+$/, "");
 
 function assert(condition, message) {
@@ -22,6 +23,14 @@ async function main() {
   const verificationFile = verificationFiles[0];
 
   const checks = [];
+
+  const home = await fetchManual(`${origin}/`);
+  assert(home.response.status === 200, `/ returned ${home.response.status}`);
+  if (GOOGLE_SITE_VERIFICATION) {
+    assert(home.body.includes('name="google-site-verification"'), "home page is missing the google-site-verification meta tag");
+    assert(home.body.includes(GOOGLE_SITE_VERIFICATION), "home page does not contain NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION");
+    checks.push("home page contains google-site-verification meta tag");
+  }
 
   const robots = await fetchManual(`${origin}/robots.txt`);
   assert(robots.response.status === 200, `robots.txt returned ${robots.response.status}`);

@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const OUT_DIR = path.join(ROOT, "out");
 const PUBLIC_DIR = path.join(ROOT, "public");
 const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "https://elhussainy.pages.dev").replace(/\/+$/, "");
+const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -17,9 +18,11 @@ async function readUtf8(filePath) {
 async function main() {
   const sitemapPath = path.join(OUT_DIR, "sitemap.xml");
   const robotsPath = path.join(OUT_DIR, "robots.txt");
+  const routesPath = path.join(PUBLIC_DIR, "_routes.json");
 
   const sitemap = await readUtf8(sitemapPath);
   const robots = await readUtf8(robotsPath);
+  const routes = JSON.parse(await readUtf8(routesPath));
 
   assert(sitemap.includes('<?xml version="1.0" encoding="UTF-8"?>'), "out/sitemap.xml is missing the XML declaration");
   assert(sitemap.includes("<urlset"), "out/sitemap.xml is missing <urlset>");
@@ -35,6 +38,13 @@ async function main() {
     const publicFile = await readUtf8(path.join(PUBLIC_DIR, fileName));
     const outFile = await readUtf8(path.join(OUT_DIR, fileName));
     assert(publicFile === outFile, `${fileName} differs between public/ and out/`);
+    assert(Array.isArray(routes.exclude) && routes.exclude.includes(`/${fileName}`), `_routes.json must exclude /${fileName} from Functions`);
+  }
+
+  if (GOOGLE_SITE_VERIFICATION) {
+    const homeHtml = await readUtf8(path.join(OUT_DIR, "index.html"));
+    assert(homeHtml.includes('name="google-site-verification"'), "out/index.html is missing the google-site-verification meta tag");
+    assert(homeHtml.includes(GOOGLE_SITE_VERIFICATION), "out/index.html does not contain NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION");
   }
 
   console.log("[verify-output] OK");

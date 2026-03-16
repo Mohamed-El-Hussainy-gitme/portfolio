@@ -14,6 +14,7 @@ const PASSTHROUGH_PATHS = new Set([
   "/manifest.json",
   "/llms.txt",
   "/ai.txt",
+  "/googlebfee5bd7eb86337c.html",
 ]);
 
 function isAssetPath(pathname: string): boolean {
@@ -52,7 +53,7 @@ function stripIndexHtml(pathname: string): string | null {
 function stripHtmlExtension(pathname: string): string | null {
   if (!pathname.toLowerCase().endsWith(".html")) return null;
 
-  // keep Google verification files intact
+  // keep Google verification files intact as an extra safety net
   if (/^\/google[a-z0-9]+\.html$/i.test(pathname)) return null;
 
   // keep 404.html as-is

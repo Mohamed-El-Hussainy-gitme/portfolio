@@ -96,3 +96,16 @@ Smoke checks:
 - If Google gives you a new HTML verification file, replace the old one in `public/` with the new exact file name and body.
 - If you prefer the meta-tag path, set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` and redeploy.
 - Keep `NEXT_PUBLIC_SITE_ORIGIN` aligned with the real production host before every deploy.
+
+
+## Search Console verification (required deployment checklist)
+
+Use a **URL-prefix property** for `https://elhussainy.pages.dev/` when verifying this Pages hostname. Google's HTML file and HTML meta-tag methods work for URL-prefix properties, while Domain properties require DNS verification instead.
+
+1. Keep the HTML verification file in `public/` exactly as provided by Google.
+2. Set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` in Cloudflare Pages **build environment variables** if you also want the meta-tag fallback.
+3. Trigger a fresh deploy after changing either the verification file or the environment variable.
+4. Run `npm run smoke:deploy https://elhussainy.pages.dev` after deployment.
+5. Verify in Search Console only after the smoke test passes.
+
+The project now enforces these conditions during `npm run verify:output` and checks the live site during `npm run smoke:deploy`.
