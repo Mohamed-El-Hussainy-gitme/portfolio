@@ -971,12 +971,12 @@ export const projects: ProjectDefinition[] = [
   },
 
   /**
-   * 08 – Rose E-commerce
+   * 08 – NODA E-commerce
    */
   {
-    id: "E-ecommerce",
+    id: "NODA-ecommerce",
     universe: 8,
-    slug: "E-ecommerce-website-development",
+    slug: "NODA-ecommerce-website-development",
     focusKeyword: { en: "e-commerce website", ar: "متجر إلكتروني" },
     seoTitle: { en: "E-commerce Website: NODA Store Case Study", ar: "متجر إلكتروني: دراسة حالة مشروع NODA" },
     seoDescription: {
