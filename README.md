@@ -109,3 +109,37 @@ Use a **URL-prefix property** for `https://elhussainy.pages.dev/` when verifying
 5. Verify in Search Console only after the smoke test passes.
 
 The project now enforces these conditions during `npm run verify:output` and checks the live site during `npm run smoke:deploy`.
+
+
+## Production domain
+
+The current production URL is:
+
+- `https://elhussainy.pages.dev/`
+
+Set this in Cloudflare Pages as an environment variable for both Preview and Production:
+
+- `NEXT_PUBLIC_SITE_ORIGIN=https://elhussainy.pages.dev`
+
+## Google Search Console
+
+This project generates these SEO files during `npm run build`:
+
+- `out/sitemap.xml`
+- `out/robots.txt`
+
+### Verification via meta tag
+
+Add the URL-prefix property `https://elhussainy.pages.dev/` in Google Search Console, then set this Cloudflare Pages environment variable and redeploy:
+
+- `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=your_google_token_here`
+
+### Verification via HTML file
+
+If Google gives you an HTML verification file, place it inside `public/` and redeploy.
+
+### Submit sitemap
+
+Submit this URL in Google Search Console:
+
+- `https://elhussainy.pages.dev/sitemap.xml`

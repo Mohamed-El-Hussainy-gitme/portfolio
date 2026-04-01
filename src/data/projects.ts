@@ -974,9 +974,9 @@ export const projects: ProjectDefinition[] = [
    * 08 – NODA E-commerce
    */
   {
-    id: "NODA-ecommerce",
+    id: "E-ecommerce",
     universe: 8,
-    slug: "NODA-ecommerce-website-development",
+    slug: "noda-ecommerce-website-development",
     focusKeyword: { en: "e-commerce website", ar: "متجر إلكتروني" },
     seoTitle: { en: "E-commerce Website: NODA Store Case Study", ar: "متجر إلكتروني: دراسة حالة مشروع NODA" },
     seoDescription: {
@@ -1012,10 +1012,10 @@ export const projects: ProjectDefinition[] = [
       { id: "E-ecommerce-13", src: "/assets/E-ecommerce/13.JPEG", alt: "E-commerce website — NODA store UI 13" },
       { id: "E-ecommerce-14", src: "/assets/E-ecommerce/14.JPEG", alt: "E-commerce website — NODA store UI 14" },
       { id: "E-ecommerce-15", src: "/assets/E-ecommerce/15.JPEG", alt: "E-commerce website — NODA store UI 15" },
-        { id: "E-ecommerce-12", src: "/assets/E-ecommerce/16.png", alt: "E-commerce website — NODA store UI 12" },
-      { id: "E-ecommerce-13", src: "/assets/E-ecommerce/17.png", alt: "E-commerce website — NODA store UI 13" },
-      { id: "E-ecommerce-14", src: "/assets/E-ecommerce/18.png", alt: "E-commerce website — NODA store UI 14" },
-      { id: "E-ecommerce-15", src: "/assets/E-ecommerce/19.png", alt: "E-commerce website — NODA store UI 15" },
+        { id: "E-ecommerce-16", src: "/assets/E-ecommerce/16.png", alt: "E-commerce website — NODA store UI 16" },
+      { id: "E-ecommerce-17", src: "/assets/E-ecommerce/17.png", alt: "E-commerce website — NODA store UI 17" },
+      { id: "E-ecommerce-18", src: "/assets/E-ecommerce/18.png", alt: "E-commerce website — NODA store UI 18" },
+      { id: "E-ecommerce-19", src: "/assets/E-ecommerce/19.png", alt: "E-commerce website — NODA store UI 19" },
     ],
     highlights: [
       {

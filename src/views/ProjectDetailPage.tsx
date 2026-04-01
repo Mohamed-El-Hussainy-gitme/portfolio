@@ -15,9 +15,9 @@ const PROJECT_SEO_OVERRIDES: Record<
   string,
   { focusKeyword: LocalizedText; seoTitle: LocalizedText; seoDescription: LocalizedText }
 > = {
-  "NODA-ecommerce-website-development": {
+  "noda-ecommerce-website-development": {
     focusKeyword: { ar: "متجر إلكتروني", en: "e-commerce website" },
-    seoTitle: { ar: "متجر إلكتروني NODA: دراسة حالة", en: "NODA E-commerce Website: Case Study" },
+    seoTitle: { ar: "متجر NODA الإلكتروني: دراسة حالة", en: "NODA E-commerce Website: Case Study" },
     seoDescription: {
       ar: "متجر إلكتروني مع لوحة تحكم وقاعدة بيانات. تجربة شراء واضحة وإدارة أسهل وبنية SEO قوية.",
       en: "E-commerce website with admin dashboard and database. Clean UX, easier operations, strong SEO structure.",
