@@ -10,9 +10,9 @@ export default function FeaturedProjectsSection() {
   const { language, direction, href } = useLanguage();
   const isArabic = language === "ar";
 
-  // Keep it simple: feature the flagship Rose project first, then two more.
+  // Keep it simple: feature the flagship NODA project first, then two more.
   const featured = [
-    projects.find((p) => p.slug === "rose-ecommerce-website-development"),
+    projects.find((p) => p.slug === "NODA-ecommerce-website-development"),
     projects.find((p) => p.slug === "growlik"),
     projects[0],
   ].filter(Boolean) as typeof projects;
