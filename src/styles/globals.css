@@ -1,87 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-}
-
-/* Root layout */
-html,
-body,
-#root {
-  height: 100%;
-}
-
-/* Global body styling */
-body {
-  @apply bg-slate-950 text-slate-50 antialiased scroll-smooth;
-}
-
-/* Subtle grid overlay used in cinematic sections */
-.multiverse-grid-overlay {
-  position: relative;
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(148, 163, 184, 0.06) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(148, 163, 184, 0.06) 1px,
-      transparent 1px
-    );
-  background-size: 80px 80px;
-}
-
-/* Global cinematic glow behind the whole page */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      circle at 0% 0%,
-      rgba(56, 189, 248, 0.22),
-      transparent 55%
-    ),
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(129, 140, 248, 0.24),
-      transparent 55%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(236, 72, 153, 0.18),
-      transparent 60%
-    );
-  mix-blend-mode: normal;
-  opacity: 0.9;
-  z-index: -1;
-}
 @layer base {
-  body {
-    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+    --obsidian: 222 47% 11%;
+    --cobalt: 221 83% 53%;
+    --slate-muted: 215 16% 47%;
+    --surface: 210 40% 98%;
   }
 
-  h1, h2, h3, .font-display {
-    font-family: "IBM Plex Sans Arabic", "Cairo", system-ui, sans-serif;
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Inter Tight', sans-serif;
   }
 }
 
+[dir='rtl'] body,
+.rtl {
+  font-family: 'Cairo', sans-serif;
+}
 
-/* Cinematic snapping between sections on desktop */
-@media (min-width: 1024px) {
-  html,
-  body {
-    scroll-snap-type: y mandatory;
-    scroll-padding-top: 80px; /* Approximate navbar height */
-  }
-
-  .scroll-scene {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
+[dir='rtl'] h1,
+[dir='rtl'] h2,
+[dir='rtl'] h3,
+[dir='rtl'] h4,
+[dir='rtl'] .font-inter-tight {
+  font-family: 'Cairo', sans-serif;
 }

@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/core/i18n/LanguageContext";
 import type { Locale } from "@/core/i18n/locale";
 import ScrollToHash from "@/core/router/ScrollToHash";
 import PageLayout from "@/layout/PageLayout";
+import QueryProvider from "@/lib/providers/QueryProvider";
 
 export default function LocaleProviders({
   children,
@@ -17,12 +18,14 @@ export default function LocaleProviders({
 }) {
   return (
     <LanguageProvider initialLanguage={locale}>
-      <PageLayout>
-        <Suspense fallback={null}>
-          <ScrollToHash />
-        </Suspense>
-        {children}
-      </PageLayout>
+      <QueryProvider>
+        <PageLayout>
+          <Suspense fallback={null}>
+            <ScrollToHash />
+          </Suspense>
+          {children}
+        </PageLayout>
+      </QueryProvider>
     </LanguageProvider>
   );
 }

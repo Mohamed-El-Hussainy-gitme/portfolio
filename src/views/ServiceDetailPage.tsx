@@ -7,16 +7,14 @@ import { useLanguage } from "../core/i18n/LanguageContext";
 import { Seo } from "../core/seo/Seo";
 import { breadcrumbList, serviceSchema } from "../core/seo/schema";
 import { services, type ServiceItem } from "../data/services";
-import { blogPosts, type BlogPost } from "../data/blog";
-import { projects } from "../data/projects";
+import type { BlogPost } from "../data/blog";
 import { buildWhatsAppLink } from "../data/contact";
 import ProjectCard from "../components/ProjectCard";
+import { useService, useBlogPosts, useProjects } from "@/lib/useSiteData";
+import DetailPageBar from "@/components/layout/DetailPageBar";
+import { MessageCircle } from "lucide-react";
 
 type Locale = "en" | "ar";
-
-function bySlug(slug: string): ServiceItem | undefined {
-  return services.find((s) => s.slug === slug);
-}
 
 type TimelineDef = { en: string; ar: string };
 
@@ -301,7 +299,23 @@ export default function ServiceDetailPage() {
   const lang: Locale = language === "ar" ? "ar" : "en";
   const isArabic = lang === "ar";
 
-  const service = slug ? bySlug(slug) : undefined;
+  const staticService = slug ? services.find((s) => s.slug === slug) : undefined;
+  const { data: dbService, isLoading } = useService(slug || "");
+  const { data: blogPosts = [] } = useBlogPosts();
+  const { data: projects = [] } = useProjects();
+
+  const service = useMemo((): ServiceItem | undefined => {
+    if (!staticService && !dbService) return undefined;
+    if (staticService && dbService) {
+      return {
+        ...staticService,
+        title: dbService.title,
+        summary: dbService.summary,
+        focusKeyword: dbService.focusKeyword?.en ? dbService.focusKeyword : staticService.focusKeyword,
+      };
+    }
+    return staticService;
+  }, [staticService, dbService]);
 
   const relatedPosts = useMemo(() => {
     if (!service) return [];
@@ -331,22 +345,27 @@ export default function ServiceDetailPage() {
     return pick;
   }, [service]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-4 border-cobalt border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!service) {
     return (
-      <div dir={direction} className="mx-auto max-w-4xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
-        <Seo
-          title={isArabic ? "الخدمة غير موجودة" : "Service not found"}
-          description={isArabic ? "لم يتم العثور على هذه الخدمة." : "The requested service was not found."}
-        />
-        <h1 className="mb-3 text-2xl font-semibold text-slate-50">
-          {isArabic ? "الخدمة غير موجودة" : "Service not found"}
-        </h1>
-        <Link
-          href={href("/services")}
-          className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-5 py-2 text-sm font-medium text-slate-100 hover:border-indigo-400"
-        >
-          {isArabic ? "العودة للخدمات" : "Back to services"}
-        </Link>
+      <div dir={direction} className="min-h-screen bg-white flex items-center justify-center px-4">
+        <div className="text-center">
+          <Seo
+            title={isArabic ? "الخدمة غير موجودة" : "Service not found"}
+            description={isArabic ? "لم يتم العثور على هذه الخدمة." : "The requested service was not found."}
+          />
+          <p className="text-slate-500 mb-4">{isArabic ? "الخدمة غير موجودة." : "Service not found."}</p>
+          <Link href={href("/services")} className="text-cobalt font-semibold hover:underline">
+            {isArabic ? "العودة للخدمات" : "Back to services"}
+          </Link>
+        </div>
       </div>
     );
   }
@@ -378,7 +397,7 @@ export default function ServiceDetailPage() {
   const faqs = FAQS[service.slug] ?? [];
 
   return (
-    <div dir={direction} className="mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
+    <div dir={direction} className="min-h-screen bg-white">
       <Seo
         title={pageTitle}
         description={pageDescription}
@@ -393,78 +412,76 @@ export default function ServiceDetailPage() {
         ]}
       />
 
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <Link
-          href={href("/services")}
-          className="inline-flex items-center gap-2 text-xs font-medium text-slate-300 hover:text-white"
-        >
-          <span aria-hidden>←</span>
-          <span>{isArabic ? "العودة للخدمات" : "Back to services"}</span>
-        </Link>
-
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-semibold text-cyan-200/90 hover:text-cyan-100"
-        >
-          {isArabic ? "اطلب عرض سعر" : "Request a quote"}
-        </a>
-      </div>
-
-      <header className={direction === "rtl" ? "text-right" : "text-left"}>
-        <p className="mb-3 text-[11px] font-medium tracking-[0.28em] text-cyan-100/85">
-          {isArabic ? "الخدمة" : "Service"} • {focusKeyword}
-        </p>
-
-        <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl">
-          {service.title[lang]}
-        </h1>
-
-        <p className="max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base" style={{ unicodeBidi: "plaintext" }}>
-          {service.summary[lang]}
-        </p>
-
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <DetailPageBar
+        backHref={href("/services")}
+        backLabel={isArabic ? "العودة للخدمات" : "Back to services"}
+        action={
           <a
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 px-6 py-3 text-sm font-semibold text-slate-950"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-cobalt hover:underline"
           >
+            <MessageCircle className="w-4 h-4" />
+            {isArabic ? "اطلب عرض سعر" : "Request a quote"}
+          </a>
+        }
+      />
+
+      <header className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 ${direction === "rtl" ? "text-right" : "text-left"}`}>
+        <p className="text-xs font-semibold uppercase tracking-widest text-cobalt mb-2">
+          {isArabic ? "الخدمة" : "Service"} · {focusKeyword}
+        </p>
+
+        <h1 className="font-inter-tight font-black text-3xl sm:text-4xl text-obsidian mb-4">
+          {service.title[lang]}
+        </h1>
+
+        <p className="max-w-3xl text-lg text-slate-600" style={{ unicodeBidi: "plaintext" }}>
+          {service.summary[lang]}
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3 items-center">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-cobalt text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition"
+          >
+            <MessageCircle className="w-4 h-4" />
             {isArabic ? "اطلب عرض سعر" : "Request a quote"}
           </a>
 
           <Link
             href={href("/contact")}
-            className="inline-flex items-center justify-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-indigo-400"
+            className="inline-flex items-center justify-center rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-obsidian hover:bg-surface transition"
           >
             {isArabic ? "تواصل" : "Contact"}
           </Link>
 
-          <div className="text-xs text-slate-400">
-            <span className="tabular-nums" dir="ltr">
-              {isArabic ? `المدة المتوقعة: ${timeline.ar}` : `Timeline: ${timeline.en}`}
-            </span>
-          </div>
+          <span className="text-xs text-slate-500 tabular-nums" dir="ltr">
+            {isArabic ? `المدة: ${timeline.ar}` : `Timeline: ${timeline.en}`}
+          </span>
         </div>
       </header>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+
       {/* What you get */}
       <section className="mt-12 grid gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-7 rounded-3xl border border-white/10 bg-slate-950/50 p-6">
-          <h2 className="text-lg font-semibold text-slate-50">
+        <div className="lg:col-span-7 rounded-2xl border border-border bg-white p-6 shadow-sm">
+          <h2 className="font-inter-tight font-bold text-lg text-obsidian">
             {isArabic ? "ماذا ستحصل عليه؟" : "What you get"}
           </h2>
 
           <div className="mt-4">
-            <p className="mb-2 text-xs font-semibold text-slate-200">
+            <p className="mb-2 text-xs font-semibold text-obsidian">
               {isArabic ? "المخرجات" : "Deliverables"}
             </p>
-            <ul className="space-y-2 text-sm text-slate-300">
+            <ul className="space-y-2 text-sm text-slate-600">
               {service.deliverables.map((d) => (
                 <li key={d.en} className="flex items-start gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt shrink-0" />
                   <span>{d[lang]}</span>
                 </li>
               ))}
@@ -472,13 +489,13 @@ export default function ServiceDetailPage() {
           </div>
 
           <div className="mt-6">
-            <p className="mb-2 text-xs font-semibold text-slate-200">
+            <p className="mb-2 text-xs font-semibold text-obsidian">
               {isArabic ? "نتائج متوقعة" : "Outcomes"}
             </p>
-            <ul className="space-y-2 text-sm text-slate-300">
+            <ul className="space-y-2 text-sm text-slate-600">
               {service.outcomes.map((o) => (
                 <li key={o.en} className="flex items-start gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-indigo-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt shrink-0" />
                   <span>{o[lang]}</span>
                 </li>
               ))}
@@ -486,15 +503,15 @@ export default function ServiceDetailPage() {
           </div>
         </div>
 
-        <div className="lg:col-span-5 rounded-3xl border border-white/10 bg-slate-950/50 p-6">
-          <h2 className="text-lg font-semibold text-slate-50">
+        <div className="lg:col-span-5 rounded-2xl border border-border bg-surface p-6">
+          <h2 className="font-inter-tight font-bold text-lg text-obsidian">
             {isArabic ? "كيف سيتم التنفيذ؟" : "How it will be delivered"}
           </h2>
 
-          <ol className="mt-4 space-y-3 text-sm text-slate-300">
+          <ol className="mt-4 space-y-3 text-sm text-slate-600">
             {service.process.map((p, idx) => (
               <li key={p.en} className="flex items-start gap-3">
-                <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 text-xs text-slate-200">
+                <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cobalt text-xs text-white font-semibold">
                   {idx + 1}
                 </span>
                 <span>{p[lang]}</span>
@@ -502,12 +519,12 @@ export default function ServiceDetailPage() {
             ))}
           </ol>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-slate-950/50 p-4">
-            <p className="text-xs font-semibold text-slate-100">{isArabic ? "ما الذي أحتاجه منك؟" : "What I need from you"}</p>
-            <ul className="mt-3 space-y-2 text-sm text-slate-300">
+          <div className="mt-6 rounded-xl border border-border bg-white p-4">
+            <p className="text-xs font-semibold text-obsidian">{isArabic ? "ما الذي أحتاجه منك؟" : "What I need from you"}</p>
+            <ul className="mt-3 space-y-2 text-sm text-slate-600">
               {needs.map((n) => (
                 <li key={n} className="flex items-start gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt shrink-0" />
                   <span>{n}</span>
                 </li>
               ))}
@@ -519,10 +536,10 @@ export default function ServiceDetailPage() {
       {/* Related projects */}
       {relatedProjects.length > 0 ? (
         <section className="mt-14">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-50">
+          <h2 className="font-inter-tight font-bold text-2xl text-obsidian">
             {isArabic ? "مشاريع مرتبطة" : "Relevant projects"}
           </h2>
-          <p className="mt-2 max-w-3xl text-sm text-slate-300">
+          <p className="mt-2 max-w-3xl text-sm text-slate-600">
             {isArabic
               ? "أمثلة من مشاريع مشابهة لتوضيح شكل التنفيذ وجودة الواجهة."
               : "Examples of similar builds to show UI quality and execution style."}
@@ -537,11 +554,11 @@ export default function ServiceDetailPage() {
       ) : null}
 
       {/* Related posts */}
-      <section className="mt-14 rounded-3xl border border-white/10 bg-slate-950/40 p-6">
-        <h2 className="text-xl font-semibold text-slate-50">
+      <section className="mt-14 rounded-2xl border border-border bg-surface p-6">
+        <h2 className="font-inter-tight font-bold text-xl text-obsidian">
           {isArabic ? "مقالات مرتبطة بالخدمة" : "Related posts for this service"}
         </h2>
-        <p className="mt-2 max-w-3xl text-sm text-slate-300">
+        <p className="mt-2 max-w-3xl text-sm text-slate-600">
           {isArabic
             ? "محتوى تقني يساعدك تفهم الاختيارات (SEO/أداء/UX) قبل اتخاذ القرار."
             : "Technical content that explains key decisions (SEO, performance, UX) before you commit."}
@@ -553,18 +570,18 @@ export default function ServiceDetailPage() {
               <Link
                 key={p.slug}
                 href={href(`/blog/${p.slug}`)}
-                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5 transition hover:border-white/20"
+                className="rounded-2xl border border-border bg-white p-5 transition hover:shadow-md hover:border-cobalt/30"
               >
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-cobalt">
                   {p.focusKeyword[lang]}
                 </p>
-                <h3 className="mb-2 text-sm font-semibold text-slate-50">{p.title[lang]}</h3>
-                <p className="text-sm text-slate-300">{p.description[lang]}</p>
+                <h3 className="mb-2 text-sm font-inter-tight font-bold text-obsidian">{p.title[lang]}</h3>
+                <p className="text-sm text-slate-600">{p.description[lang]}</p>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="mt-5 text-sm text-slate-400">
+          <p className="mt-5 text-sm text-slate-500">
             {isArabic ? "سيتم إضافة مقالات مرتبطة بهذه الخدمة قريبًا." : "More related posts will be added soon."}
           </p>
         )}
@@ -573,7 +590,7 @@ export default function ServiceDetailPage() {
       {/* FAQ */}
       {faqs.length > 0 ? (
         <section className="mt-14">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-50">
+          <h2 className="font-inter-tight font-bold text-2xl text-obsidian">
             {isArabic ? "أسئلة شائعة" : "FAQ"}
           </h2>
 
@@ -581,12 +598,12 @@ export default function ServiceDetailPage() {
             {faqs.map((f) => (
               <details
                 key={f.q.en}
-                className="rounded-3xl border border-white/10 bg-slate-950/50 p-5"
+                className="rounded-2xl border border-border bg-white p-5"
               >
-                <summary className="cursor-pointer select-none text-sm font-semibold text-slate-50">
+                <summary className="cursor-pointer select-none text-sm font-semibold text-obsidian">
                   {f.q[lang]}
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{f.a[lang]}</p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600">{f.a[lang]}</p>
               </details>
             ))}
           </div>
@@ -594,34 +611,36 @@ export default function ServiceDetailPage() {
       ) : null}
 
       {/* Final CTA */}
-      <section className="mt-14 rounded-3xl border border-slate-800/70 bg-slate-950/60 p-6">
-        <h2 className="text-lg font-semibold text-slate-50">
+      <section className="mt-14 rounded-2xl border border-border bg-surface p-8">
+        <h2 className="font-inter-tight font-bold text-lg text-obsidian">
           {isArabic ? "جاهز للبدء؟" : "Ready to start?"}
         </h2>
-        <p className="mt-2 text-sm text-slate-300">
+        <p className="mt-2 text-sm text-slate-600">
           {isArabic
             ? "أرسل نوع المشروع والهدف وعدد الصفحات والموعد المتوقع، وسأرد عليك بخطة واضحة وعرض سعر."
             : "Send project type, goal, number of pages, and target date. I will reply with a clear plan and quote."}
         </p>
 
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-5 flex flex-wrap gap-3">
           <a
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 px-6 py-3 text-sm font-semibold text-slate-950"
+            className="inline-flex items-center gap-2 bg-cobalt text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition"
           >
+            <MessageCircle className="w-4 h-4" />
             {isArabic ? "اطلب عرض سعر" : "Request a quote"}
           </a>
 
           <Link
             href={href("/contact")}
-            className="inline-flex items-center justify-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-indigo-400"
+            className="inline-flex items-center justify-center rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-obsidian hover:bg-white transition"
           >
             {isArabic ? "صفحة التواصل" : "Contact page"}
           </Link>
         </div>
       </section>
+      </div>
     </div>
   );
 }

@@ -2,42 +2,47 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import type { Locale } from "../core/i18n/locale";
 import { useLanguage } from "../core/i18n/LanguageContext";
 import { Seo } from "../core/seo/Seo";
 import { blogItemListSchema, breadcrumbList } from "../core/seo/schema";
-import { blogPosts } from "../data/blog";
-import { services } from "../data/services";
 import { buildWhatsAppLink } from "../data/contact";
 import BlogQueryPost from "../components/BlogQueryPost";
+import { useBlogPosts, useServices } from "@/lib/useSiteData";
+import { usePageContent } from "@/lib/usePageContent";
+import { pageHeroField, pageSeoField } from "@/lib/pageContent";
+import PageHero, { HeroLink } from "@/components/layout/PageHero";
 
-export default function BlogIndexPage() {
-  const { language, direction } = useLanguage();
+export default function BlogIndexPage({ locale }: { locale: Locale }) {
+  const { language, direction, href } = useLanguage();
   const isArabic = language === "ar";
 
-  // Focus keyword (simple + short) — repeated naturally in the content below.
-  const focusKeyword = isArabic ? "مدونة تطوير مواقع" : "web development blog";
+  const { data: blogPosts = [] } = useBlogPosts();
+  const { data: services = [] } = useServices();
+  const { data: page } = usePageContent("blog");
 
-  const title = isArabic ? "مدونة تطوير مواقع: Next.js و(SEO) وواجهات (RTL)" : "Web Development Blog: Next.js, SEO, RTL";
-
-  const description = isArabic
-    ? "مدونة تطوير مواقع بمقالات عملية عن أداء Next.js، تحسين (SEO)، واجهات (RTL)، ولوحات التحكم. للمطورين والعملاء مع أمثلة كود وخطوات واضحة."
-    : "Web development blog with practical posts on Next.js performance, technical SEO, RTL UI, dashboards, and deployment. For developers and clients.";
+  const lang = isArabic ? "ar" : "en";
+  const focusKeyword = pageSeoField(page.seo, "focus_keyword", lang);
+  const title = pageSeoField(page.seo, "title", lang);
+  const description = pageSeoField(page.seo, "description", lang);
+  const heroLabel = pageHeroField(page.hero, "label", lang);
+  const heroHeading = pageHeroField(page.hero, "heading", lang);
+  const heroSub = pageHeroField(page.hero, "sub", lang);
 
   const allTags = useMemo(() => {
     const set = new Set<string>();
     blogPosts.forEach((p) => p.tags.forEach((t) => set.add(t)));
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, []);
+  }, [blogPosts]);
 
   const [activeTag, setActiveTag] = useState<string>("all");
 
   const filtered = useMemo(() => {
     if (activeTag === "all") return blogPosts;
     return blogPosts.filter((p) => p.tags.includes(activeTag));
-  }, [activeTag]);
+  }, [activeTag, blogPosts]);
 
-  // Show up to 6 services (as requested), blog links to services.
-  const topServices = useMemo(() => services.slice(0, 6), []);
+  const topServices = useMemo(() => services.slice(0, 6), [services]);
 
   const blogWhatsApp = buildWhatsAppLink(
     isArabic
@@ -46,7 +51,7 @@ export default function BlogIndexPage() {
   );
 
   return (
-    <div dir={direction} className="mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
+    <div dir={direction} className="min-h-screen bg-white">
       <Seo
         title={title}
         description={description}
@@ -60,28 +65,29 @@ export default function BlogIndexPage() {
         ]}
       />
 
-      <header className={direction === "rtl" ? "text-right" : "text-left"}>
-        <p className="mb-3 text-[11px] font-medium tracking-[0.28em] text-cyan-100/85">{isArabic ? "المدونة" : "Blog"}</p>
+      <PageHero
+        label={heroLabel}
+        heading={heroHeading}
+        sub={heroSub}
+        actions={
+          <>
+            <HeroLink href={href("/contact")}>{isArabic ? "تواصل" : "Contact"}</HeroLink>
+            <HeroLink href={href("/services")} variant="outline">
+              {isArabic ? "الخدمات" : "Services"}
+            </HeroLink>
+          </>
+        }
+      />
 
-        <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl">
-          {isArabic ? "مدونة تطوير مواقع بمحتوى عملي" : "A practical web development blog"}
-        </h1>
-
-        <p className="max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          {isArabic
-            ? "هذه مدونة تطوير مواقع تركّز على التطبيق: أداء Next.js، تحسين (SEO)، وتجربة (RTL) النظيفة. ستجد أسئلة يبحث عنها المطور مثل (LCP) و(التخزين المؤقت) وبناء المكوّنات، وأسئلة يبحث عنها العميل مثل: بناء ويب سايت، تصميم مواقع، وطلب عرض سعر — لكن بإجابات واضحة وخطوات تنفيذ."
-            : "This web development blog is practical and implementation-first: Next.js performance, technical SEO, and clean RTL UX. You will find developer answers (LCP, caching, architecture) and client answers (website development, SEO basics, and what the build process looks like)."}
-        </p>
-      </header>
-
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div className="py-8 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => setActiveTag("all")}
           className={`rounded-full border px-4 py-1.5 text-xs font-medium transition ${
             activeTag === "all"
-              ? "border-cyan-300/60 bg-cyan-400/10 text-cyan-100"
-              : "border-slate-700/70 bg-slate-950/40 text-slate-200 hover:border-slate-500"
+              ? "bg-obsidian text-white border-obsidian"
+              : "bg-surface text-slate-600 border-border hover:bg-slate-200"
           }`}
         >
           {isArabic ? "الكل" : "All"}
@@ -94,8 +100,8 @@ export default function BlogIndexPage() {
             onClick={() => setActiveTag(tag)}
             className={`rounded-full border px-4 py-1.5 text-xs font-medium transition ${
               activeTag === tag
-                ? "border-violet-300/60 bg-violet-400/10 text-violet-100"
-                : "border-slate-700/70 bg-slate-950/40 text-slate-200 hover:border-slate-500"
+                ? "bg-obsidian text-white border-obsidian"
+                : "bg-surface text-slate-600 border-border hover:bg-slate-200"
             }`}
           >
             {tag}
@@ -103,27 +109,18 @@ export default function BlogIndexPage() {
         ))}
       </div>
 
-      <section className="mt-10 space-y-7">
+      <section className="grid gap-6 sm:grid-cols-2">
         {filtered.map((post) => (
-          <div
-            key={post.slug}
-            className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 p-6"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_right_bottom,rgba(167,139,250,0.16),transparent_55%)] opacity-70" />
-            <div className="relative">
-              <BlogQueryPost post={post} />
-            </div>
-          </div>
+          <BlogQueryPost key={post.slug} post={post} />
         ))}
       </section>
 
-      {/* SEO / GEO-rich content (visible, but kept clean) */}
-      <section className="mt-14 rounded-3xl border border-white/10 bg-slate-950/40 p-7">
-        <h2 className="mb-3 text-xl font-semibold tracking-tight text-slate-50">
+      <section className="mt-14 rounded-2xl border border-border bg-surface p-8">
+        <h2 className="mb-3 text-xl font-inter-tight font-bold text-obsidian">
           {isArabic ? "كيف تستخدم مدونة تطوير مواقع بذكاء؟" : "How to use this web development blog"}
         </h2>
 
-        <div className="space-y-4 text-sm leading-relaxed text-slate-300">
+        <div className="space-y-4 text-sm leading-relaxed text-slate-600">
           {isArabic ? (
             <>
               <p>
@@ -141,15 +138,15 @@ export default function BlogIndexPage() {
               </p>
               <ul className="mt-2 space-y-2 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>بناء ويب سايت لشركة: ما الذي يرفع التحويل ويزيد الثقة؟</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>تصميم مواقع (RTL): كيف تمنع خلط اللغة وتحافظ على تجربة نظيفة؟</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>تحسين (SEO) لمتجر إلكتروني: عناوين + وصف + سكيما + سرعة.</span>
                 </li>
               </ul>
@@ -177,15 +174,15 @@ export default function BlogIndexPage() {
               </p>
               <ul className="mt-2 space-y-2 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>Website development for a company: what builds trust and increases leads?</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>RTL engineering: how to prevent language mixing and layout regressions?</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cobalt" />
                   <span>Technical SEO for e-commerce: titles + descriptions + schema + speed.</span>
                 </li>
               </ul>
@@ -199,13 +196,13 @@ export default function BlogIndexPage() {
       </section>
 
       {/* Blog -> Services */}
-      <section className="mt-10 rounded-3xl border border-white/10 bg-gradient-to-b from-slate-950/60 to-slate-900/40 p-7">
+      <section className="mt-10 rounded-2xl border border-border bg-white p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-50">
+            <h2 className="text-xl font-inter-tight font-bold text-obsidian">
               {isArabic ? "جاهز للتنفيذ؟ اختر خدمة" : "Ready to implement? Pick a service"}
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
               {isArabic
                 ? "بعد قراءة المقال، اختر الخدمة الأقرب لهدفك. كل خدمة لها مخرجات واضحة وخطوات تنفيذ، ثم زر (اطلب عرض سعر) برسالة مباشرة."
                 : "After reading a post, pick the service that matches your goal. Each service has clear deliverables and a direct quote request message."}
@@ -216,7 +213,7 @@ export default function BlogIndexPage() {
             href={blogWhatsApp}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 px-6 py-2.5 text-sm font-semibold text-slate-950"
+            className="inline-flex items-center justify-center rounded-xl bg-cobalt px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition"
           >
             {isArabic ? "اطلب تنفيذ الفكرة" : "Request implementation"}
           </a>
@@ -226,27 +223,27 @@ export default function BlogIndexPage() {
           {topServices.map((s) => (
             <Link
 	              key={s.slug}
-	              href={`/${language}/services/${s.slug}`}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/40 p-6 transition hover:border-white/20"
+	              href={href(`/services/${s.slug}`)}
+              className="group border border-border rounded-2xl bg-white p-6 hover:shadow-lg hover:border-cobalt/30 transition-all"
             >
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_left_top,rgba(34,211,238,0.10),transparent_55%)] opacity-70" />
-              <div className="relative">
-	                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-	                  {s.focusKeyword?.[language] ?? ""}
-	                </p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-slate-50">{s.title[language]}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{s.summary[language]}</p>
-                <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-cyan-200/90">
+                <p className="text-xs font-semibold uppercase tracking-widest text-cobalt">
+                  {s.focusKeyword?.[language] ?? ""}
+                </p>
+                <h3 className="mt-2 text-lg font-inter-tight font-bold text-obsidian group-hover:text-cobalt transition-colors">
+                  {s.title[language]}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.summary[language]}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-cobalt">
                   <span>{isArabic ? "تفاصيل الخدمة" : "Service details"}</span>
                   <span className="transition group-hover:translate-x-0.5" aria-hidden>
                     →
                   </span>
                 </span>
-              </div>
             </Link>
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 }

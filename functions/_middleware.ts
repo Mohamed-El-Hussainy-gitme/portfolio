@@ -88,12 +88,37 @@ function stripEnPrefix(pathname: string): string | null {
   return null;
 }
 
+function hasValidAdminSession(request: Request): boolean {
+  const cookies = request.headers.get('cookie') || '';
+  // Check for Supabase session cookie (sb-*-auth-token)
+  return /sb-[a-z0-9]+-auth-token/.test(cookies);
+}
+
+function isAdminRoute(pathname: string): boolean {
+  return pathname.startsWith('/admin') && pathname !== '/admin/login';
+}
+
 export async function onRequest(context: PagesContext) {
   const { request } = context;
   const url = new URL(request.url);
 
   const originalPath = url.pathname;
   const pathname = normalizePathname(originalPath);
+
+  // Admin Route Protection: Block unauthorized access to /admin/* (except /admin/login)
+  if (isAdminRoute(pathname)) {
+    if (!hasValidAdminSession(request)) {
+      const loginUrl = new URL(url.toString());
+      loginUrl.pathname = '/admin/login';
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: loginUrl.toString(),
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      });
+    }
+  }
 
   // 0) Redirect ".../index.html" -> canonical path
   const withoutIndex = stripIndexHtml(pathname);

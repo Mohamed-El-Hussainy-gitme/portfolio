@@ -1,79 +1,60 @@
-"use client";
+'use client';
 
-import { verifiedReviews } from "@/data/verifiedReviews";
-import { useLanguage } from "@/core/i18n/LanguageContext";
-
-function Stars({ count }: { count: number }) {
-  return (
-    <div className="flex items-center gap-1" aria-hidden="true">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={i < count ? "text-yellow-400" : "text-slate-600"}>
-          ★
-        </span>
-      ))}
-    </div>
-  );
-}
+import { Star, ExternalLink } from 'lucide-react';
+import { useReviews } from '@/lib/useSiteData';
+import { useLanguage } from '@/core/i18n/LanguageContext';
+import LazyImage from '@/components/LazyImage';
 
 export default function ReviewsSection() {
+  const { data: reviews = [] } = useReviews();
   const { language } = useLanguage();
+  const isAr = language === 'ar';
+
+  if (!reviews.length) return null;
+
+  const t = {
+    tag: isAr ? 'آراء العملاء' : 'Social Proof',
+    heading: isAr ? 'ماذا يقول العملاء' : 'Verified Client Reviews',
+    viewReview: isAr ? 'عرض التقييم' : 'View review',
+  };
 
   return (
-    <section className="mt-12">
-      <h2 className="text-xl font-semibold">
-        {language === "ar" ? "آراء عملاء موثّقة" : "Verified client reviews"}
-      </h2>
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold uppercase tracking-widest text-cobalt mb-2">{t.tag}</p>
+          <h2 className="text-3xl sm:text-4xl font-inter-tight font-black text-obsidian">{t.heading}</h2>
+        </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {verifiedReviews.map((r) => (
-          <article
-            key={r.id}
-            className="rounded-2xl border border-slate-800 bg-slate-950/40 p-5"
-            aria-label={`${r.platform} review`}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm text-slate-300">{r.platform}</p>
-
-                <div
-                  role="img"
-                  className="mt-1 flex items-center gap-2"
-                  aria-label={`Rating ${r.rating} out of 5`}
-                >
-                  <Stars count={r.rating} />
-                  <span className="text-xs text-slate-400">{r.rating}/5</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {reviews.map((review, i) => (
+            <div key={String(review.id ?? i)} className="border border-border rounded-2xl p-6 bg-white hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="font-semibold text-obsidian">{review.platform}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-4 h-4 ${s <= (Number(review.rating) || 5) ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}`}
+                      />
+                    ))}
+                    <span className="text-sm font-bold text-obsidian ms-1">{review.rating || 5}/5</span>
+                  </div>
                 </div>
+                {review.reviewUrl && (
+                  <a href={review.reviewUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-cobalt hover:underline">
+                    {t.viewReview} <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </div>
-
-              <a
-                className="text-sm text-cyan-300 hover:underline"
-                href={r.platformUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {language === "ar" ? "رابط التقييم" : "View review"}
-              </a>
+              <p className="text-slate-700 leading-relaxed mb-4">{review.reviewText[language]}</p>
+              {review.screenshotUrl && (
+                <LazyImage src={review.screenshotUrl} alt="Review screenshot" className="rounded-xl h-40 w-full object-cover" />
+              )}
             </div>
-
-            <p className="mt-4 text-sm leading-relaxed text-slate-300">
-              {language === "ar" ? r.reviewText.ar : r.reviewText.en}
-            </p>
-
-            {r.screenshot && (
-              <figure className="mt-4 overflow-hidden rounded-xl border border-slate-800">
-                <img
-                  alt={language === "ar" ? "لقطة شاشة للتقييم" : "Review screenshot"}
-                  className="h-auto w-full"
-                  loading="lazy"
-                  decoding="async"
-                  src={r.screenshot.src}
-                  width={r.screenshot.width}
-                  height={r.screenshot.height}
-                />
-              </figure>
-            )}
-          </article>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1206,6 +1206,495 @@ export const projects: ProjectDefinition[] = [
       ],
     },
   },
+  // ─── Project 10 — Ahwa Café OS ──────────────────────────────
+  {
+    id: "ahwa-cafe-os",
+    universe: 10,
+    slug: "ahwa-cafe-os",
+    name: {
+      en: "Ahwa — Café Operating System",
+      ar: "أهوه — نظام تشغيل المقهى",
+    },
+    tagline: {
+      en: "Multi-tenant SaaS for café operations: shifts, orders, inventory, billing, and real-time staff presence.",
+      ar: "SaaS متعدد المستأجرين لإدارة المقاهي: الشيفتات والطلبات والمخزون والفوترة وحضور الموظفين.",
+    },
+    description: {
+      en: "Ahwa is a full-stack café operating system built with Next.js 16 and Supabase. It uses a strict three-database topology — one control-plane database routing tenant traffic to two dedicated operational shards — covering 80+ Supabase migrations, real-time shift management, role-based access (owner, branch manager, supervisor, barista, shisha), PWA push notifications, archive pipelines with approval flows, and a billing layer.",
+      ar: "أهوه هو نظام تشغيل كامل للمقاهي مبني بـ Next.js 16 وSupabase. يعتمد بنية ثلاث قواعد بيانات: قاعدة تحكم مركزية توجه حركة المستأجرين إلى شاردين تشغيليين. يغطي 80+ migration، وإدارة شيفت حية، وصلاحيات متدرجة، وإشعارات PWA، وخطوط أرشفة مع موافقات.",
+    },
+    focusKeyword: { en: "café management system", ar: "نظام إدارة مقهى" },
+    seoTitle: {
+      en: "Ahwa Café OS: Multi-Tenant SaaS Case Study",
+      ar: "أهوه: دراسة حالة SaaS متعدد المستأجرين",
+    },
+    seoDescription: {
+      en: "Real-time café operating system with shift management, role-based access, billing, and a three-database multi-tenant architecture.",
+      ar: "نظام تشغيل مقاهي بالوقت الحقيقي يشمل إدارة الشيفتات وصلاحيات متدرجة وفوترة وبنية SaaS متعددة المستأجرين.",
+    },
+    techStack: ["Next.js 16", "React 19", "TypeScript", "Supabase", "PostgreSQL", "Tailwind CSS 4", "Zustand", "Zod", "Redis", "web-push"],
+    tags: ["saas", "fullstack", "multi-tenant", "realtime", "backend", "postgresql"],
+    repoUrl: "https://github.com/Mohamed-El-Hussainy-gitme/ahwa",
+    screens: [],
+    highlights: [
+      {
+        id: "keyPoints",
+        label: { en: "Key Points", ar: "أبرز النقاط" },
+        body: {
+          en: "Three-database multi-tenant topology, 80+ Supabase migrations, role-based RLS, real-time shift management, PWA push, archive approval flow, and a platform super-admin portal.",
+          ar: "بنية SaaS ثلاثية قواعد البيانات، 80+ migration في Supabase، صلاحيات RLS متدرجة، إدارة شيفت بالوقت الحقيقي، إشعارات PWA، خط أرشفة مع موافقات، وبوابة سوبر أدمن.",
+        },
+      },
+      {
+        id: "focus",
+        label: { en: "Focus", ar: "التركيز" },
+        body: {
+          en: "Building a production-grade multi-tenant SaaS with strict database isolation, ordered migration chains, and a real-time operational layer.",
+          ar: "بناء SaaS متعدد المستأجرين بمعايير الإنتاج مع عزل صارم لقواعد البيانات وسلاسل migration مرتبة وطبقة تشغيلية بالوقت الحقيقي.",
+        },
+      },
+      {
+        id: "role",
+        label: { en: "Role", ar: "الدور" },
+        body: {
+          en: "Full-stack architecture, database design (80+ migrations), RLS policy authoring, real-time presence, PWA push, billing layer, and deployment.",
+          ar: "معمارية full-stack، تصميم قاعدة البيانات (80+ migration)، صياغة سياسات RLS، الحضور الحي، إشعارات PWA، طبقة الفوترة، والنشر.",
+        },
+      },
+    ],
+    caseStudy: {
+      problem: {
+        en: "Café owners struggled with paper-based shift logs, no real-time visibility into staff presence, manual billing reconciliation, and no way for a platform operator to manage multiple café tenants securely.",
+        ar: "كان أصحاب المقاهي يعانون من سجلات الشيفت الورقية وغياب الرؤية الفورية لحضور الموظفين والتسوية اليدوية للفواتير.",
+      },
+      solution: {
+        en: "Designed a strict three-database topology with explicit tenant routing, 80+ ordered migrations, and a role matrix enforced at the RLS layer.",
+        ar: "صممت بنية ثلاث قواعد بيانات مع توجيه صريح للمستأجرين و80+ migration مرتبة ومصفوفة صلاحيات مطبّقة على مستوى RLS.",
+      },
+      outcome: {
+        en: "A production-ready SaaS platform where each café runs in isolation, shift snapshots drive weekly/monthly/yearly reports, and archive approval flows protect historical data.",
+        ar: "منصة SaaS جاهزة للإنتاج حيث يعمل كل مقهى باستقلالية تامة ولقطات الشيفت تغذي تقارير أسبوعية وشهرية وسنوية.",
+      },
+      role: {
+        en: "Full-stack architecture, database design, RLS authoring, real-time presence, PWA push, billing, and deployment.",
+        ar: "معمارية full-stack، تصميم قاعدة البيانات، صياغة RLS، الحضور الحي، إشعارات PWA، فوترة، ونشر.",
+      },
+      stack: {
+        en: "Next.js 16 • React 19 • TypeScript • Supabase • Redis • Zustand • Zod • Tailwind CSS 4 • web-push",
+        ar: "Next.js 16 • React 19 • TypeScript • Supabase • Redis • Zustand • Zod • Tailwind CSS 4 • web-push",
+      },
+      steps: {
+        en: ["Design three-database topology and control-plane routing", "Author 80+ ordered migrations", "Implement role-based RLS matrix", "Build real-time shift management with atomic RPCs", "Add PWA push notifications", "Implement billing and archive approval flows", "Build platform super-admin portal"],
+        ar: ["تصميم بنية ثلاث قواعد البيانات", "كتابة 80+ migration مرتبة", "تطبيق مصفوفة صلاحيات RLS", "بناء إدارة الشيفت بالوقت الحقيقي", "إضافة إشعارات PWA", "تطبيق تدفقات الفوترة والأرشفة", "بناء بوابة السوبر أدمن"],
+      },
+      faqs: [
+        {
+          q: { en: "How does multi-tenancy work?", ar: "كيف يعمل تعدد المستأجرين؟" },
+          a: { en: "A control-plane database routes each request to the correct operational shard using app.current_cafe_id(). RLS policies enforce strict tenant isolation.", ar: "قاعدة بيانات control-plane توجه كل طلب إلى الشارد التشغيلي الصحيح. سياسات RLS تفرض العزل الصارم." },
+        },
+        {
+          q: { en: "How are historical reports protected?", ar: "كيف تُحمى التقارير التاريخية؟" },
+          a: { en: "The archive flow requires two approval secrets before deleting runtime detail, with post-archive verification.", ar: "تتطلب عملية الأرشفة سرين للموافقة قبل الحذف مع تحقق بعدي." },
+        },
+        {
+          q: { en: "What roles does the system support?", ar: "ما الأدوار التي يدعمها النظام؟" },
+          a: { en: "Owner, branch manager, supervisor, barista, shisha, and platform super-admin — each with distinct RLS policies.", ar: "مالك، مدير فرع، مشرف، باريستا، معلم شيشة، وسوبر أدمن — لكل منهم سياسات RLS مستقلة." },
+        },
+      ],
+    },
+  },
+
+  // ─── Project 11 — Arab Anglais ──────────────────────────────
+  {
+    id: "arab-anglais-portfolio",
+    universe: 11,
+    slug: "arab-anglais-portfolio",
+    name: {
+      en: "Arab Anglais — Bilingual Agency Portfolio",
+      ar: "Arab Anglais — بورتفوليو وكالة ثنائي اللغة",
+    },
+    tagline: {
+      en: "Full-stack bilingual agency site (AR/EN) with a headless CMS admin panel and drag-and-drop works gallery.",
+      ar: "موقع وكالة ثنائي اللغة بنظام إدارة محتوى headless ومعرض أعمال بالسحب والإفلات.",
+    },
+    description: {
+      en: "Arab Anglais is a production bilingual agency portfolio built with React 18, Vite, Tailwind CSS, and Supabase. It features a full public-facing site and a password-protected admin panel covering services, portfolio works with drag-and-drop reordering, team members, page content, site settings, and contact messages.",
+      ar: "Arab Anglais هو موقع وكالة ثنائي اللغة مبني بـ React 18 وVite وTailwind CSS وSupabase. يضم موقعاً عاماً كاملاً ولوحة إدارة محمية تتيح إدارة الخدمات والأعمال بالسحب والإفلات وأعضاء الفريق ومحتوى الصفحات.",
+    },
+    focusKeyword: { en: "bilingual agency portfolio", ar: "بورتفوليو وكالة ثنائي اللغة" },
+    seoTitle: {
+      en: "Arab Anglais: Bilingual Agency Portfolio Case Study",
+      ar: "Arab Anglais: دراسة حالة بورتفوليو وكالة ثنائي اللغة",
+    },
+    seoDescription: {
+      en: "Bilingual AR/EN agency portfolio with a headless CMS admin panel, Supabase backend, and drag-and-drop works management.",
+      ar: "بورتفوليو وكالة ثنائي اللغة بلوحة إدارة CMS وباك إند Supabase وإدارة أعمال بالسحب والإفلات.",
+    },
+    techStack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "React Router v6", "TanStack Query", "shadcn/ui", "@hello-pangea/dnd", "Sonner"],
+    tags: ["portfolio", "bilingual", "cms", "fullstack", "frontend", "supabase"],
+    repoUrl: "https://github.com/Mohamed-El-Hussainy-gitme/arab-anglais",
+    screens: [],
+    highlights: [
+      {
+        id: "keyPoints",
+        label: { en: "Key Points", ar: "أبرز النقاط" },
+        body: {
+          en: "Bilingual AR/EN content model, headless CMS admin panel, drag-and-drop works gallery, Supabase RLS, keep-alive strategy, and full CRUD for all agency content.",
+          ar: "نموذج محتوى ثنائي اللغة، لوحة إدارة CMS، معرض أعمال بالسحب والإفلات، RLS في Supabase، واستراتيجية keep-alive.",
+        },
+      },
+      {
+        id: "focus",
+        label: { en: "Focus", ar: "التركيز" },
+        body: {
+          en: "Delivering a fully editable bilingual agency site where non-technical staff control all content through a clean admin panel.",
+          ar: "تقديم موقع وكالة ثنائي اللغة قابل للتحرير بالكامل حيث يتحكم الموظفون غير التقنيين في كل المحتوى.",
+        },
+      },
+      {
+        id: "role",
+        label: { en: "Role", ar: "الدور" },
+        body: {
+          en: "Full-stack design and implementation: schema, RLS, public site, and admin panel.",
+          ar: "تصميم وتنفيذ full-stack: المخطط، RLS، الموقع العام، ولوحة الإدارة.",
+        },
+      },
+    ],
+    caseStudy: {
+      problem: {
+        en: "Agencies needed a bilingual online presence where non-technical staff could update works, services, and team members without developer intervention.",
+        ar: "كانت الوكالات بحاجة إلى حضور رقمي ثنائي اللغة يمكّن الموظفين غير التقنيين من التحديث دون تدخل المطور.",
+      },
+      solution: {
+        en: "Built a headless CMS using Supabase as the data layer and a React admin panel as the editor, with drag-and-drop reordering and a keep-alive strategy.",
+        ar: "بنيت CMS بدون رأس باستخدام Supabase كطبقة بيانات ولوحة إدارة React كمحرر مع السحب والإفلات واستراتيجية keep-alive.",
+      },
+      outcome: {
+        en: "A live bilingual agency site where the team manages all content from a single admin panel with instant public updates.",
+        ar: "موقع وكالة ثنائي اللغة حي يدير فيه الفريق كل المحتوى من لوحة واحدة مع تحديثات فورية.",
+      },
+      role: {
+        en: "Full-stack build: React SPA, Supabase schema, RLS policies, admin panel, drag-and-drop, and deployment.",
+        ar: "بناء full-stack: React SPA، مخطط Supabase، سياسات RLS، لوحة الإدارة، السحب والإفلات، والنشر.",
+      },
+      stack: {
+        en: "React 18 • Vite • Tailwind CSS • Supabase • React Router v6 • TanStack Query • shadcn/ui • @hello-pangea/dnd",
+        ar: "React 18 • Vite • Tailwind CSS • Supabase • React Router v6 • TanStack Query • shadcn/ui • @hello-pangea/dnd",
+      },
+      steps: {
+        en: ["Design bilingual Supabase schema", "Implement RLS for public-read / admin-write", "Build public site (Home, Services, Works, Team, About, Contact)", "Build admin panel with CRUD managers", "Add drag-and-drop reordering", "Implement keep-alive and data prefetching", "Deploy and configure Supabase storage"],
+        ar: ["تصميم مخطط Supabase ثنائي اللغة", "تطبيق RLS للفصل بين القراءة العامة والكتابة الإدارية", "بناء الموقع العام", "بناء لوحة الإدارة مع مديري CRUD", "إضافة السحب والإفلات", "تطبيق keep-alive والجلب المسبق", "النشر وإعداد التخزين"],
+      },
+      faqs: [
+        {
+          q: { en: "How is bilingual content handled?", ar: "كيف يُعالج المحتوى ثنائي اللغة؟" },
+          a: { en: "Each entity stores separate AR and EN fields. A LanguageContext hook switches the active locale across the entire site.", ar: "كل كيان يخزن حقولاً منفصلة للعربية والإنجليزية. خطاف LanguageContext يبدّل اللغة النشطة." },
+        },
+        {
+          q: { en: "Can the admin reorder works?", ar: "هل يمكن للمدير إعادة ترتيب الأعمال؟" },
+          a: { en: "Yes. The works gallery supports drag-and-drop reordering with the new order persisted to Supabase.", ar: "نعم. معرض الأعمال يدعم السحب والإفلات مع حفظ الترتيب في Supabase." },
+        },
+        {
+          q: { en: "How is the free-tier cold start handled?", ar: "كيف تُعالج مشكلة Cold Start؟" },
+          a: { en: "A keep-alive script pings Supabase at regular intervals to keep the connection warm.", ar: "سكريبت keep-alive يرسل ping على فترات منتظمة لإبقاء الاتصال دافئاً." },
+        },
+      ],
+    },
+  },
+
+  // ─── Project 12 — BCC Commercial ────────────────────────────
+  {
+    id: "bcc-commercial",
+    universe: 12,
+    slug: "bcc-commercial",
+    name: {
+      en: "BCC Commercial — Luxury Gifts & Corporate Solutions",
+      ar: "البنط التجارية — هدايا فاخرة وحلول مؤسسية",
+    },
+    tagline: {
+      en: "Corporate website for a Saudi luxury-gifts company with animated galleries, a Supabase CMS, a blog, and dark/light mode.",
+      ar: "موقع شركة سعودية للهدايا الفاخرة مع معارض متحركة وCMS بـ Supabase ومدونة ووضع داكن وفاتح.",
+    },
+    description: {
+      en: "BCC Commercial is a full-stack corporate website for a Saudi luxury-gifts and office-furniture company, presenting eight service lines through animated service cards with multi-image carousels. A Supabase CMS admin panel lets the team manage services, works gallery, blog posts, banners, clients, and all page content.",
+      ar: "البنط التجارية موقع شركة سعودية متكامل للهدايا الفاخرة والأثاث المكتبي. يقدم ثماني خطوط خدمة عبر بطاقات خدمة متحركة مع كاروسيلات صور. لوحة إدارة CMS مدعومة بـ Supabase تتيح إدارة كل المحتوى.",
+    },
+    focusKeyword: { en: "luxury gifts corporate website", ar: "موقع شركة هدايا فاخرة" },
+    seoTitle: {
+      en: "BCC Commercial: Luxury Gifts & Corporate Solutions Website",
+      ar: "البنط التجارية: موقع الهدايا الفاخرة والحلول المؤسسية",
+    },
+    seoDescription: {
+      en: "Animated corporate website for a Saudi luxury-gifts company with a Supabase CMS, service galleries, blog, and admin panel.",
+      ar: "موقع شركة سعودية للهدايا الفاخرة مع Supabase CMS ومعارض خدمات ومدونة ولوحة إدارة.",
+    },
+    techStack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "Framer Motion", "TanStack Query", "shadcn/ui", "react-helmet-async"],
+    tags: ["corporate", "cms", "fullstack", "frontend", "animation", "supabase", "blog"],
+    repoUrl: "https://github.com/Mohamed-El-Hussainy-gitme/bcc-commercial",
+    screens: [],
+    highlights: [
+      {
+        id: "keyPoints",
+        label: { en: "Key Points", ar: "أبرز النقاط" },
+        body: {
+          en: "Animated multi-image service galleries, Supabase CMS with full admin panel, SEO blog engine, lazy loading, dark/light mode, and code splitting.",
+          ar: "معارض خدمات متحركة متعددة الصور، CMS بـ Supabase مع لوحة إدارة كاملة، محرك مدونة SEO، تحميل كسول، ووضع داكن/فاتح.",
+        },
+      },
+      {
+        id: "focus",
+        label: { en: "Focus", ar: "التركيز" },
+        body: {
+          en: "Presenting eight luxury service lines with rich animated galleries while keeping all content fully editable by non-technical staff.",
+          ar: "عرض ثماني خطوط خدمة فاخرة بمعارض متحركة غنية مع إبقاء كل المحتوى قابلاً للتحرير.",
+        },
+      },
+      {
+        id: "role",
+        label: { en: "Role", ar: "الدور" },
+        body: {
+          en: "Full-stack build: UI design, animation, CMS, blog engine, admin panel, and deployment.",
+          ar: "بناء full-stack: تصميم الواجهة، الحركة، CMS، محرك المدونة، لوحة الإدارة، والنشر.",
+        },
+      },
+    ],
+    caseStudy: {
+      problem: {
+        en: "A Saudi luxury-gifts company needed a professional online presence with rich photo galleries and the ability for non-technical staff to update all content independently.",
+        ar: "شركة سعودية للهدايا الفاخرة بحاجة إلى حضور رقمي احترافي بمعارض صور غنية يتيح للموظفين التحديث باستقلالية.",
+      },
+      solution: {
+        en: "Built an animated service showcase with multi-image carousels, a Supabase CMS, a structured blog, lazy-loaded images, and a full admin panel.",
+        ar: "بنيت واجهة خدمات متحركة مع كاروسيلات صور، وCMS بـ Supabase، ومدونة منظمة، وصور بالتحميل الكسول، ولوحة إدارة كاملة.",
+      },
+      outcome: {
+        en: "A fully editable corporate website presenting all service lines with animated galleries, giving the team complete content control.",
+        ar: "موقع شركة قابل للتحرير بالكامل يعرض جميع خطوط الخدمة بمعارض متحركة.",
+      },
+      role: {
+        en: "Full-stack build: React SPA, Supabase schema and storage, Framer Motion, blog engine, admin panel, and deployment.",
+        ar: "بناء full-stack: React SPA، مخطط Supabase والتخزين، Framer Motion، محرك المدونة، لوحة الإدارة، والنشر.",
+      },
+      stack: {
+        en: "React 18 • Vite • Tailwind CSS • Supabase • Framer Motion • TanStack Query • shadcn/ui • react-helmet-async",
+        ar: "React 18 • Vite • Tailwind CSS • Supabase • Framer Motion • TanStack Query • shadcn/ui • react-helmet-async",
+      },
+      steps: {
+        en: ["Design Supabase schema for services, works, blog, banners, clients", "Build animated hero and service cards with multi-image carousels", "Build blog engine with rich article sections", "Develop full admin panel", "Add lazy loading, code splitting, and keep-alive", "Implement dark/light mode"],
+        ar: ["تصميم مخطط Supabase للخدمات والأعمال والمدونة", "بناء هيرو متحرك وبطاقات خدمة مع كاروسيلات", "بناء محرك المدونة", "تطوير لوحة الإدارة الكاملة", "إضافة التحميل الكسول وتقسيم الكود", "تطبيق الوضع الداكن/الفاتح"],
+      },
+      faqs: [
+        {
+          q: { en: "What services does the site showcase?", ar: "ما الخدمات التي يعرضها الموقع؟" },
+          a: { en: "Eight service lines: promotional gifts, luxury custom gifts, golden/silver swords, events, corporate furniture, outdoor branding, photography, and screen printing.", ar: "ثماني خطوط: هدايا دعائية، هدايا فاخرة، سيوف وخناجر، فعاليات، أثاث، إعلانات خارجية، تصوير، وطباعة شاشة." },
+        },
+        {
+          q: { en: "How is content managed?", ar: "كيف يُدار المحتوى؟" },
+          a: { en: "All content is managed through a Supabase-backed admin panel with no code changes needed.", ar: "كل المحتوى يُدار عبر لوحة إدارة مدعومة بـ Supabase بدون تغييرات في الكود." },
+        },
+        {
+          q: { en: "Is the site bilingual?", ar: "هل الموقع ثنائي اللغة؟" },
+          a: { en: "The primary language is Arabic targeting a Saudi audience, with the admin panel supporting English.", ar: "اللغة الأساسية عربية للجمهور السعودي مع دعم الإنجليزية في لوحة الإدارة." },
+        },
+      ],
+    },
+  },
+
+  // ─── Project 13 — Smart CRM ─────────────────────────────────
+  {
+    id: "smart-crm",
+    universe: 13,
+    slug: "smart-crm",
+    name: {
+      en: "Smart CRM — AI-Powered Sales Intelligence Platform",
+      ar: "Smart CRM — منصة ذكاء مبيعات بالذكاء الاصطناعي",
+    },
+    tagline: {
+      en: "Full-stack CRM with AI lead capture from Google Maps, 8-stage pipeline, deal management, and WhatsApp automation.",
+      ar: "CRM متكامل باستخراج عملاء من خرائط جوجل بالذكاء الاصطناعي وخط اتصال ثماني مراحل وأتمتة واتساب.",
+    },
+    description: {
+      en: "Smart CRM is a full-stack sales intelligence platform built as a TypeScript monorepo. The backend runs as a Cloudflare Worker with Supabase as the database. Key features: AI-powered acquisition from Google Maps URLs, an 8-stage contact pipeline, deal lifecycle management, automated follow-up scheduling, WhatsApp broadcast automation, payment tracking, and an intelligence engine that scores contacts by momentum and risk.",
+      ar: "Smart CRM هو منصة ذكاء مبيعات متكاملة كـ TypeScript monorepo. الباك إند يعمل كـ Cloudflare Worker مع Supabase. الميزات: استخراج عملاء من روابط خرائط جوجل بالذكاء الاصطناعي، خط اتصال ثماني مراحل، إدارة دورة الصفقات، جدولة المتابعة التلقائية، بث واتساب، تتبع المدفوعات، ومحرك ذكاء يسجّل الزخم والمخاطر.",
+    },
+    focusKeyword: { en: "AI CRM sales platform", ar: "منصة CRM ذكاء مبيعات" },
+    seoTitle: {
+      en: "Smart CRM: AI-Powered Sales Intelligence Platform",
+      ar: "Smart CRM: منصة ذكاء المبيعات بالذكاء الاصطناعي",
+    },
+    seoDescription: {
+      en: "Full-stack TypeScript CRM with AI lead capture from Google Maps, 8-stage contact pipeline, deal management, and WhatsApp automation.",
+      ar: "CRM TypeScript متكامل مع استخراج عملاء من خرائط جوجل، خط اتصال ثماني مراحل، إدارة صفقات، وأتمتة واتساب.",
+    },
+    techStack: ["TypeScript", "Next.js", "Cloudflare Workers", "Supabase", "PostgreSQL", "Zod", "React", "Tailwind CSS"],
+    tags: ["crm", "saas", "fullstack", "ai", "backend", "typescript", "cloudflare"],
+    repoUrl: "https://github.com/Mohamed-El-Hussainy-gitme/smart-crm",
+    screens: [],
+    highlights: [
+      {
+        id: "keyPoints",
+        label: { en: "Key Points", ar: "أبرز النقاط" },
+        body: {
+          en: "AI lead capture from Google Maps, 8-stage contact pipeline, 7-stage deal lifecycle, intelligence engine with momentum and risk scoring, WhatsApp automation, and Cloudflare Workers backend.",
+          ar: "استخراج عملاء AI من خرائط جوجل، خط اتصال ثماني مراحل، دورة صفقات بـ 7 مراحل، محرك ذكاء بتسجيل زخم ومخاطر، وأتمتة واتساب.",
+        },
+      },
+      {
+        id: "focus",
+        label: { en: "Focus", ar: "التركيز" },
+        body: {
+          en: "Building an AI acquisition pipeline and intelligence engine that turns raw Google Maps data into scored, de-duplicated leads with automated follow-up workflows.",
+          ar: "بناء خط استخراج AI ومحرك ذكاء يحوّل بيانات خرائط جوجل إلى عملاء محتملين مُسجَّلين وخالين من التكرار.",
+        },
+      },
+      {
+        id: "role",
+        label: { en: "Role", ar: "الدور" },
+        body: {
+          en: "Full-stack TypeScript monorepo: Cloudflare Worker backend, AI pipeline, intelligence engine, Next.js frontend, and RBAC.",
+          ar: "TypeScript monorepo متكامل: باك إند Cloudflare Worker، خط AI، محرك ذكاء، واجهة Next.js، وصلاحيات متدرجة.",
+        },
+      },
+    ],
+    caseStudy: {
+      problem: {
+        en: "Sales teams wasted hours manually entering leads from Google Maps, had no unified pipeline view, and lacked automated intelligence to prioritize follow-ups.",
+        ar: "كانت فرق المبيعات تضيع ساعات في إدخال العملاء يدوياً من خرائط جوجل وتفتقر إلى رؤية موحدة وذكاء آلي لتحديد أولويات المتابعة.",
+      },
+      solution: {
+        en: "Built an AI acquisition pipeline that parses Google Maps URLs to extract phones, normalize locations, detect duplicates, and score confidence. Layered an 8-stage contact pipeline, 7-stage deal lifecycle, and an intelligence engine computing momentum and risk.",
+        ar: "بنيت خط استخراج AI يحلل روابط خرائط جوجل لاستخراج الهواتف وتطبيع المواقع وكشف المكررات وتسجيل الثقة. أضفت خط اتصال ثماني مراحل ودورة صفقات ومحرك ذكاء.",
+      },
+      outcome: {
+        en: "Sales reps can drop a Google Maps URL and get a pre-filled, de-duplicated lead in seconds, with the intelligence dashboard surfacing hot leads and rescue lists.",
+        ar: "مندوبو المبيعات يحصلون على عميل مُعبأ وخالٍ من التكرار في ثوانٍ، ولوحة الذكاء تعرض العملاء الساخنين وقوائم الإنقاذ.",
+      },
+      role: {
+        en: "Full-stack: Cloudflare Workers backend, Supabase schema, AI pipeline, intelligence engine, Next.js frontend, and RBAC.",
+        ar: "Full-stack: باك إند Cloudflare Workers، مخطط Supabase، خط AI، محرك ذكاء، واجهة Next.js، وصلاحيات.",
+      },
+      stack: {
+        en: "TypeScript • Cloudflare Workers • Next.js • Supabase (PostgreSQL) • Zod • cookie-based sessions",
+        ar: "TypeScript • Cloudflare Workers • Next.js • Supabase (PostgreSQL) • Zod • جلسات مبنية على الكوكيز",
+      },
+      steps: {
+        en: ["Design TypeScript monorepo (shared, backend, web)", "Build Cloudflare Worker router with cookie session auth", "Implement AI acquisition pipeline (phone extraction, location normalization, duplicate detection)", "Build 8-stage contact pipeline and 7-stage deal lifecycle", "Build intelligence engine with momentum and risk scoring", "Add WhatsApp automation, payment tracking, and audit trail", "Build Next.js frontend with RBAC"],
+        ar: ["تصميم TypeScript monorepo", "بناء Cloudflare Worker router مع مصادقة الجلسة", "تطبيق خط استخراج AI", "بناء خط الاتصال ودورة الصفقات", "بناء محرك الذكاء", "إضافة أتمتة واتساب وتتبع المدفوعات وسجل التدقيق", "بناء واجهة Next.js بـ RBAC"],
+      },
+      faqs: [
+        {
+          q: { en: "How does the AI lead capture work?", ar: "كيف يعمل استخراج العملاء بالذكاء الاصطناعي؟" },
+          a: { en: "Paste a Google Maps URL. The pipeline extracts phones, normalizes location, detects duplicates, and assigns a confidence score (HIGH/MEDIUM/LOW).", ar: "الصق رابط خرائط جوجل. الخط يستخرج الهواتف ويطبّع الموقع ويكشف المكررات ويعيّن درجة ثقة." },
+        },
+        {
+          q: { en: "What is the intelligence engine?", ar: "ما هو محرك الذكاء؟" },
+          a: { en: "It analyses tasks, payments, deals, and last interaction to compute a momentum score (HOT/WARM/COLD) and risk level.", ar: "يحلل المهام والمدفوعات والصفقات وآخر تفاعل لحساب درجة زخم (ساخن/دافئ/بارد) ومستوى مخاطر." },
+        },
+        {
+          q: { en: "Why Cloudflare Workers?", ar: "لماذا Cloudflare Workers؟" },
+          a: { en: "Workers run at the edge with near-zero cold start, globally distributed, and scale automatically.", ar: "Workers تعمل على الحافة بدون Cold Start تقريباً، موزعة عالمياً وتتوسع تلقائياً." },
+        },
+      ],
+    },
+  },
+
+  // ─── Project 14 — POS ERP ───────────────────────────────────
+  {
+    id: "pos-erp",
+    universe: 14,
+    slug: "pos-erp",
+    name: {
+      en: "POS ERP — Restaurant & Retail Management System",
+      ar: "POS ERP — نظام إدارة المطاعم والمتاجر",
+    },
+    tagline: {
+      en: "Full-stack POS and ERP covering sales, inventory, kitchen display, multi-branch, accounting, and analytics.",
+      ar: "نظام POS وERP متكامل يشمل المبيعات والمخزون وشاشة المطبخ والفروع والمحاسبة والتحليلات.",
+    },
+    description: {
+      en: "POS ERP is a comprehensive restaurant and retail management system built with React 18, Vite, and Supabase. The POS screen supports dine-in/takeaway/delivery, barcode scanning, multiple payment methods (cash, card, Apple Pay, STC Pay), and offline mode. Beyond POS: inventory tracking with stock movement logs, kitchen display, tables management, customer profiles, purchasing, multi-branch management, employee scheduling, accounting reconciliation, and a KPI dashboard with Recharts.",
+      ar: "POS ERP هو نظام شامل للمطاعم والمتاجر مبني بـ React 18 وVite وSupabase. شاشة POS تدعم الطلبات (داين إن، تيك أواي، توصيل)، مسح الباركود، طرق دفع متعددة، ووضع أوفلاين. بالإضافة: تتبع مخزون، شاشة مطبخ، إدارة طاولات، ملفات عملاء، مشتريات، إدارة فروع متعددة، جداول موظفين، محاسبة، ولوحة KPI.",
+    },
+    focusKeyword: { en: "restaurant POS ERP system", ar: "نظام POS ERP للمطاعم" },
+    seoTitle: {
+      en: "POS ERP: Restaurant & Retail Management System Case Study",
+      ar: "POS ERP: دراسة حالة نظام إدارة المطاعم والمتاجر",
+    },
+    seoDescription: {
+      en: "Full-stack POS and ERP for restaurants with offline mode, barcode scanning, inventory, kitchen display, multi-branch, and analytics.",
+      ar: "POS وERP متكامل للمطاعم مع وضع أوفلاين ومسح باركود ومخزون وشاشة مطبخ وفروع متعددة وتحليلات.",
+    },
+    techStack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "TanStack Query", "Recharts", "shadcn/ui", "date-fns"],
+    tags: ["pos", "erp", "fullstack", "dashboard", "offline", "restaurant", "supabase"],
+    repoUrl: "https://github.com/Mohamed-El-Hussainy-gitme/pos-erp",
+    screens: [],
+    highlights: [
+      {
+        id: "keyPoints",
+        label: { en: "Key Points", ar: "أبرز النقاط" },
+        body: {
+          en: "POS with offline mode and barcode scanning, inventory with adjustment logs, kitchen display, tables management, customer profiles, multi-branch management, employee scheduling, accounting reconciliation, and KPI dashboard.",
+          ar: "POS مع وضع أوفلاين ومسح باركود، مخزون مع سجلات تعديل، شاشة مطبخ، إدارة طاولات، ملفات عملاء، فروع متعددة، جداول موظفين، محاسبة، ولوحة KPI.",
+        },
+      },
+      {
+        id: "focus",
+        label: { en: "Focus", ar: "التركيز" },
+        body: {
+          en: "Building a complete operational loop from POS intake to accounting close, with offline resilience, multi-branch visibility, and real-time KPI analytics.",
+          ar: "بناء حلقة تشغيل كاملة من استلام POS إلى الإغلاق المحاسبي مع مرونة أوفلاين ورؤية فروع متعددة وتحليلات KPI.",
+        },
+      },
+      {
+        id: "role",
+        label: { en: "Role", ar: "الدور" },
+        body: {
+          en: "Full-stack build: React SPA, Supabase schema, offline mode, kitchen display, multi-branch, accounting, and analytics.",
+          ar: "بناء full-stack: React SPA، مخطط Supabase، وضع أوفلاين، شاشة مطبخ، فروع متعددة، محاسبة، وتحليلات.",
+        },
+      },
+    ],
+    caseStudy: {
+      problem: {
+        en: "Restaurants needed a unified system for POS transactions (including offline), inventory tracking, kitchen order routing, employee management, and accounting reports — without multiple disconnected tools.",
+        ar: "المطاعم بحاجة إلى نظام موحد لمعالجة POS (بما فيها الأوفلاين) وتتبع المخزون وتوجيه الطلبات وإدارة الموظفين والتقارير.",
+      },
+      solution: {
+        en: "Built a unified React SPA covering the full operational loop: POS with offline fallback, inventory with adjustment logs, kitchen display, customer profiles, purchasing, multi-branch management, and accounting with KPI dashboard.",
+        ar: "بنيت SPA موحدة بـ React تغطي الحلقة التشغيلية الكاملة: POS مع احتياطي أوفلاين، مخزون مع سجلات تعديل، شاشة مطبخ، ملفات عملاء، مشتريات، إدارة فروع، ومحاسبة مع لوحة KPI.",
+      },
+      outcome: {
+        en: "A single system covering the entire lifecycle from order intake to accounting close, working offline when connectivity drops, with real-time KPI visibility across all branches.",
+        ar: "نظام واحد يغطي دورة التشغيل الكاملة من استلام الطلب إلى الإغلاق المحاسبي، يعمل أوفلاين عند انقطاع الاتصال.",
+      },
+      role: {
+        en: "Full-stack: React SPA, Supabase schema, offline mode, kitchen display, multi-branch, accounting, and analytics.",
+        ar: "Full-stack: React SPA، مخطط Supabase، وضع أوفلاين، شاشة مطبخ، فروع، محاسبة، وتحليلات.",
+      },
+      stack: {
+        en: "React 18 • Vite • Tailwind CSS • Supabase • TanStack Query • Recharts • shadcn/ui • date-fns • localStorage offline",
+        ar: "React 18 • Vite • Tailwind CSS • Supabase • TanStack Query • Recharts • shadcn/ui • date-fns • تخزين محلي أوفلاين",
+      },
+      steps: {
+        en: ["Design Supabase schema (products, orders, inventory, customers, employees, branches)", "Build POS with dine-in/takeaway/delivery, barcode scanning, and multi-payment", "Implement offline mode with localStorage fallback", "Build inventory manager with stock adjustment logs", "Implement kitchen display and tables management", "Add multi-branch management and employee scheduling", "Build accounting view and KPI dashboard with Recharts"],
+        ar: ["تصميم مخطط Supabase", "بناء POS بأنواع الطلبات ومسح الباركود وطرق الدفع", "تطبيق وضع الأوفلاين", "بناء مدير المخزون", "تطبيق شاشة المطبخ وإدارة الطاولات", "إضافة إدارة الفروع وجداول الموظفين", "بناء المحاسبة ولوحة KPI"],
+      },
+      faqs: [
+        {
+          q: { en: "How does offline mode work?", ar: "كيف يعمل وضع الأوفلاين؟" },
+          a: { en: "When connectivity drops, orders are saved to localStorage with a generated order number and synced to Supabase on reconnect.", ar: "عند انقطاع الاتصال تُحفظ الطلبات في localStorage وتُزامن مع Supabase عند إعادة الاتصال." },
+        },
+        {
+          q: { en: "What payment methods are supported?", ar: "ما طرق الدفع المدعومة؟" },
+          a: { en: "Cash, card, Apple Pay, and STC Pay — selectable per order on the POS screen.", ar: "نقداً، بطاقة، Apple Pay، وSTC Pay — قابلة للاختيار لكل طلب على شاشة POS." },
+        },
+        {
+          q: { en: "Can it handle multiple branches?", ar: "هل يدعم فروع متعددة؟" },
+          a: { en: "Yes. The multi-branch panel lets managers set up branches, assign employees, and view per-branch KPIs from a single interface.", ar: "نعم. لوحة الفروع تتيح إعداد الفروع وتعيين الموظفين وعرض KPIs من واجهة واحدة." },
+        },
+      ],
+    },
+  },
 ];
 
 export type ProjectId = (typeof projects)[number]["id"];

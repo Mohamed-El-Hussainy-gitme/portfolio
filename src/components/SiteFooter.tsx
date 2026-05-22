@@ -1,154 +1,137 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useLanguage } from "../core/i18n/LanguageContext";
-import { buildWhatsAppLink, CONTACT_EMAIL, CONTACT_GITHUB, CONTACT_LINKEDIN } from "../data/contact";
+import Link from 'next/link';
+import { Github, Linkedin, Twitter, Mail, Phone, Youtube, Facebook, Instagram, Send } from 'lucide-react';
+import { useSettings } from '@/lib/useSiteData';
+import { useLanguage } from '@/core/i18n/LanguageContext';
 
 export default function SiteFooter() {
-  const { language, direction, href } = useLanguage();
-  const isArabic = language === "ar";
+  const { data: s } = useSettings();
+  const { language, href } = useLanguage();
+  const isAr = language === 'ar';
 
-  const focusKeyword = isArabic ? "بناء ويب سايت" : "website development";
+  const socialIcons = [
+    s?.github_url && { icon: Github, href: s.github_url, label: 'GitHub' },
+    s?.linkedin_url && { icon: Linkedin, href: s.linkedin_url, label: 'LinkedIn' },
+    s?.twitter_url && { icon: Twitter, href: s.twitter_url, label: 'Twitter' },
+    s?.youtube_url && { icon: Youtube, href: s.youtube_url, label: 'YouTube' },
+    s?.facebook_url && { icon: Facebook, href: s.facebook_url, label: 'Facebook' },
+    s?.instagram_url && { icon: Instagram, href: s.instagram_url, label: 'Instagram' },
+    s?.telegram_url && { icon: Send, href: s.telegram_url, label: 'Telegram' },
+    s?.email && { icon: Mail, href: `mailto:${s.email}`, label: 'Email' },
+  ].filter(Boolean) as { icon: typeof Github; href: string; label: string }[];
 
-  const waMessage = isArabic
-    ? `مرحبًا محمد، أريد ${focusKeyword} وأرغب في طلب عرض سعر.`
-    : `Hi Mohamed, I need ${focusKeyword} and would like a quote.`;
+  const navLinks = isAr
+    ? [
+        ['الرئيسية', '/'],
+        ['المشاريع', '/projects'],
+        ['الخدمات', '/services'],
+        ['المدونة', '/blog'],
+        ['عني', '/about'],
+        ['تواصل', '/contact'],
+      ]
+    : [
+        ['Home', '/'],
+        ['Projects', '/projects'],
+        ['Services', '/services'],
+        ['Blog', '/blog'],
+        ['About', '/about'],
+        ['Contact', '/contact'],
+      ];
 
-  const waLink = buildWhatsAppLink(waMessage);
-
-  const brandTitle = isArabic ? "محمد الحسيني" : "Mohamed El-Husseiny";
-  const brandTagline = isArabic
-    ? `مطور ويب متخصص في ${focusKeyword} وتجارب RTL/EN بدون خلط.`
-    : `Web developer focused on ${focusKeyword}, clean SEO, and flawless RTL/LTR UX.`;
-
-    const logoSrc = "/brand/logo.svg";
-
-  const links = [
-    { to: "/", label: isArabic ? "الرئيسية" : "Home" },
-    { to: "/projects", label: isArabic ? "المشاريع" : "Projects" },
-    { to: "/services", label: isArabic ? "الخدمات" : "Services" },
-    { to: "/blog", label: isArabic ? "المدونة" : "Blog" },
-    { to: "/about", label: isArabic ? "من أنا" : "About" },
-    { to: "/contact", label: isArabic ? "تواصل" : "Contact" },
-  ];
+  const phones = Array.isArray(s?.phone_numbers) ? s.phone_numbers : [];
 
   return (
-    <footer
-      dir={direction}
-      className="relative mt-16 overflow-hidden border-t border-slate-800/70 bg-gradient-to-b from-slate-950 via-[#050816] to-black"
-    >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="multiverse-grid-overlay h-full w-full opacity-[0.12]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.18),transparent_55%),radial-gradient(circle_at_80%_100%,rgba(129,140,248,0.22),transparent_60%)] mix-blend-screen" />
-      </div>
-
-      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/70 ring-1 ring-white/10 shadow-lg shadow-violet-500/20">
-                <Image
-                  src={logoSrc}
-                  alt={isArabic ? "شعار المطور" : "Developer logo"}
-                  width={28}
-                  height={28}
-                />
+    <footer className="bg-obsidian text-white mt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-600">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/logo.png" alt="ME Logo" className="w-full h-full object-cover" />
               </div>
-
-              <div className={direction === "rtl" ? "text-right" : "text-left"}>
-                <div className="text-sm font-semibold text-slate-50">{brandTitle}</div>
-                <div className="text-xs text-slate-400">{isArabic ? "ملف أعمال مطور ويب" : "Developer portfolio"}</div>
+              <div>
+                <p className="font-bold">{s?.owner_name || 'Mohamed El-Husseiny'}</p>
+                <p className="text-sm text-slate-400">
+                  {isAr ? s?.tagline_ar || 'معرض أعمال مطور ويب' : s?.tagline_en || 'Developer portfolio'}
+                </p>
               </div>
             </div>
+            <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
+              {isAr
+                ? 'مطور ويب متخصص في بناء المواقع بأداء عالٍ، SEO تقني، وتجربة مستخدم AR/EN.'
+                : 'Web developer focused on website development, clean SEO, and flawless RTL/LTR UX.'}
+            </p>
+            <div className="flex flex-wrap items-center gap-3 mt-5">
+              {socialIcons.map(({ icon: Icon, href: socialHref, label }) => (
+                <a
+                  key={label}
+                  href={socialHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={label}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
 
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-slate-300">{brandTagline}</p>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
+              {isAr ? 'التنقل' : 'Navigation'}
+            </p>
+            <div className="space-y-2">
+              {navLinks.map(([label, path]) => (
+                <Link key={path} href={href(path)} className="block text-sm text-slate-400 hover:text-white transition-colors">
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">
+              {isAr ? 'تواصل' : 'Contact'}
+            </p>
+            <div className="space-y-2 text-sm text-slate-400">
+              {s?.email && (
+                <a href={`mailto:${s.email}`} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  {s.email}
+                </a>
+              )}
+              {phones.map((phone: string, i: number) => (
+                <a key={i} href={`tel:${phone}`} className="flex items-center gap-2 hover:text-white transition-colors">
+                  <Phone className="w-4 h-4 flex-shrink-0" />
+                  {phone}
+                </a>
+              ))}
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2">
               <a
-                href={waLink}
+                href={`https://wa.me/${s?.whatsapp || '201018557413'}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 px-5 py-2 text-xs font-semibold text-slate-950 shadow-sm shadow-cyan-400/25 transition hover:brightness-105"
+                className="inline-flex items-center gap-2 bg-cobalt text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                {isArabic ? "اطلب عرض سعر" : "Request a quote"}
+                {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
               </a>
-
               <Link
-                href={href("/projects")}
-                className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-5 py-2 text-xs font-medium text-slate-100 hover:border-indigo-400"
+                href={href('/projects')}
+                className="inline-flex items-center gap-2 border border-slate-700 text-slate-300 text-sm font-medium px-4 py-2 rounded-lg hover:border-slate-500 transition-colors"
               >
-                {isArabic ? "شاهد المشاريع" : "View projects"}
+                {isAr ? 'المشاريع' : 'View projects'}
               </Link>
-            </div>
-          </div>
-
-          <div className="md:col-span-4">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-              {isArabic ? "روابط" : "Links"}
-            </p>
-            <ul className="grid gap-2 text-sm text-slate-300">
-              {links.map((l) => (
-                <li key={l.to}>
-                  <Link href={href(l.to)} className="hover:text-white">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="md:col-span-3">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-              {isArabic ? "تواصل" : "Contact"}
-            </p>
-
-            <div className="space-y-3 text-sm text-slate-300">
-              <div>
-                <span className="text-slate-400">{isArabic ? "البريد:" : "Email:"}</span>{" "}
-                <a className="hover:text-white" href={`mailto:${CONTACT_EMAIL}`}>
-                  {CONTACT_EMAIL}
-                </a>
-              </div>
-
-              <div className="flex flex-wrap gap-3 text-xs">
-                <a
-                  className="rounded-full border border-slate-700/70 bg-slate-950/60 px-4 py-2 hover:border-indigo-400"
-                  href={CONTACT_GITHUB}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GitHub
-                </a>
-                <a
-                  className="rounded-full border border-slate-700/70 bg-slate-950/60 px-4 py-2 hover:border-indigo-400"
-                  href={CONTACT_LINKEDIN}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LinkedIn
-                </a>
-              </div>
-
-              <p className="pt-2 text-xs leading-relaxed text-slate-400">
-                {isArabic
-                  ? `إذا كنت تبحث عن ${focusKeyword} سريع وحديث، ارسل رسالة مختصرة وسأرد عليك بخطة واضحة وخطوات التنفيذ.`
-                  : `If you need ${focusKeyword} with clean UX and SEO, send a short message and I will reply with a clear plan and next steps.`}
-              </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 h-px w-full bg-gradient-to-r from-transparent via-slate-700/70 to-transparent" />
-
-        <div className="mt-6 flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            © {new Date().getFullYear()} {brandTitle}. {isArabic ? "جميع الحقوق محفوظة." : "All rights reserved."}
-          </span>
-          <span className="text-slate-600">
-            {isArabic ? "مصمم بعناية لنتائج البحث (SEO/GEO) وتجربة عربية صحيحة." : "Crafted for SEO/GEO and clean bilingual UX."}
-          </span>
+        <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <p>© 2026 {s?.owner_name || 'Mohamed El-Husseiny'}. All rights reserved.</p>
+          <p>Crafted for SEO/GEO and clean bilingual UX.</p>
         </div>
       </div>
     </footer>

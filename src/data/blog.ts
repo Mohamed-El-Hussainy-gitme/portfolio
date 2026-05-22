@@ -14,6 +14,9 @@ export type BlogPost = {
   title: LocalizedText;
   description: LocalizedText;
   blocks: BlogBlock[];
+  /** من Supabase أو افتراضي 5 */
+  readingTimeMin?: number;
+  coverImage?: string;
 };
 
 // ---------------------------------------------------------------------------
