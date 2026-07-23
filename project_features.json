@@ -1,0 +1,304 @@
+{
+  "ahwa": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "AL OLA": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "bcc run time": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "coffe store": {
+    "stack": [
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "coffe-store": {
+    "stack": [
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "crm": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "dashboard for hussainy": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "E-Commrece with dashboard and ERP": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "freelawyers": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": [
+      "admin",
+      "auth",
+      "conversations",
+      "dashboard",
+      "how-it-works",
+      "launch",
+      "lawyers",
+      "layout.tsx",
+      "notifications",
+      "page.tsx",
+      "policies",
+      "requests"
+    ]
+  },
+  "hussainy next with dashboard": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": [
+      "(ar)",
+      "(en)",
+      "admin",
+      "GoogleAnalytics.tsx",
+      "LocaleProviders.tsx"
+    ]
+  },
+  "NilUEgy": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "noda AI": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "noda groq clean": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "POS": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "pos erp": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "pos-erp-project": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "restaurant": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "ahwa-github": {
+    "stack": [],
+    "models": [],
+    "routes": []
+  },
+  "arab-tourism-platform": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "dashboard-admin": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "E-Commerce ERP": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "elhussainy-next": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": [
+      "(ar)",
+      "(en)",
+      "admin",
+      "GoogleAnalytics.tsx",
+      "LocaleProviders.tsx"
+    ]
+  },
+  "holospace": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "Mohamed El Hussainy portfolio": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": [
+      "layout.tsx",
+      "page.tsx",
+      "[locale]"
+    ]
+  },
+  "multiverse-showcase": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "Nilu": {
+    "stack": [
+      "Next.js",
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "Nilu react version": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "real-estate-ui": {
+    "stack": [
+      "React",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "al khair": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "alafkham": {
+    "stack": [
+      "WordPress",
+      "Plugins: cart-for-woocommerce-disabled, elementor, elementor-pro, elementskit-lite, emailkit, getgenie, gutenkit-blocks-addon, hostinger, hostinger-ai-assistant, hostinger-easy-onboarding, hostinger-reach, index.php, jeg-elementor-kit, litespeed-cache, megamenu, metform, polylang, popup-builder-block, send-app, shopengine, template-kit-import, woocommerce, woocommerce-payments, wp-fastest-cache, wp-social, wp-ultimate-review"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "arab anglais": {
+    "stack": [
+      "React",
+      "Supabase",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "BCC commercial": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "GrowLik": {
+    "stack": [
+      "WordPress"
+    ],
+    "models": [],
+    "routes": []
+  },
+  "zeta": {
+    "stack": [
+      "React",
+      "Framer Motion",
+      "Tailwind CSS"
+    ],
+    "models": [],
+    "routes": []
+  }
+}

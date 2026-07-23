@@ -1,30 +1,29 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import { useLanguage } from "../core/i18n/LanguageContext";
+import Link from 'next/link';
+import { useLanguage } from '@/core/i18n/LanguageContext';
 
 export default function NotFoundPage() {
-  const { language, direction, href } = useLanguage();
-  const isArabic = language === "ar";
+  const { language, href } = useLanguage();
+  const isAr = language === 'ar';
 
   return (
-    <section className="mx-auto flex min-h-[70vh] max-w-6xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6 lg:px-8">
-      <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400">404</p>
-      <h1 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">{isArabic ? "الصفحة غير موجودة" : "Page not found"}</h1>
-      <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
-        {isArabic ? "الرابط غير صحيح أو تم نقل الصفحة." : "The link is incorrect or the page has been moved."}
+    <div className="min-h-[60vh] flex flex-col items-center justify-center bg-white px-4 text-center">
+      <p className="text-xs font-semibold uppercase tracking-widest text-cobalt mb-2">404</p>
+      <h1 className="text-3xl font-inter-tight font-black text-obsidian mb-3">
+        {isAr ? 'الصفحة غير موجودة' : 'Page not found'}
+      </h1>
+      <p className="text-slate-600 mb-8 max-w-md">
+        {isAr ? 'الرابط غير صحيح أو الصفحة نُقلت.' : 'The link may be wrong or the page was moved.'}
       </p>
-
-      <div className={`mt-10 flex flex-wrap gap-3 ${direction === "rtl" ? "justify-end" : "justify-start"}`}>
-        <Link href={href("/")} className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-2.5 text-sm font-medium text-slate-100 hover:border-indigo-400">
-          {isArabic ? "العودة للرئيسية" : "Back to home"}
+      <div className="flex flex-wrap gap-3 justify-center">
+        <Link href={href('/')} className="bg-cobalt text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-blue-700">
+          {isAr ? 'الرئيسية' : 'Home'}
         </Link>
-
-        <Link href={href("/projects")} className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-2.5 text-sm font-medium text-slate-100 hover:border-indigo-400">
-          {isArabic ? "عرض المشاريع" : "View projects"}
+        <Link href={href('/projects')} className="border border-border text-slate-700 font-medium px-6 py-2.5 rounded-xl hover:bg-slate-50">
+          {isAr ? 'المشاريع' : 'Projects'}
         </Link>
       </div>
-    </section>
+    </div>
   );
 }

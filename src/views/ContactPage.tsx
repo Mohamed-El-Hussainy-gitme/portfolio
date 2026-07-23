@@ -4,19 +4,14 @@ import type { ReactNode, SVGProps } from "react";
 import type { Locale } from "@/core/i18n/locale";
 import { buildWhatsAppLink, CONTACT_EMAIL, CONTACT_WHATSAPP_PHONE, GITHUB_URL, LINKEDIN_URL } from "@/data/contact";
 import { useLanguage } from "@/core/i18n/LanguageContext";
+import { usePageContent } from "@/lib/usePageContent";
+import { pageHeroField } from "@/lib/pageContent";
+import PageHero from "@/components/layout/PageHero";
+import ContactForm from "@/components/ContactForm";
 
 function IconMail(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
       <path d="M4 4h16v16H4z" />
       <path d="m4 6 8 7 8-7" />
     </svg>
@@ -25,12 +20,7 @@ function IconMail(props: SVGProps<SVGSVGElement>) {
 
 function IconGithub(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
       <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.76.6-3.34-1.33-3.34-1.33-.45-1.14-1.1-1.45-1.1-1.45-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.2-.25-4.51-1.1-4.51-4.9 0-1.08.39-1.96 1.03-2.65-.1-.25-.45-1.26.1-2.62 0 0 .84-.27 2.75 1.01A9.6 9.6 0 0 1 12 6.8c.85 0 1.71.12 2.51.34 1.91-1.28 2.75-1.01 2.75-1.01.55 1.36.2 2.37.1 2.62.64.69 1.03 1.57 1.03 2.65 0 3.81-2.31 4.65-4.52 4.9.36.31.68.92.68 1.85v2.74c0 .26.18.58.69.48A10 10 0 0 0 12 2z" />
     </svg>
   );
@@ -59,110 +49,110 @@ type Action = {
   icon: ReactNode;
   sublabel?: string;
   targetBlank?: boolean;
-  tone?: "default" | "accent" | "success";
+  accent?: "default" | "cobalt" | "success";
 };
 
 export default function ContactPage({ locale }: { locale: Locale }) {
-  void locale;
   const { language } = useLanguage();
   const isRTL = language === "ar";
 
-  const eyebrow = language === "ar" ? "نهاية — بداية جديدة" : "ENDING — NEW BEGINNING";
-  const title = language === "ar" ? "لنصنع شيئًا يلفت العملاء" : "Let’s build something that attracts customers";
-  const subtitle =
-    language === "ar"
-      ? "إذا عندك مشروع أو تريد موقع احترافي (واجهة + خلفية + قاعدة بيانات) مع SEO تقني وأداء عالي — أرسل رسالة وسأرد عليك بسرعة."
-      : "Have a project? I build complete websites (frontend, backend, database) with responsive UI, SEO, performance, and integrations. Send a message and I’ll reply quickly.";
+  const { data: page } = usePageContent("contact");
+  const lang = language === "ar" ? "ar" : "en";
+  const heroLabel = pageHeroField(page.hero, "label", lang);
+  const title = pageHeroField(page.hero, "heading", lang);
+  const subtitle = pageHeroField(page.hero, "sub", lang);
 
   const actions: Action[] = [
     {
-      key: "email",
-      label: language === "ar" ? "Email" : "Email",
-      href: `mailto:${CONTACT_EMAIL}`,
-      icon: <IconMail className="h-4 w-4" />,
-      sublabel: CONTACT_EMAIL,
-      tone: "default",
+      key: "whatsapp",
+      label: language === "ar" ? "WhatsApp" : "WhatsApp",
+      href: buildWhatsAppLink(
+        language === "ar" ? "مرحبًا، أريد عرض سعر لموقع جديد." : "Hi, I want a quote for a new website."
+      ),
+      icon: <IconWhatsApp className="h-5 w-5" />,
+      sublabel: `+${CONTACT_WHATSAPP_PHONE}`,
+      targetBlank: true,
+      accent: "success",
     },
     {
-      key: "github",
-      label: "GitHub",
-      href: GITHUB_URL,
-      icon: <IconGithub className="h-4 w-4" />,
-      targetBlank: true,
-      tone: "default",
+      key: "email",
+      label: "Email",
+      href: `mailto:${CONTACT_EMAIL}`,
+      icon: <IconMail className="h-5 w-5" />,
+      sublabel: CONTACT_EMAIL,
+      accent: "cobalt",
     },
     {
       key: "linkedin",
       label: "LinkedIn",
       href: LINKEDIN_URL,
-      icon: <IconLinkedIn className="h-4 w-4" />,
+      icon: <IconLinkedIn className="h-5 w-5" />,
       targetBlank: true,
-      tone: "accent",
+      accent: "default",
     },
     {
-      key: "whatsapp",
-      label: language === "ar" ? "WhatsApp" : "WhatsApp",
-      href: buildWhatsAppLink(language === "ar" ? "مرحبًا، أريد عرض سعر لموقع جديد." : "Hi, I want a quote for a new website."),
-      icon: <IconWhatsApp className="h-4 w-4" />,
-      sublabel: `+${CONTACT_WHATSAPP_PHONE}`,
+      key: "github",
+      label: "GitHub",
+      href: GITHUB_URL,
+      icon: <IconGithub className="h-5 w-5" />,
       targetBlank: true,
-      tone: "success",
+      accent: "default",
     },
   ];
 
   const tip =
     language === "ar"
-      ? "ملاحظة: أرسل تفاصيل سريعة (نوع الموقع، عدد الصفحات، اللغة، المحتوى/التصميم، موعد التسليم) وسأعطيك تقدير أدق."
-      : "Tip: Share quick details (website type, pages, language, content/design, deadline) for a more accurate quote.";
+      ? "أرسل تفاصيل سريعة: نوع الموقع، عدد الصفحات، اللغة، المحتوى/التصميم، وموعد التسليم — للحصول على تقدير أدق."
+      : "Share quick details: site type, page count, language, content/design, and deadline for a sharper quote.";
 
-  const orderedActions = isRTL ? [...actions].reverse() : actions;
-
-  // Navbar + footer are rendered once globally in <PageLayout />.
   return (
-    <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.22),transparent_60%)]"
-      />
+    <div className="min-h-screen bg-white">
+      <PageHero label={heroLabel} heading={title} sub={subtitle} />
 
-      <div className="relative mx-auto max-w-4xl text-center">
-          <div className="text-[11px] font-semibold tracking-[0.32em] text-slate-400">{eyebrow}</div>
-          <h1 className="mt-6 text-3xl font-semibold tracking-tight text-slate-50 sm:text-5xl">{title}</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">{subtitle}</p>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto">
+          {actions.map((a) => {
+            const cardClass =
+              a.accent === "success"
+                ? "border-emerald-200 bg-emerald-50/50 hover:border-emerald-300"
+                : a.accent === "cobalt"
+                  ? "border-cobalt/20 bg-blue-50/30 hover:border-cobalt/40"
+                  : "border-border bg-white hover:border-cobalt/30";
 
-          <div className={`mt-10 flex flex-wrap items-center justify-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
-            {orderedActions.map((a) => {
-              const toneClass =
-                a.tone === "success"
-                  ? "border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/15"
-                  : a.tone === "accent"
-                    ? "border-sky-400/30 bg-sky-500/10 hover:bg-sky-500/15"
-                    : "border-white/15 bg-white/5 hover:bg-white/10";
+            return (
+              <a
+                key={a.key}
+                href={a.href}
+                target={a.targetBlank ? "_blank" : undefined}
+                rel={a.targetBlank ? "noopener noreferrer" : undefined}
+                className={`flex items-start gap-4 rounded-2xl border p-5 transition hover:shadow-md ${cardClass} ${isRTL ? "flex-row-reverse text-right" : ""}`}
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border border-border text-cobalt">
+                  {a.icon}
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-inter-tight font-bold text-obsidian">{a.label}</span>
+                  {a.sublabel ? (
+                    <span className="block text-xs text-slate-500 mt-1 truncate" dir="ltr">
+                      {a.sublabel}
+                    </span>
+                  ) : null}
+                </span>
+              </a>
+            );
+          })}
+        </div>
 
-              return (
-                <a
-                  key={a.key}
-                  href={a.href}
-                  target={a.targetBlank ? "_blank" : undefined}
-                  rel={a.targetBlank ? "noopener noreferrer" : undefined}
-                  className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium text-slate-100 transition ${toneClass} ${isRTL ? "flex-row-reverse" : ""} focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40`}
-                >
-                  <span className="opacity-90">{a.icon}</span>
-                  <span>{a.label}</span>
-                </a>
-              );
-            })}
-          </div>
+        <p className="mt-10 text-center text-sm text-slate-500 max-w-xl mx-auto">{tip}</p>
+      </section>
 
-          <div className="mt-12 text-xs text-slate-400">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-              <span className="font-medium text-slate-300">{CONTACT_EMAIL}</span>
-              <span className="opacity-60">•</span>
-              <span className="font-medium text-slate-300">+{CONTACT_WHATSAPP_PHONE}</span>
-            </div>
-            <p className="mt-4">{tip}</p>
-          </div>
-      </div>
-    </section>
+      {/* Contact Form Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 border-t border-slate-200">
+        <h2 className={`text-2xl sm:text-3xl font-bold mb-8 ${isRTL ? "text-right" : "text-left"}`}>
+          {language === "ar" ? "أرسل لنا رسالة" : "Send us a message"}
+        </h2>
+        <ContactForm locale={language === "ar" ? "ar" : "en"} />
+      </section>
+    </div>
   );
 }

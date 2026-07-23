@@ -6,31 +6,14 @@ import {
   SITE_ORIGIN,
   OG_IMAGE_PATH,
   FAVICON_PATH,
+  GOOGLE_SITE_VERIFICATION,
   buildLangUrl,
 } from "@/core/seo/siteMeta";
 
-// Accept metadata configuration for a page. When working with localized
-// metadata we allow consumers to provide either simple strings or per-locale
-// records. The `path` property identifies the locale-less portion of the
-// route (e.g. "/", "/about", "/services/my-service"). It is optional and
-// defaults to the root path when omitted. To support richer SERP display we
-// also expose a `keywords` property; callers may supply either a flat array
-// of keywords or an object keyed by locale. When omitted, no `keywords`
-// section will be emitted. Finally, `noIndex` may be set to true to
-// instruct robots to avoid indexing the page.
 export type MetadataInput = {
   title: LocalizedText;
   description?: LocalizedText;
-  /**
-   * Locale-less path, like "/", "/about", "/services/landing-page". When
-   * undefined the path defaults to "/".
-   */
   path?: string;
-  /**
-   * Optional keywords. May be a flat array of strings applied to all
-   * locales or an object keyed by locale with arrays of keywords. When
-   * undefined, no keywords will be added to the metadata.
-   */
   keywords?: ReadonlyArray<string> | Partial<Record<Locale, ReadonlyArray<string>>>;
   noIndex?: boolean;
 };
@@ -41,20 +24,13 @@ function resolveText(input: LocalizedText | undefined, locale: Locale): string {
   if (!input) return "";
   if (typeof input === "string") return input;
 
-  // Prefer exact locale, then default locale, then any available value.
   return input[locale] ?? input[DEFAULT_LOCALE] ?? Object.values(input).find(Boolean) ?? "";
 }
 
 function resolveKeywords(input: MetadataInput["keywords"], locale: Locale): string[] {
   if (!input) return [];
-  // If a plain array is provided it applies to all locales.
   if (Array.isArray(input)) return Array.from(input);
-  // Otherwise fall back to locale specific or default keywords.
-  //
-  // NOTE: `Array.isArray()` does not narrow `ReadonlyArray<T>` in a union well
-  // enough for some TS versions (notably the one bundled with VSCode for some
-  // users), which can cause TS7053 on `input[locale]`. To keep this strict and
-  // type-safe, we explicitly treat this branch as the locale-keyed object.
+
   const map = input as Partial<Record<Locale, ReadonlyArray<string>>>;
   const byLocale =
     map[locale] ??
@@ -64,23 +40,68 @@ function resolveKeywords(input: MetadataInput["keywords"], locale: Locale): stri
   return byLocale ? Array.from(byLocale) : [];
 }
 
+function buildLanguageAlternates(path: string): Record<string, string> {
+  const languages: Record<string, string> = {};
+
+  for (const locale of SUPPORTED_LOCALES) {
+    languages[locale] = buildLangUrl(locale, path);
+  }
+
+  languages["x-default"] = buildLangUrl(DEFAULT_LOCALE, path);
+  return languages;
+}
+
+function buildVerification(): Metadata["verification"] | undefined {
+  if (!GOOGLE_SITE_VERIFICATION) return undefined;
+
+  return {
+    google: GOOGLE_SITE_VERIFICATION,
+  };
+}
+
+export function buildLayoutMetadata(locale: Locale): Metadata {
+  const canonical = buildLangUrl(locale, "/");
+  const ogImageAbs = new URL(OG_IMAGE_PATH, SITE_ORIGIN).toString();
+
+  return {
+    metadataBase: new URL(SITE_ORIGIN),
+    title: {
+      default: SITE_NAME,
+      template: `%s | ${SITE_NAME}`,
+    },
+    description: SITE_DESCRIPTION,
+    alternates: {
+      canonical,
+      languages: buildLanguageAlternates("/"),
+    },
+    verification: buildVerification(),
+    openGraph: {
+      type: "website",
+      url: canonical,
+      title: SITE_NAME,
+      siteName: SITE_NAME,
+      description: SITE_DESCRIPTION,
+      locale,
+      images: [{ url: ogImageAbs }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: SITE_NAME,
+      description: SITE_DESCRIPTION,
+      images: [ogImageAbs],
+    },
+    icons: {
+      icon: FAVICON_PATH,
+    },
+  };
+}
+
 export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
   const title = resolveText(input.title, locale);
   const description = resolveText(input.description ?? SITE_DESCRIPTION, locale);
-
-  // Default the path to the root. Normalize undefined and empty strings.
   const path = input.path ?? "/";
-
   const canonical = buildLangUrl(locale, path);
-
-  const languages: Record<string, string> = {};
-  for (const l of SUPPORTED_LOCALES) {
-    languages[l] = buildLangUrl(l, path);
-  }
-  languages["x-default"] = buildLangUrl(DEFAULT_LOCALE, path);
-
   const ogImageAbs = new URL(OG_IMAGE_PATH, SITE_ORIGIN).toString();
-
   const keywords = resolveKeywords(input.keywords, locale);
 
   const metadata: Metadata = {
@@ -92,9 +113,10 @@ export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
     description,
     alternates: {
       canonical,
-      languages,
+      languages: buildLanguageAlternates(path),
     },
     robots: input.noIndex ? { index: false, follow: false } : { index: true, follow: true },
+    verification: buildVerification(),
     openGraph: {
       type: "website",
       url: canonical,
@@ -115,10 +137,7 @@ export function buildMetadata(locale: Locale, input: MetadataInput): Metadata {
     },
   };
 
-  // Only add keywords when provided.
   if (keywords.length > 0) {
-    // Next.js metadata supports keywords as string[]; convert any readonly
-    // tuples/arrays to a mutable array.
     metadata.keywords = keywords;
   }
 

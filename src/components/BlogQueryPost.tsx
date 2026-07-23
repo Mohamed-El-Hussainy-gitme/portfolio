@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import { useLanguage } from "../core/i18n/LanguageContext";
-import type { BlogPost } from "../data/blog";
+import Link from 'next/link';
+import { ArrowRight, Clock } from 'lucide-react';
+import { useLanguage } from '@/core/i18n/LanguageContext';
+import type { BlogPost } from '@/data/blog';
 
 type Props = {
   post: BlogPost;
 };
 
-function formatDate(dateISO: string, language: "en" | "ar") {
+function formatDate(dateISO: string, language: 'en' | 'ar') {
   const d = new Date(dateISO);
   try {
-    return d.toLocaleDateString(language === "ar" ? "ar-EG" : "en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
+    return d.toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
     });
   } catch {
     return dateISO;
@@ -23,40 +23,51 @@ function formatDate(dateISO: string, language: "en" | "ar") {
 }
 
 export default function BlogQueryPost({ post }: Props) {
-  const { language, direction, href } = useLanguage();
-  const isArabic = language === "ar";
+  const { language, href } = useLanguage();
+  const isAr = language === 'ar';
 
   const title = post.title[language];
   const desc = post.description[language];
-  const urlLine = `${isArabic ? "مدونة المطور" : "Developer blog"} › /blog/${post.slug}`;
   const date = formatDate(post.dateISO, language);
 
   return (
-    <article dir={direction} className="group">
-      <Link href={href(`/blog/${post.slug}`)} className="block">
-        <div className={direction === "rtl" ? "text-right" : "text-left"}>
-          <div className="mb-1 text-[12px] text-slate-400">{urlLine}</div>
-
-          <h2 className="mb-1 text-lg font-semibold tracking-tight text-sky-200 group-hover:underline sm:text-xl">
-            {title}
-          </h2>
-
-          <div className="mb-2 flex flex-wrap items-center gap-2 text-[12px] text-slate-400">
-            <span>{date}</span>
-            <span aria-hidden>·</span>
-            <span className="text-slate-300">{post.focusKeyword[language]}</span>
-            {post.tags.slice(0, 2).map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-slate-700/70 bg-slate-950/60 px-2 py-0.5 text-[11px] text-slate-300"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <p className="max-w-3xl text-sm leading-relaxed text-slate-300">{desc}</p>
+    <article className="group">
+      <Link
+        href={href(`/blog/${post.slug}`)}
+        className="block bg-white border border-border rounded-2xl p-6 hover:shadow-lg hover:border-cobalt/30 transition-all"
+      >
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {(post.tags || []).slice(0, 3).map((t) => (
+            <span
+              key={t}
+              className="text-xs bg-blue-50 text-cobalt font-medium px-2 py-0.5 rounded-full"
+            >
+              {t}
+            </span>
+          ))}
         </div>
+
+        <h2 className="font-inter-tight font-bold text-obsidian text-lg leading-snug mb-2 group-hover:text-cobalt transition-colors">
+          {title}
+        </h2>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mb-3">
+          <Clock className="w-3 h-3" />
+          <span>{date}</span>
+          {post.focusKeyword?.[language] ? (
+            <>
+              <span aria-hidden>·</span>
+              <span>{post.focusKeyword[language]}</span>
+            </>
+          ) : null}
+        </div>
+
+        <p className="text-sm text-slate-600 line-clamp-2 mb-4">{desc}</p>
+
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-cobalt group-hover:gap-2 transition-all">
+          {isAr ? 'اقرأ المقال' : 'Read article'}
+          <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+        </span>
       </Link>
     </article>
   );

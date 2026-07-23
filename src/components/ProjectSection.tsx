@@ -104,15 +104,23 @@ function buildNarrative(locale: Locale, project: ProjectDefinition, cs: ProjectC
   ];
 }
 
-function renderFaqs(faqs: ProjectCaseStudy["faqs"], locale: Locale) {
+function renderFaqs(faqs: ProjectCaseStudy["faqs"] | undefined, locale: Locale) {
+  if (!faqs || faqs.length === 0) return null;
+
+  const validFaqs = faqs.filter(
+    (item) => item?.q?.[locale] && item?.a?.[locale]
+  );
+
+  if (validFaqs.length === 0) return null;
+
   return (
     <div className="space-y-3">
-      {faqs.map((item, idx) => (
-        <details key={`${idx}-${item.q[locale]}`} className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
-          <summary className="cursor-pointer text-sm font-semibold text-slate-100" style={{ unicodeBidi: "plaintext" }}>
+      {validFaqs.map((item, idx) => (
+        <details key={`faq-${idx}`} className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
+          <summary className="cursor-pointer text-sm font-semibold text-slate-100 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
             {item.q[locale]}
           </summary>
-          <p className="mt-3 text-sm leading-relaxed text-slate-300" style={{ unicodeBidi: "plaintext" }}>
+          <p className="mt-3 text-sm leading-relaxed text-slate-300 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
             {item.a[locale]}
           </p>
         </details>
@@ -248,45 +256,45 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({ project }) => {
             <h2 className="mb-3 text-lg font-semibold tracking-tight text-slate-50">{isArabic ? "دراسة حالة" : "Case study"}</h2>
 
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                   {isArabic ? "المشكلة والقيود" : "Problem & constraints"}
                 </p>
-                <p className="text-sm leading-relaxed text-slate-200" style={{ unicodeBidi: "plaintext" }}>
+                <p className="text-sm leading-relaxed text-slate-200 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                   {cs.problem[language]}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                   {isArabic ? "الحل والقرارات" : "Solution & decisions"}
                 </p>
-                <p className="text-sm leading-relaxed text-slate-200" style={{ unicodeBidi: "plaintext" }}>
+                <p className="text-sm leading-relaxed text-slate-200 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                   {cs.solution[language]}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                   {isArabic ? "النتيجة والنتائج" : "Outcome & results"}
                 </p>
-                <p className="text-sm leading-relaxed text-slate-200" style={{ unicodeBidi: "plaintext" }}>
+                <p className="text-sm leading-relaxed text-slate-200 break-words whitespace-normal" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                   {cs.outcome[language]}
                 </p>
               </div>
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">{isArabic ? "الدور" : "Role"}</p>
-                <p className="text-sm leading-relaxed text-slate-200" style={{ unicodeBidi: "plaintext" }}>
+                <p className="text-sm leading-relaxed text-slate-200 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                   {cs.role[language]}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 overflow-hidden">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">{isArabic ? "التقنيات" : "Stack"}</p>
-                <p className="text-sm leading-relaxed text-slate-200" style={{ unicodeBidi: "plaintext" }}>
+                <p className="text-sm leading-relaxed text-slate-200 break-words" style={{ unicodeBidi: "plaintext", wordBreak: "break-word", overflowWrap: "anywhere" }}>
                   {cs.stack[language]}
                 </p>
               </div>
@@ -453,10 +461,12 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({ project }) => {
             </div>
           </div>
 
-          <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/40 p-7">
-            <h2 className="mb-3 text-lg font-semibold tracking-tight text-slate-50">{isArabic ? "أسئلة شائعة" : "Project FAQs"}</h2>
-            {renderFaqs(cs.faqs, locale)}
-          </div>
+          {cs.faqs && cs.faqs.length > 0 && (
+            <div className="mt-8 rounded-3xl border border-white/10 bg-slate-950/40 p-7">
+              <h2 className="mb-3 text-lg font-semibold tracking-tight text-slate-50">{isArabic ? "أسئلة شائعة" : "Project FAQs"}</h2>
+              {renderFaqs(cs.faqs, locale)}
+            </div>
+          )}
         </div>
       </div>
     </section>

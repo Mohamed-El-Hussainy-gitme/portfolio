@@ -2,27 +2,31 @@
 
 import React from "react";
 import Link from "next/link";
+import type { Locale } from "../core/i18n/locale";
 import { useLanguage } from "../core/i18n/LanguageContext";
 import { Seo } from "../core/seo/Seo";
 import { breadcrumbList, servicesItemListSchema } from "../core/seo/schema";
-import { services } from "../data/services";
+import { useServices } from "@/lib/useSiteData";
+import { usePageContent } from "@/lib/usePageContent";
+import { pageHeroField, pageSeoField } from "@/lib/pageContent";
+import PageHero, { HeroLink } from "@/components/layout/PageHero";
 
-export default function ServicesPage() {
+export default function ServicesPage({ locale }: { locale: Locale }) {
   const { language, direction, href } = useLanguage();
   const isArabic = language === "ar";
+  const { data: services = [] } = useServices();
+  const { data: page } = usePageContent("services");
 
-  const focusKeyword = isArabic ? "خدمات تطوير مواقع" : "web development services";
-
-  const title = isArabic
-    ? "خدمات تطوير مواقع احترافية | صفحات ومواقع ومتاجر"
-    : "Web development services for speed and SEO";
-
-  const description = isArabic
-    ? "خدمات تطوير مواقع تشمل صفحات هبوط، مواقع شركات، متاجر إلكترونية، لوحات تحكم، وSEO تقني. صفحات مستقلة لكل خدمة بمخرجات وخطة تنفيذ."
-    : "Web development services: landing pages, company websites, e-commerce, dashboards, and technical SEO. Separate pages per service with scope and deliverables.";
+  const lang = isArabic ? "ar" : "en";
+  const title = pageSeoField(page.seo, "title", lang);
+  const description = pageSeoField(page.seo, "description", lang);
+  const focusKeyword = pageSeoField(page.seo, "focus_keyword", lang);
+  const heroLabel = pageHeroField(page.hero, "label", lang);
+  const heroHeading = pageHeroField(page.hero, "heading", lang);
+  const heroSub = pageHeroField(page.hero, "sub", lang);
 
   return (
-    <div dir={direction} className="mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
+    <div dir={direction} className="min-h-screen bg-white">
       <Seo
         title={title}
         description={description}
@@ -36,55 +40,52 @@ export default function ServicesPage() {
         ]}
       />
 
-      <header className={direction === "rtl" ? "text-right" : "text-left"}>
-        <p className="mb-3 text-[11px] font-medium tracking-[0.28em] text-cyan-100/85">
-          {isArabic ? "الخدمات" : "Services"}
-        </p>
+      <PageHero
+        label={heroLabel}
+        heading={heroHeading}
+        sub={heroSub}
+        actions={
+          <>
+            <HeroLink href={href("/contact")}>{isArabic ? "اطلب عرض سعر" : "Get a quote"}</HeroLink>
+            <HeroLink href={href("/projects")} variant="outline">
+              {isArabic ? "المشاريع" : "Projects"}
+            </HeroLink>
+          </>
+        }
+      />
 
-        <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl">
-          {isArabic ? "خدمات تطوير مواقع" : "Web development services"}
-        </h1>
-
-        <p className="max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          {isArabic
-            ? "كل خدمة لها صفحة مستقلة فيها النطاق والمخرجات والخطوات والمدة، حتى تكون الصورة واضحة قبل طلب عرض السعر."
-            : "Each service has a dedicated page with scope, deliverables, process, and timeline—so everything is clear before requesting a quote."}
-        </p>
-      </header>
-
-      <section className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
           <article
             // Use the service slug as the unique key. `id` was never defined on
             // ServiceDefinition, causing TS errors and broken list rendering.
             key={service.slug}
-            className="relative overflow-hidden rounded-3xl border border-slate-800/70 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 p-6"
+            className="border border-border rounded-2xl bg-white p-6 hover:shadow-lg transition-shadow"
           >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_55%),radial-gradient(circle_at_bottom,rgba(167,139,250,0.16),transparent_55%)] opacity-70" />
-            <div className="relative">
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-cobalt">
                   {/* Guard against missing focusKeyword. Each service should
                      specify this field but fallback to an empty string if
                      undefined. */}
                   {service.focusKeyword?.[language] ?? ""}
               </p>
 
-              <h2 className="mb-2 text-lg font-semibold tracking-tight text-slate-50">
+              <h2 className="mb-2 text-lg font-inter-tight font-bold text-obsidian">
                 {service.title[language]}
               </h2>
 
-              <p className="mb-4 text-sm leading-relaxed text-slate-300">
+              <p className="mb-4 text-sm leading-relaxed text-slate-600">
                 {service.summary[language]}
               </p>
 
               <div className="mb-5">
-                <p className="mb-2 text-xs font-semibold text-slate-200">
+                <p className="mb-2 text-xs font-semibold text-obsidian">
                   {isArabic ? "يشمل" : "Includes"}
                 </p>
-                <ul className="space-y-1.5 text-xs text-slate-200/90">
+                <ul className="space-y-1.5 text-xs text-slate-600">
                   {service.deliverables.slice(0, 3).map((d) => (
                     <li key={d.en} className="flex items-start gap-2">
-                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-300/80" />
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cobalt" />
                       <span>{d[language as "en" | "ar"]}</span>
                     </li>
                   ))}
@@ -93,7 +94,7 @@ export default function ServicesPage() {
 
               <Link
                 href={href(`/services/${service.slug}`)}
-                className="inline-flex items-center justify-center rounded-full border border-slate-700/70 bg-slate-950/60 px-5 py-2.5 text-xs font-semibold text-slate-100 transition hover:border-indigo-400"
+                className="inline-flex items-center justify-center rounded-xl bg-cobalt px-5 py-2.5 text-xs font-semibold text-white hover:bg-blue-700 transition"
               >
                 {isArabic ? "تفاصيل الخدمة" : "Service details"}
               </Link>
@@ -102,13 +103,14 @@ export default function ServicesPage() {
         ))}
       </section>
 
-      <section className="mt-12 rounded-3xl border border-white/10 bg-slate-950/50 p-6">
-        <h2 className="text-lg font-semibold text-slate-50">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="rounded-2xl border border-border bg-surface p-8">
+        <h2 className="text-lg font-inter-tight font-bold text-obsidian">
           {isArabic ? "ماذا يحدث بعد طلب عرض السعر؟" : "What happens after you request a quote?"}
         </h2>
-        <ol className="mt-4 space-y-3 text-sm text-slate-300">
+        <ol className="mt-4 space-y-3 text-sm text-slate-600">
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 text-xs text-slate-200">
+            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cobalt text-xs text-white">
               1
             </span>
             <span>
@@ -118,7 +120,7 @@ export default function ServicesPage() {
             </span>
           </li>
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 text-xs text-slate-200">
+            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cobalt text-xs text-white">
               2
             </span>
             <span>
@@ -128,7 +130,7 @@ export default function ServicesPage() {
             </span>
           </li>
           <li className="flex items-start gap-3">
-            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 text-xs text-slate-200">
+            <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cobalt text-xs text-white">
               3
             </span>
             <span>
@@ -138,6 +140,7 @@ export default function ServicesPage() {
             </span>
           </li>
         </ol>
+      </div>
       </section>
     </div>
   );

@@ -1,60 +1,71 @@
-"use client";
+'use client';
 
-import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useLanguage } from "@/core/i18n/LanguageContext";
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/core/i18n/LanguageContext';
+import { useSettings } from '@/lib/useSiteData';
 
 export default function AboutMeSection() {
-  const { language, direction, href } = useLanguage();
-  const isArabic = language === "ar";
-  const pathname = usePathname() || "";
+  const { language, href } = useLanguage();
+  const isAr = language === 'ar';
+  const pathname = usePathname() || '';
+  const { data: settings } = useSettings();
+  const isOnAboutPage = pathname.includes('/about');
 
-  // بعد توحيد الروابط، المسار الصحيح دائمًا يكون /{locale}/about
-  const isOnAboutPage = pathname === `/${language}/about`;
+  const t = {
+    tag: isAr ? 'عن المطور' : 'About Me',
+    heading: isAr ? 'من أنا ولماذا أنا؟' : 'Who I am & why me',
+    readMore: isAr ? 'اقرأ المزيد' : 'Read more',
+    services: isAr ? 'خدماتي' : 'My services',
+    values: isAr
+      ? [
+          { title: 'تسليم على مراحل', desc: 'راجع تقدم المشروع في كل مرحلة.' },
+          { title: 'دعم ما بعد التسليم', desc: 'فترة صيانة 30 يوماً بعد المشروع.' },
+          { title: 'كود نظيف', desc: 'كود منظم لتسهيل الصيانة.' },
+          { title: 'ثنائي اللغة', desc: 'إتقان العربية والإنجليزية وتجربة RTL.' },
+        ]
+      : [
+          { title: 'Milestone-Based', desc: 'Review progress in stages at every step.' },
+          { title: 'Post-Delivery Support', desc: '30 days of maintenance after project delivery.' },
+          { title: 'Clean Code', desc: 'Well-structured and commented for easy maintenance.' },
+          { title: 'Bilingual UX', desc: 'Fluent in English and Arabic. RTL/LTR mastery.' },
+        ],
+  };
 
-  const focusKeyword = isArabic ? "إنشاء موقع" : "website development";
-
-  const title = isArabic ? "من أنا ولماذا أنا" : "Who I am & why me";
-  const body = isArabic
-    ? "مرحبًا! أنا محمد الحسيني، مطوّر ويب شامل (Full Stack) ولدي خبرة تزيد سنه في هذا المجال. أؤمن بأهمية العمل الجماعي والتعاون الوثيق مع العملاء وأفراد الفريق لتحقيق أفضل النتائج. هدفي هو تطوير مواقع حديثة ومتجاوبة مع كافة الأجهزة وكاملة الوظائف لتعزيز الحضور الرقمي لشركتك. ألتزم بتجسيد رؤيتك على أرض الواقع من خلال كود نظيف وحلول إبداعية."
-    : "Hello! I'm Mohamed El Hussainy, a passionate Full Stack Web Developer with over one year of experience in the field. I excel in collaborative teamwork and believe that working closely with clients and other developers leads to the best results. My goal is to develop modern, mobile-responsive, and fully functional websites that enhance your company’s digital presence. I am committed to turning your vision into a reality with clean code and creative solutions.";
-
-  const primaryCta = isOnAboutPage
-    ? {
-        href: href("#why-choose"),
-        label: isArabic ? "لماذا تختارني؟" : "Why choose me?",
-      }
-    : {
-        href: href("/about"),
-        label: isArabic ? "اقرأ المزيد" : "Read more",
-      };
+  const bio = isAr
+    ? settings?.about_bio_ar || settings?.about_bio_en
+    : settings?.about_bio_en;
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-        <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400">{focusKeyword}</p>
-        <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">{title}</h2>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">{body}</p>
-
-        <div
-          className={`mt-8 flex flex-wrap gap-3 ${
-            direction === "rtl" ? "flex-row-reverse justify-end" : "justify-start"
-          }`}
-        >
-          <Link
-            href={primaryCta.href}
-            className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-2.5 text-sm font-medium text-slate-100 hover:border-indigo-400"
-          >
-            {primaryCta.label}
-          </Link>
-
-          <Link
-            href={href("/services")}
-            className="inline-flex items-center rounded-full border border-slate-700/70 bg-slate-950/60 px-6 py-2.5 text-sm font-medium text-slate-100 hover:border-indigo-400"
-          >
-            {isArabic ? "خدماتي" : "My services"}
-          </Link>
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-cobalt mb-2">{t.tag}</p>
+            <h2 className="text-3xl sm:text-4xl font-inter-tight font-black text-obsidian mb-6">{t.heading}</h2>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">{bio}</p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={isOnAboutPage ? href('#why-choose') : href('/about')}
+                className="inline-flex items-center gap-2 border-2 border-obsidian text-obsidian font-semibold px-5 py-2.5 rounded-xl hover:bg-obsidian hover:text-white transition-all"
+              >
+                {t.readMore}
+              </Link>
+              <Link href={href('/services')} className="inline-flex items-center gap-2 text-cobalt font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-all">
+                {t.services} <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+              </Link>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {t.values.map((item, i) => (
+              <div key={i} className="bg-surface border border-border rounded-2xl p-5">
+                <div className="w-2 h-2 rounded-full bg-cobalt mb-3" />
+                <h4 className="font-bold text-obsidian text-sm mb-1">{item.title}</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

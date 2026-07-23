@@ -1,52 +1,50 @@
-# Elhussainy Portfolio (Next.js App Router)
+# Hussainy Unified Portfolio
 
-Canonical origin (do not change):
-- https://elhussainy-portfolio.pages.dev
+Merged Next.js portfolio + admin dashboard. Single Supabase database (bilingual schema).
 
-## Requirements
-- Node.js >= 18 (recommended: 20)
-- npm
+## Stack
 
-## Install
+- Next.js 15 (App Router)
+- Supabase (PostgreSQL + Auth + Storage)
+- TanStack Query
+- Tailwind (dashboard theme: obsidian / cobalt)
+
+## Setup
+
 ```bash
+cd hussainy-unified
 npm install
+cp .env.example .env.local
+# Fill NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
-## Local development
+## Database
+
+Run migrations in order in Supabase SQL Editor:
+
+1. `supabase/migrations/001_initial_schema.sql`
+2. `supabase/migrations/002_seed_data.sql` (optional baseline)
+3. `supabase/migrations/003_real_seed_data.sql` (canonical data from Hussainy-next)
+
+Regenerate seed from TypeScript data:
+
+```bash
+npx tsx src/data/generate_seed.ts
+```
+
+## Dev
+
 ```bash
 npm run dev
 ```
 
-## Production build (Next)
-```bash
-npm run build
-```
+- Public site: `/` (en), `/ar` (ar)
+- Admin: `/admin` (requires Supabase Auth user)
 
-## Cloudflare Pages build (recommended)
-This project is configured for Cloudflare Pages via **@cloudflare/next-on-pages**.
+## Source projects
 
-### Cloudflare Pages settings
-- Build command: `npm run pages:build`
-- Build output directory: `.vercel/output/static`
-
-### Build locally (optional)
-```bash
-npm run pages:build
-```
-
-## Deploy with Wrangler (optional)
-```bash
-npm run deploy
-```
-
-## Verification checklist
-- `GET /sitemap.xml` returns valid XML
-- `GET /robots.txt` contains:
-  - `Sitemap: https://elhussainy-portfolio.pages.dev/sitemap.xml`
-- All canonical URLs use: `https://elhussainy-portfolio.pages.dev`
-- hreflang alternates exist for `en`, `ar`, and `x-default`
-- Unknown slugs return 404
-- Lighthouse SEO score check
-- Search Console: submit sitemap + request indexing
-"# Portfolio" 
-"# portfolio" 
+| Folder | Role |
+|--------|------|
+| `elhussainy-next-extracted` | Content source of truth |
+| Root `dashboard for hussainy` | UI theme + admin patterns |
+| `hussainy-unified` | **Final merged app** |
