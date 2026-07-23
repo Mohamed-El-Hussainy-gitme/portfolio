@@ -64,7 +64,7 @@ export default function AdminReviews() {
   const qc = useQueryClient();
   const [filterStatus, setFilterStatus] = useState('all');
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
+  const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
   const { data: reviews = [], isLoading } = useQuery({
@@ -73,7 +73,7 @@ export default function AdminReviews() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) =>
+    mutationFn: (data: any) =>
       editing?.id ? upsertReview({ ...data, id: editing.id }) : upsertReview(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-reviews'] });
@@ -104,15 +104,15 @@ export default function AdminReviews() {
     onError: (error: Error) => toast.error(error.message || 'فشل الحذف'),
   });
 
-  const filtered = reviews.filter((r: Record<string, unknown>) => {
+  const filtered = reviews.filter((r: any) => {
     if (filterStatus === 'approved') return r.visible;
     if (filterStatus === 'pending') return !r.visible;
     return true;
   });
 
-  const pendingCount = reviews.filter((r: Record<string, unknown>) => !r.visible).length;
+  const pendingCount = reviews.filter((r: any) => !r.visible).length;
 
-  const handleOpen = (review?: Record<string, unknown>) => {
+  const handleOpen = (review?: any) => {
     if (review) {
       setEditing(review);
       setForm({
@@ -169,7 +169,7 @@ export default function AdminReviews() {
           </div>
         ) : (
           <div className="space-y-3">
-            {filtered.map((review: Record<string, unknown>) => (
+            {filtered.map((review: any) => (
               <div
                 key={String(review.id)}
                 className={`p-4 bg-card border rounded-lg font-heading flex gap-4 items-start ${
