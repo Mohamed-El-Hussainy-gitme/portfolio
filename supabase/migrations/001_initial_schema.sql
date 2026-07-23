@@ -1,7 +1,8 @@
 -- ============================================================
 --  001_initial_schema.sql
---  Mohamed El-Husseiny Portfolio — Full Schema
---  Run once in Supabase SQL Editor (or via Supabase CLI)
+--  Mohamed El-Husseiny Portfolio — Safe Schema Update
+--  Intended for an existing Supabase database.
+--  This migration updates/extends the schema without rebuilding it from scratch.
 -- ============================================================
 
 -- Enable UUID helper (already available in Supabase)
@@ -223,6 +224,155 @@ create table if not exists contact_messages (
 );
 
 -- ============================================================
+--  SAFE UPDATE SECTION: add any missing columns to existing tables
+-- ============================================================
+
+alter table site_settings
+  add column if not exists owner_name text,
+  add column if not exists tagline_en text,
+  add column if not exists tagline_ar text,
+  add column if not exists hero_heading_en text,
+  add column if not exists hero_heading_ar text,
+  add column if not exists hero_subheading_en text,
+  add column if not exists hero_subheading_ar text,
+  add column if not exists about_bio_en text,
+  add column if not exists about_bio_ar text,
+  add column if not exists email text,
+  add column if not exists phone_numbers jsonb default '[]',
+  add column if not exists whatsapp text,
+  add column if not exists whatsapp_quote_message_en text,
+  add column if not exists github_url text,
+  add column if not exists linkedin_url text,
+  add column if not exists twitter_url text,
+  add column if not exists youtube_url text,
+  add column if not exists facebook_url text,
+  add column if not exists instagram_url text,
+  add column if not exists tiktok_url text,
+  add column if not exists telegram_url text,
+  add column if not exists available_for_work boolean default true,
+  add column if not exists years_experience integer default 0,
+  add column if not exists projects_count integer default 0,
+  add column if not exists meta_title text,
+  add column if not exists meta_description text,
+  add column if not exists og_image text,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table projects
+  add column if not exists universe integer,
+  add column if not exists slug text,
+  add column if not exists status text default 'draft',
+  add column if not exists featured boolean default false,
+  add column if not exists name_en text,
+  add column if not exists name_ar text,
+  add column if not exists tagline_en text,
+  add column if not exists tagline_ar text,
+  add column if not exists description_en text,
+  add column if not exists description_ar text,
+  add column if not exists focus_keyword_en text,
+  add column if not exists focus_keyword_ar text,
+  add column if not exists seo_title_en text,
+  add column if not exists seo_title_ar text,
+  add column if not exists seo_description_en text,
+  add column if not exists seo_description_ar text,
+  add column if not exists tech_stack jsonb default '[]',
+  add column if not exists tags jsonb default '[]',
+  add column if not exists repo_url text,
+  add column if not exists live_url text,
+  add column if not exists screens jsonb default '[]',
+  add column if not exists case_study_problem_en text,
+  add column if not exists case_study_problem_ar text,
+  add column if not exists case_study_solution_en text,
+  add column if not exists case_study_solution_ar text,
+  add column if not exists case_study_outcome_en text,
+  add column if not exists case_study_outcome_ar text,
+  add column if not exists case_study_role_en text,
+  add column if not exists case_study_role_ar text,
+  add column if not exists case_study_stack_en text,
+  add column if not exists case_study_stack_ar text,
+  add column if not exists case_study_steps_en jsonb default '[]',
+  add column if not exists case_study_steps_ar jsonb default '[]',
+  add column if not exists faqs jsonb default '[]',
+  add column if not exists highlight_key_points_en text,
+  add column if not exists highlight_key_points_ar text,
+  add column if not exists highlight_focus_en text,
+  add column if not exists highlight_focus_ar text,
+  add column if not exists highlight_role_en text,
+  add column if not exists highlight_role_ar text,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table blog_posts
+  add column if not exists slug text,
+  add column if not exists status text default 'draft',
+  add column if not exists title_en text,
+  add column if not exists title_ar text,
+  add column if not exists summary_en text,
+  add column if not exists summary_ar text,
+  add column if not exists content_en text,
+  add column if not exists content_ar text,
+  add column if not exists tags jsonb default '[]',
+  add column if not exists cover_image text,
+  add column if not exists published_date date,
+  add column if not exists reading_time_min integer default 5,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table services
+  add column if not exists "order" integer default 0,
+  add column if not exists status text default 'published',
+  add column if not exists slug text,
+  add column if not exists icon text,
+  add column if not exists cover_image text,
+  add column if not exists keyword_en text,
+  add column if not exists keyword_ar text,
+  add column if not exists title_en text,
+  add column if not exists title_ar text,
+  add column if not exists description_en text,
+  add column if not exists description_ar text,
+  add column if not exists includes_en jsonb default '[]',
+  add column if not exists includes_ar jsonb default '[]',
+  add column if not exists seo_title_en text,
+  add column if not exists seo_title_ar text,
+  add column if not exists seo_description_en text,
+  add column if not exists seo_description_ar text,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table skills
+  add column if not exists "order" integer default 0,
+  add column if not exists category text default 'Frontend',
+  add column if not exists name text,
+  add column if not exists logo_url text,
+  add column if not exists project_count integer default 0,
+  add column if not exists visible boolean default true,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table reviews
+  add column if not exists "order" integer default 0,
+  add column if not exists platform text,
+  add column if not exists rating numeric(2,1) default 5,
+  add column if not exists reviewer_name text,
+  add column if not exists review_text_en text,
+  add column if not exists review_text_ar text,
+  add column if not exists review_url text,
+  add column if not exists screenshot_url text,
+  add column if not exists visible boolean default true,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table contact_messages
+  add column if not exists name text,
+  add column if not exists email text,
+  add column if not exists budget text,
+  add column if not exists timeline text,
+  add column if not exists goal text,
+  add column if not exists status text default 'new',
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+-- ============================================================
 --  AUTO-UPDATE updated_at  (trigger function)
 -- ============================================================
 create or replace function update_updated_at()
@@ -242,6 +392,7 @@ begin
     'site_settings','projects','blog_posts',
     'services','skills','reviews','contact_messages'
   ] loop
+    execute format('drop trigger if exists trg_%s_updated_at on %I;', replace(t,'.','_'), t);
     execute format(
       'create trigger trg_%s_updated_at
        before update on %I
@@ -370,3 +521,22 @@ drop policy if exists "admin_manage_media" on storage.objects;
 create policy "admin_manage_media"
   on storage.objects for all
   using (bucket_id = 'media' and auth.role() = 'authenticated');
+
+
+-- Trigger to auto-update projects_count in site_settings
+CREATE OR REPLACE FUNCTION update_projects_count()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE site_settings
+  SET projects_count = (SELECT count(*) FROM projects WHERE status = 'published')
+  WHERE key = 'main';
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_update_projects_count ON projects;
+
+CREATE TRIGGER trigger_update_projects_count
+AFTER INSERT OR DELETE ON projects
+FOR EACH STATEMENT
+EXECUTE FUNCTION update_projects_count();

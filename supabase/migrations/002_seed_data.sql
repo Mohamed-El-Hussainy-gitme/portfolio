@@ -8,7 +8,7 @@
 --  SITE SETTINGS
 -- ────────────────────────────────────────────────────────────
 insert into site_settings (
-  key, owner_name,
+  "key", owner_name,
   tagline_en, tagline_ar,
   hero_heading_en, hero_heading_ar,
   hero_subheading_en, hero_subheading_ar,
@@ -32,10 +32,32 @@ insert into site_settings (
   'https://github.com/Mohamed-El-Hussainy-gitme',
   'https://www.linkedin.com/in/mohamed-el-hussainy',
   '',
-  true, 1, 9,
+  true, 1, 34,
   'Mohamed El-Husseiny — Full Stack Web Developer',
   'Full Stack Web Developer building fast, SEO-ready, bilingual websites. React, Next.js, WordPress, E-commerce.'
-);
+)
+on conflict ("key") do update set
+  owner_name = excluded.owner_name,
+  tagline_en = excluded.tagline_en,
+  tagline_ar = excluded.tagline_ar,
+  hero_heading_en = excluded.hero_heading_en,
+  hero_heading_ar = excluded.hero_heading_ar,
+  hero_subheading_en = excluded.hero_subheading_en,
+  hero_subheading_ar = excluded.hero_subheading_ar,
+  about_bio_en = excluded.about_bio_en,
+  about_bio_ar = excluded.about_bio_ar,
+  email = excluded.email,
+  phone_numbers = excluded.phone_numbers,
+  whatsapp = excluded.whatsapp,
+  whatsapp_quote_message_en = excluded.whatsapp_quote_message_en,
+  github_url = excluded.github_url,
+  linkedin_url = excluded.linkedin_url,
+  twitter_url = excluded.twitter_url,
+  available_for_work = excluded.available_for_work,
+  years_experience = excluded.years_experience,
+  projects_count = excluded.projects_count,
+  meta_title = excluded.meta_title,
+  meta_description = excluded.meta_description;
 
 -- ────────────────────────────────────────────────────────────
 --  PROJECTS  (9 projects)
@@ -163,7 +185,23 @@ insert into projects (
  '[{"id":"s1","src":"https://elhussainy.pages.dev/assets/growlik/01.png","alt":"GrowLik page structure"}]',
  'GrowLik''s website was not appearing in search results despite having good content due to technical SEO issues.',
  'Audited and fixed technical SEO issues: structured data, canonical tags, sitemap, robots.txt, and Core Web Vitals.',
- 'Improved search visibility, better rich snippets, and a healthier crawl budget after the technical SEO overhaul.');
+ 'Improved search visibility, better rich snippets, and a healthier crawl budget after the technical SEO overhaul.')
+on conflict (slug) do update set
+  universe = excluded.universe,
+  status = excluded.status,
+  featured = excluded.featured,
+  name_en = excluded.name_en,
+  name_ar = excluded.name_ar,
+  tagline_en = excluded.tagline_en,
+  tagline_ar = excluded.tagline_ar,
+  tech_stack = excluded.tech_stack,
+  tags = excluded.tags,
+  repo_url = excluded.repo_url,
+  live_url = excluded.live_url,
+  screens = excluded.screens,
+  case_study_problem_en = excluded.case_study_problem_en,
+  case_study_solution_en = excluded.case_study_solution_en,
+  case_study_outcome_en = excluded.case_study_outcome_en;
 
 -- ────────────────────────────────────────────────────────────
 --  SERVICES  (8 services)
@@ -238,24 +276,70 @@ insert into services (
  'Keep your website stable: fixes, content updates, monitoring, and small iterations—SEO and performance kept healthy over time.',
  'حافظ على استقرار موقعك: الإصلاحات وتحديثات المحتوى والمراقبة.',
  '["Monthly bug fixes and updates","Content updates and small iterations","Security patches and hardening"]',
- '["إصلاح الأخطاء الشهرية والتحديثات","تحديثات المحتوى والتكرارات الصغيرة","تصحيحات الأمان والتقوية"]');
+ '["إصلاح الأخطاء الشهرية والتحديثات","تحديثات المحتوى والتكرارات الصغيرة","تصحيحات الأمان والتقوية"]) 
+on conflict (slug) do update set
+  "order" = excluded."order",
+  status = excluded.status,
+  icon = excluded.icon,
+  keyword_en = excluded.keyword_en,
+  keyword_ar = excluded.keyword_ar,
+  title_en = excluded.title_en,
+  title_ar = excluded.title_ar,
+  description_en = excluded.description_en,
+  description_ar = excluded.description_ar,
+  includes_en = excluded.includes_en,
+  includes_ar = excluded.includes_ar;
 
 -- ────────────────────────────────────────────────────────────
 --  SKILLS  (12 skills)
 -- ────────────────────────────────────────────────────────────
-insert into skills ("order", category, name, logo_url, project_count, visible) values
-(1,  'Frontend',     'React',         'https://elhussainy.pages.dev/skills/react.svg',                4, true),
-(2,  'Frontend',     'Next.js',       'https://elhussainy.pages.dev/skills/nextjs-app-router.svg',    1, true),
-(3,  'Frontend',     'JavaScript',    'https://elhussainy.pages.dev/skills/javascript.svg',           1, true),
-(4,  'Frontend',     'TypeScript',    'https://elhussainy.pages.dev/skills/typescript.svg',           3, true),
-(5,  'Frontend',     'HTML5',         'https://elhussainy.pages.dev/skills/html5.svg',                2, true),
-(6,  'UI & Styling', 'Tailwind CSS',  'https://elhussainy.pages.dev/skills/tailwind-css.svg',         4, true),
-(7,  'UI & Styling', 'Framer Motion', 'https://elhussainy.pages.dev/skills/framer-motion.svg',        3, true),
-(8,  'UI & Styling', 'CSS',           'https://elhussainy.pages.dev/skills/css.svg',                  2, true),
-(9,  'Tooling',      'Vite',          'https://elhussainy.pages.dev/skills/vite.svg',                 3, true),
-(10, 'CMS & SEO',    'WordPress',     'https://elhussainy.pages.dev/skills/wordpress.svg',            1, true),
-(11, 'CMS & SEO',    'Technical SEO', 'https://elhussainy.pages.dev/skills/technical-seo.svg',        1, true),
-(12, 'CMS & SEO',    'Schema',        'https://elhussainy.pages.dev/skills/schema.svg',               1, true);
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 1, 'Frontend', 'React', 'https://elhussainy.pages.dev/skills/react.svg', 4, true
+where not exists (select 1 from skills where name = 'React');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 2, 'Frontend', 'Next.js', 'https://elhussainy.pages.dev/skills/nextjs-app-router.svg', 1, true
+where not exists (select 1 from skills where name = 'Next.js');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 3, 'Frontend', 'JavaScript', 'https://elhussainy.pages.dev/skills/javascript.svg', 1, true
+where not exists (select 1 from skills where name = 'JavaScript');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 4, 'Frontend', 'TypeScript', 'https://elhussainy.pages.dev/skills/typescript.svg', 3, true
+where not exists (select 1 from skills where name = 'TypeScript');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 5, 'Frontend', 'HTML5', 'https://elhussainy.pages.dev/skills/html5.svg', 2, true
+where not exists (select 1 from skills where name = 'HTML5');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 6, 'UI & Styling', 'Tailwind CSS', 'https://elhussainy.pages.dev/skills/tailwind-css.svg', 4, true
+where not exists (select 1 from skills where name = 'Tailwind CSS');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 7, 'UI & Styling', 'Framer Motion', 'https://elhussainy.pages.dev/skills/framer-motion.svg', 3, true
+where not exists (select 1 from skills where name = 'Framer Motion');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 8, 'UI & Styling', 'CSS', 'https://elhussainy.pages.dev/skills/css.svg', 2, true
+where not exists (select 1 from skills where name = 'CSS');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 9, 'Tooling', 'Vite', 'https://elhussainy.pages.dev/skills/vite.svg', 3, true
+where not exists (select 1 from skills where name = 'Vite');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 10, 'CMS & SEO', 'WordPress', 'https://elhussainy.pages.dev/skills/wordpress.svg', 1, true
+where not exists (select 1 from skills where name = 'WordPress');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 11, 'CMS & SEO', 'Technical SEO', 'https://elhussainy.pages.dev/skills/technical-seo.svg', 1, true
+where not exists (select 1 from skills where name = 'Technical SEO');
+
+insert into skills ("order", category, name, logo_url, project_count, visible)
+select 12, 'CMS & SEO', 'Schema', 'https://elhussainy.pages.dev/skills/schema.svg', 1, true
+where not exists (select 1 from skills where name = 'Schema');
 
 -- ────────────────────────────────────────────────────────────
 --  REVIEWS  (4 reviews — 2 verified Khamsat + 2 from portfolio)
@@ -330,4 +414,13 @@ insert into blog_posts (
  'معمارية React التي تتوسع في التطبيقات الحقيقية',
  'State boundaries, naming, testing, and stable exports. A practical React architecture approach for fewer bugs.',
  'حدود الحالة والتسمية والاختبار والصادرات الثابتة.',
- '["React","TypeScript","Architecture"]', '2026-01-13', 6);
+ '["React","TypeScript","Architecture"]', '2026-01-13', 6)
+on conflict (slug) do update set
+  status = excluded.status,
+  title_en = excluded.title_en,
+  title_ar = excluded.title_ar,
+  summary_en = excluded.summary_en,
+  summary_ar = excluded.summary_ar,
+  tags = excluded.tags,
+  published_date = excluded.published_date,
+  reading_time_min = excluded.reading_time_min;

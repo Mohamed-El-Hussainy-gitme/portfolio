@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Buffer } from 'buffer';
 import { projects } from './projects';
 import { blogPosts } from './blog';
 import { services } from './services';
@@ -31,7 +32,7 @@ for (const p of projects) {
     highlight_key_points_en, highlight_key_points_ar, highlight_focus_en, highlight_focus_ar,
     highlight_role_en, highlight_role_ar
   ) VALUES (
-    ${p.universe || 0}, ${escapeSql(p.slug)}, 'published', true,
+    ${p.universe || 0}, ${escapeSql(p.slug)}, 'published', ${p.isFeatured ? 'true' : 'false'},
     ${escapeSql(p.name?.en)}, ${escapeSql(p.name?.ar)},
     ${escapeSql(p.tagline?.en)}, ${escapeSql(p.tagline?.ar)},
     ${escapeSql(p.description?.en)}, ${escapeSql(p.description?.ar)},
@@ -85,5 +86,8 @@ for (const s of services || []) {
   );\n`;
 }
 
-fs.writeFileSync('supabase/migrations/003_real_seed_data.sql', sql);
-console.log("SQL seed file generated at 003_real_seed_data.sql");
+// Write with explicit UTF-8 encoding + BOM so Arabic text is preserved on Windows
+const bom = Buffer.from([0xEF, 0xBB, 0xBF]);
+const content = Buffer.from(sql, 'utf8');
+fs.writeFileSync('supabase/migrations/003_real_seed_data.sql', Buffer.concat([bom, content]));
+console.log("SQL seed file generated at 003_real_seed_data.sql (UTF-8 with BOM)");

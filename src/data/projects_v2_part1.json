@@ -1,0 +1,357 @@
+[
+  {
+    "id": "bcc-fullstack",
+    "slug": "bcc-fullstack",
+    "name": {
+      "en": "BCC Commercial",
+      "ar": "شركة BCC التجارية"
+    },
+    "tagline": {
+      "en": "Luxury Digital Agency Portal",
+      "ar": "بوابة رقمية فاخرة لوكالة تجارية"
+    },
+    "description": {
+      "en": "A premium full-stack platform built from scratch for a Saudi commercial agency representing high-profile ministries. It features a luxury UI and a comprehensive admin dashboard for dynamic content management.",
+      "ar": "منصة متكاملة بنيت من الصفر لوكالة تجارية سعودية تخدم وزارات وهيئات كبرى. تتميز بواجهة فاخرة تعكس هوية الشركة، مع لوحة تحكم شاملة لإدارة المحتوى والخدمات بكل سهولة."
+    },
+    "focusKeyword": {
+      "en": "BCC Commercial luxury website React Supabase",
+      "ar": "موقع شركة BCC التجارية React Supabase"
+    },
+    "seoTitle": {
+      "en": "BCC Commercial | Luxury Agency Portal & Dashboard",
+      "ar": "شركة BCC التجارية | منصة رقمية فاخرة ولوحة تحكم"
+    },
+    "seoDescription": {
+      "en": "A full-stack React and Supabase platform for BCC Commercial in KSA, featuring luxury UI and dynamic service management.",
+      "ar": "منصة متكاملة لشركة BCC التجارية في السعودية باستخدام React و Supabase، تتميز بواجهة جذابة ولوحة تحكم قوية لإدارة الخدمات والمنتجات."
+    },
+    "techStack": ["React 18", "Vite", "TailwindCSS", "Supabase", "shadcn/ui", "react-query"],
+    "tags": ["Fullstack", "Admin Dashboard", "Luxury UI", "Agency"],
+    "repoUrl": "",
+    "liveUrl": "https://bcc.sa.com/",
+    "caseStudy": {
+      "problem": {
+        "en": "The client represents numerous services and products in Saudi Arabia for high-profile clients like ministries. They needed a unified digital presence that reflects their luxury brand and allows for easy updates of services and clients without technical bottlenecks.",
+        "ar": "العميل يمتلك مجالات وخدمات متعددة في المملكة العربية السعودية ويخدم عملاء كبار كالوزارات والهيئات. المشكلة كانت تكمن في الحاجة إلى منصة رقمية تجمع كل هذه الخدمات بواجهة جذابة تعكس الهوية الفاخرة للشركة، وتسمح لفريق العمل بإضافة وتحديث المحتوى (خدمات، منتجات، عملاء بارزين) بسلاسة."
+      },
+      "solution": {
+        "en": "Developed a full-stack website from scratch. The front-end features a highly attractive, premium design with interactive contact forms. The backend is powered by a custom admin dashboard that makes managing categories, services, and clients intuitive and fast.",
+        "ar": "قمت بتطوير موقع إلكتروني متكامل (Fullstack) من الصفر. الواجهة الأمامية صُممت لتكون جذابة جداً وتعكس الهوية البصرية الفاخرة للشركة مع نماذج تواصل فعالة. وبالتوازي، قمت ببناء لوحة تحكم (Admin Dashboard) سهلة الاستخدام تتيح للإدارة تحديث الخدمات، إضافة المنتجات، وإدراج العملاء الجدد بضغطة زر."
+      },
+      "outcome": {
+        "en": "BCC Commercial now has a premium digital portal that perfectly aligns with their high-profile clientele. The robust admin dashboard eliminated content bottlenecks, allowing the team to keep the site continuously updated with zero code.",
+        "ar": "أصبح لدى الشركة واجهة مشرفة تليق بعملائها من الوزارات والهيئات الكبرى. بفضل لوحة التحكم المرنة، تم القضاء على تعقيدات تحديث المحتوى، وأصبح بإمكان الفريق إدارة المنصة بالكامل وإضافة الخدمات والعملاء الجدد بكل سهولة وموثوقية."
+      },
+      "role": {
+        "en": "Full-Stack Developer",
+        "ar": "مطور Full-Stack (واجهات أمامية وخلفية)"
+      },
+      "stack": {
+        "en": "React, Supabase, Tailwind CSS, Vite",
+        "ar": "React, Supabase, Tailwind CSS, Vite"
+      },
+      "steps": {
+        "en": ["UI/UX luxury design translation", "Supabase database modeling", "Admin dashboard implementation", "Client-facing dynamic pages integration"],
+        "ar": ["تحويل التصميم الفاخر إلى واجهات تفاعلية", "هيكلة قاعدة البيانات باستخدام Supabase", "بناء وتطوير لوحة التحكم الشاملة", "ربط الواجهات الأمامية بالبيانات الديناميكية"]
+      },
+      "faqs": [
+        {
+          "q": {
+            "en": "How does the admin dashboard handle content?",
+            "ar": "كيف تدير لوحة التحكم محتوى الموقع؟"
+          },
+          "a": {
+            "en": "It uses a tailored Supabase backend to allow CRUD operations on services, products, and clients instantly reflecting on the live site.",
+            "ar": "تعتمد على قاعدة بيانات Supabase مخصصة تتيح إضافة وتعديل وحذف الخدمات والمنتجات والعملاء، لينعكس ذلك فوراً على الموقع الحي."
+          }
+        }
+      ]
+    },
+    "highlights": []
+  },
+  {
+    "id": "al-ola-oil-collection",
+    "slug": "al-ola-oil-collection",
+    "name": {
+      "en": "AL OLA Oil Collection",
+      "ar": "منصة العلا لتجميع الزيت"
+    },
+    "tagline": {
+      "en": "Uber-like App for Used Oil Collection",
+      "ar": "تطبيق متكامل لجمع الزيت المستهلك"
+    },
+    "description": {
+      "en": "A massive logistics application that connects households directly with verified company drivers to collect used cooking oil safely, complete with a full CRM/ERP backend.",
+      "ar": "تطبيق لوجستي ضخم يربط المستهلكين مباشرة مع مناديب وسائقي الشركة لجمع زيت الطعام المستهلك بشكل آمن، مع نظام CRM و ERP متكامل لإدارة العمليات."
+    },
+    "focusKeyword": {
+      "en": "oil collection logistics app Nextjs",
+      "ar": "تطبيق لوجستي لتجميع الزيت Nextjs"
+    },
+    "seoTitle": {
+      "en": "AL OLA | Logistics App for Oil Collection",
+      "ar": "منصة العلا | تطبيق لوجستي ذكي لتجميع الزيت"
+    },
+    "seoDescription": {
+      "en": "A robust logistics and collection web application functioning like Uber for used oil collection, featuring a comprehensive ERP and CRM dashboard.",
+      "ar": "تطبيق لوجستي ذكي يعمل بنظام مشابه لأوبر لتجميع الزيت المستهلك، مدعوم بلوحة تحكم ERP و CRM شاملة لإدارة الأسطول والمناديب."
+    },
+    "techStack": ["Next.js", "Maps API", "ERP Integration", "PostgreSQL"],
+    "tags": ["Logistics", "ERP", "CRM", "Web App"],
+    "repoUrl": "",
+    "liveUrl": "",
+    "caseStudy": {
+      "problem": {
+        "en": "Used cooking oil was being collected by unverified street vendors who resold it to cheap restaurants, posing severe health hazards. The company needed a verified, trusted, and highly organized digital system to collect oil directly from consumers.",
+        "ar": "كان زيت الطعام المستهلك يُجمع بواسطة بائعين متجولين غير موثوقين يعيدون بيعه للمطاعم الشعبية مما يسبب أضراراً صحية جسيمة. احتاجت الشركة الموثقة إلى نظام رقمي ضخم ومنظم يثق به الناس لجمع الزيت مباشرة من المنازل دون وسطاء."
+      },
+      "solution": {
+        "en": "Engineered an Uber-like application where users pin their location indicating they have oil to sell (e.g., 2 liters). A fleet of company drivers receives real-time notifications to pick it up. The entire ecosystem is monitored by a powerful backend handling CRM, ERP, tracking, and reporting.",
+        "ar": "تم بناء تطبيق ذكي (يشبه فكرة أوبر) حيث يحدد المستهلك موقعه ويضع الكمية المتاحة لديه (مثلاً 2 لتر). يتلقى أسطول المناديب والسائقين إشعاراً للتوجه لنقطة التلاقي واستلام الزيت. كل هذا مربوط بلوحة تحكم ضخمة للشركة تدير الـ CRM، الـ ERP، التقارير اليومية، ومسارات السائقين بشكل كامل."
+      },
+      "outcome": {
+        "en": "The platform revolutionized the collection process, cutting out dangerous middle-men and providing the company with absolute 100% control over their fleet, logistics, and resource management.",
+        "ar": "أحدثت المنصة ثورة في عملية التجميع؛ حيث قضت على العشوائية ووفرت بيئة موثوقة وآمنة للمستهلك. كما منحت الشركة سيطرة مطلقة (100%) على أسطولها اللوجستي ومخازنها من خلال لوحة تحكم الإدارة الشاملة (ERP/CRM)."
+      },
+      "role": {
+        "en": "Lead Application Architect",
+        "ar": "المهندس والمطور الرئيسي للمنصة"
+      },
+      "stack": {
+        "en": "Next.js, Geolocation/Maps, Custom ERP/CRM, DB",
+        "ar": "Next.js, خرائط وتحديد مواقع, نظام ERP/CRM مخصص"
+      },
+      "steps": {
+        "en": ["Mapping logic & Geolocation integration", "Driver fleet notification system", "Full ERP/CRM backend development", "Consumer-facing UI implementation"],
+        "ar": ["برمجة نظام الخرائط وتحديد نقاط التلاقي", "بناء نظام الإشعارات وتوجيه أسطول السائقين", "تطوير لوحة التحكم الشاملة (CRM/ERP)", "تصميم وبرمجة واجهة المستهلك (البائع)"]
+      },
+      "faqs": [
+        {
+          "q": {
+            "en": "Does the system track drivers in real-time?",
+            "ar": "هل يتتبع النظام السائقين والمناديب؟"
+          },
+          "a": {
+            "en": "Yes, it functions similarly to ride-hailing apps, managing driver fleets and mapping out collection points dynamically.",
+            "ar": "نعم، يعمل بآلية مشابهة لتطبيقات التوصيل، حيث يوجه المناديب لنقاط التجميع ويتيح للشركة إدارة الأسطول كاملاً."
+          }
+        }
+      ]
+    },
+    "highlights": []
+  },
+  {
+    "id": "nilu-tourism",
+    "slug": "nilu-tourism",
+    "name": {
+      "en": "Nilu Tourism",
+      "ar": "نظام شركة Nilu للسياحة"
+    },
+    "tagline": {
+      "en": "Integrated Travel Booking Engine",
+      "ar": "محرك حجوزات سياحية متكامل"
+    },
+    "description": {
+      "en": "A private, full-scale booking and operations management system tailored for a tourism company to manage client itineraries and internal processes seamlessly.",
+      "ar": "نظام حجوزات متكامل وخاص لشركة سياحة، يدير كافة العمليات التشغيلية ويتيح للعملاء حجز برامجهم السياحية قبل الوصول للبلد المستضيف."
+    },
+    "focusKeyword": {
+      "en": "tourism booking system Nextjs",
+      "ar": "نظام حجوزات سياحية Nextjs"
+    },
+    "seoTitle": {
+      "en": "Nilu Tourism | Private Booking & Management System",
+      "ar": "نظام Nilu | محرك حجوزات متكامل لشركات السياحة"
+    },
+    "seoDescription": {
+      "en": "A complete booking engine and operations dashboard developed for Nilu tourism, allowing end-to-end management of client itineraries.",
+      "ar": "محرك حجوزات ولوحة تشغيل متكاملة لشركة Nilu السياحية، تتيح إدارة رحلات العملاء وعمليات الحجز من البداية للنهاية."
+    },
+    "techStack": ["Next.js", "Booking Engine", "Dashboard"],
+    "tags": ["Booking", "Tourism", "Fullstack"],
+    "repoUrl": "",
+    "liveUrl": "",
+    "caseStudy": {
+      "problem": {
+        "en": "The tourism company struggled with managing complex, manual booking operations for their clients, lacking a centralized system for clients to orchestrate their travel plans before arrival.",
+        "ar": "كانت شركة السياحة تعاني من إدارة العمليات التشغيلية المعقدة وحجوزات العملاء بشكل يدوي، ولم تمتلك نظاماً يتيح للعميل تنسيق رحلته بالكامل قبل الوصول."
+      },
+      "solution": {
+        "en": "Developed a dedicated, full-scale booking engine. Unlike a generic OTA (like Booking.com), this system is hyper-tailored to the company's specific operational needs, allowing clients to completely customize and book their itineraries pre-arrival.",
+        "ar": "قمت بتطوير نظام حجوزات (Booking System) شامل ومخصص بالكامل للشركة (وليس منصة عامة). النظام يدير كافة العمليات التشغيلية ويتيح للعميل تصفح وتخصيص وحجز رحلته السياحية بجميع تفاصيلها من بلده قبل الوصول."
+      },
+      "outcome": {
+        "en": "The company fully digitized their operations. Manual errors dropped to zero, and client satisfaction skyrocketed as tourists could securely manage their entire trips through a professional digital interface.",
+        "ar": "تحولت جميع عمليات الشركة إلى النظام الرقمي مما وفر مجهوداً ضخماً، وأصبح العميل يستمتع بتجربة حجز سلسة واحترافية تزيد من ثقته بالشركة قبل حتى أن يبدأ رحلته."
+      },
+      "role": {
+        "en": "Full-Stack Developer",
+        "ar": "مطور النظام الشامل"
+      },
+      "stack": {
+        "en": "Next.js, Custom Booking API",
+        "ar": "Next.js, واجهات برمجة حجوزات مخصصة"
+      },
+      "steps": {
+        "en": ["Booking engine architecture", "Itinerary management workflows", "Operations dashboard integration", "Client portal deployment"],
+        "ar": ["هيكلة محرك الحجوزات المخصص", "تصميم مسارات إدارة الرحلات", "برمجة لوحة تحكم العمليات التشغيلية", "إطلاق واجهة العملاء"]
+      },
+      "faqs": [
+        {
+          "q": {
+            "en": "Is this a multi-vendor platform like booking.com?",
+            "ar": "هل هذه المنصة متعددة الشركات مثل Booking.com؟"
+          },
+          "a": {
+            "en": "No, it's a private, highly-specialized operations and booking portal dedicated exclusively to the internal workflow of Nilu tourism.",
+            "ar": "لا، هو نظام حجوزات خاص ومتكامل مصمم خصيصاً لخدمة العمليات التشغيلية وعملاء شركة Nilu فقط."
+          }
+        }
+      ]
+    },
+    "highlights": []
+  },
+  {
+    "id": "noda-ai-tool",
+    "slug": "noda-ai-tool",
+    "name": {
+      "en": "Noda AI Tool",
+      "ar": "أداة Noda AI"
+    },
+    "tagline": {
+      "en": "Code Generation AI Assistant",
+      "ar": "مساعد ذكاء اصطناعي لتوليد الأكواد"
+    },
+    "description": {
+      "en": "An advanced AI-powered tool designed to generate programming code, competing with platforms like Lovable, integrating multiple major LLM providers.",
+      "ar": "أداة متقدمة تعمل بالذكاء الاصطناعي لتوليد الأكواد البرمجية، تضاهي منصات كبرى مثل Lovable وتدمج عدة نماذج لغوية قوية."
+    },
+    "focusKeyword": {
+      "en": "AI code generator Groq OpenAI",
+      "ar": "أداة ذكاء اصطناعي لتوليد الأكواد"
+    },
+    "seoTitle": {
+      "en": "Noda AI | Intelligent Code Generation Tool",
+      "ar": "Noda AI | منصة توليد الأكواد بالذكاء الاصطناعي"
+    },
+    "seoDescription": {
+      "en": "A powerful AI tool that generates software code using Ollama, Groq, and OpenAI, built for rapid component and UI generation.",
+      "ar": "أداة ذكاء اصطناعي قوية لتوليد الأكواد البرمجية باستخدام نماذج Ollama و Groq و OpenAI، مصممة لتسريع عملية التطوير."
+    },
+    "techStack": ["Next.js", "OpenAI API", "Groq", "Ollama"],
+    "tags": ["AI", "LLM", "Tooling"],
+    "repoUrl": "",
+    "liveUrl": "",
+    "caseStudy": {
+      "problem": {
+        "en": "Building UI components and boilerplate code is repetitive and time-consuming. There was a need for an internal, highly capable AI assistant to rapidly scaffold code directly integrated with open design standards.",
+        "ar": "كتابة الأكواد المتكررة وبناء الواجهات يستهلك الكثير من الوقت. ظهرت الحاجة لأداة ذكاء اصطناعي قوية (تضاهي Lovable و Base44) لتسريع عملية التطوير وتوليد الأكواد بشكل فوري."
+      },
+      "solution": {
+        "en": "Engineered Noda AI, a robust code-generation platform integrating state-of-the-art APIs including Ollama, Groq, and OpenAI. It leverages open design architectures to output highly accurate, production-ready code snippets.",
+        "ar": "برمجت أداة Noda AI لتكون محركاً جباراً لتوليد الأكواد. تم دمجها مع أقوى النماذج اللغوية (Ollama, Groq, OpenAI) ومعمارية الـ Open Design، مما يتيح لها فهم المتطلبات وتوليد أكواد برمجية دقيقة وجاهزة للاستخدام."
+      },
+      "outcome": {
+        "en": "Significantly accelerated the development pipeline. The tool successfully generates complex components in seconds, matching the capability of premium automated coding platforms.",
+        "ar": "تسريع دورة التطوير بشكل مذهل؛ حيث أصبحت الأداة قادرة على بناء مكونات برمجية معقدة في ثوانٍ معدودة، وبجودة تنافس أقوى أدوات الذكاء الاصطناعي العالمية."
+      },
+      "role": {
+        "en": "AI Integration & Frontend Engineer",
+        "ar": "مهندس تطوير واجهات ودمج الذكاء الاصطناعي"
+      },
+      "stack": {
+        "en": "LLM APIs (Groq, OpenAI, Ollama), React",
+        "ar": "LLM APIs (Groq, OpenAI, Ollama), React"
+      },
+      "steps": {
+        "en": ["LLM providers integration (Groq, OpenAI)", "Prompt engineering & system instructions", "Open design UI mapping", "Streaming responses & code highlighting"],
+        "ar": ["ربط واجهات النماذج اللغوية المتعددة", "هندسة الأوامر (Prompt Engineering)", "تطبيق معايير التصميم المفتوح", "استقبال الأكواد وعرضها برمجياً بسلاسة"]
+      },
+      "faqs": [
+        {
+          "q": {
+            "en": "Which AI models does the tool support?",
+            "ar": "ما هي نماذج الذكاء الاصطناعي المدعومة؟"
+          },
+          "a": {
+            "en": "It is model-agnostic, seamlessly utilizing Ollama for local tasks and Groq/OpenAI for high-speed, complex code generation.",
+            "ar": "الأداة مرنة وتدعم Ollama للمهام المحلية، و Groq و OpenAI لتوليد الأكواد المعقدة بسرعات فائقة."
+          }
+        }
+      ]
+    },
+    "highlights": []
+  },
+  {
+    "id": "pos-system-nextjs",
+    "slug": "pos-system-nextjs",
+    "name": {
+      "en": "Next.js POS & ERP System",
+      "ar": "نظام نقاط البيع POS و ERP"
+    },
+    "tagline": {
+      "en": "Hardware-Integrated Point of Sale",
+      "ar": "نظام نقاط بيع متصل بالهاردوير"
+    },
+    "description": {
+      "en": "A lightning-fast, highly adaptable POS system built with Next.js, featuring full ERP capabilities, Kitchen Display System (KDS) integration, and hardware connectivity for receipt printers and barcode scanners.",
+      "ar": "نظام نقاط بيع (POS) سريع جداً ومبني بـ Next.js، يدمج قدرات الـ ERP وشاشة المطبخ (KDS)، مع دعم كامل للطابعات وماسحات الباركود."
+    },
+    "focusKeyword": {
+      "en": "Nextjs POS system ERP KDS",
+      "ar": "نظام نقاط بيع Nextjs ERP"
+    },
+    "seoTitle": {
+      "en": "Advanced POS & ERP System built with Next.js",
+      "ar": "نظام نقاط بيع (POS) و ERP متقدم باستخدام Next.js"
+    },
+    "seoDescription": {
+      "en": "A highly scalable POS software with a built-in ERP and Kitchen Display System, seamlessly integrated with retail hardware.",
+      "ar": "برنامج نقاط بيع قابل للتوسع يضم نظام ERP متكامل وشاشة مطبخ (KDS)، مع دعم كامل للأجهزة كطابعات الكاشير والباركود."
+    },
+    "techStack": ["Next.js", "ERP Integration", "Hardware API"],
+    "tags": ["POS", "ERP", "SaaS", "Hardware"],
+    "repoUrl": "",
+    "liveUrl": "",
+    "caseStudy": {
+      "problem": {
+        "en": "Traditional POS systems are often clunky, locked to specific hardware, and disconnected from broader ERP management. Businesses needed a modern web-based POS that is blazing fast and seamlessly integrates with standard hardware.",
+        "ar": "أنظمة نقاط البيع التقليدية غالباً ما تكون بطيئة، ومقيدة بأجهزة معينة، ومنفصلة عن أنظمة إدارة الموارد (ERP). كانت هناك حاجة لنظام حديث يعمل عبر الويب، فائق السرعة، ويدعم الربط المباشر بأجهزة الكاشير."
+      },
+      "solution": {
+        "en": "Developed a comprehensive Next.js POS system bundled with a full ERP. It seamlessly connects to external hardware like receipt printers and barcode scanners. Originally tailored with a Kitchen Display System (KDS) for restaurants, the flexible architecture allows it to easily pivot for retail or pharmacies.",
+        "ar": "طورت نظام نقاط بيع (POS) متكامل باستخدام Next.js مقترناً بنظام ERP شامل. يدعم النظام الربط المباشر مع طابعات الفواتير وماسحات الباركود. ورغم تخصيصه حالياً للمطاعم من خلال دمج شاشة المطبخ (KDS)، فإن بنيته المرنة تسمح بتحويله بسهولة ليناسب أي نشاط تجاري آخر."
+      },
+      "outcome": {
+        "en": "A zero-lag, highly resilient transaction environment. The system flawlessly processes orders from front-desk scanning to kitchen fulfillment, while centralizing all data into the integrated ERP for management.",
+        "ar": "بيئة معاملات سريعة جداً وخالية من التأخير. النظام يعالج الطلبات بسلاسة تامة من لحظة مسح الباركود وحتى وصول الطلب لشاشة المطبخ، مع تجميع كافة البيانات مالياً وإدارياً في الـ ERP المدمج."
+      },
+      "role": {
+        "en": "Software Engineer",
+        "ar": "مهندس برمجيات"
+      },
+      "stack": {
+        "en": "Next.js, Hardware APIs, ERP logic",
+        "ar": "Next.js, Hardware APIs, ERP logic"
+      },
+      "steps": {
+        "en": ["Next.js performance optimization", "Hardware peripheral APIs integration", "KDS (Kitchen Display) real-time sync", "ERP module architecture"],
+        "ar": ["تحسين أداء النظام ليعمل بسرعات فائقة", "برمجة التوافقية مع طابعات وماسحات الكاشير", "دمج وتزامن شاشة المطبخ (KDS) لحظياً", "تطوير وحدات الـ ERP المالية والإدارية"]
+      },
+      "faqs": [
+        {
+          "q": {
+            "en": "Can it be used for non-restaurant businesses?",
+            "ar": "هل يمكن استخدامه لمشاريع غير المطاعم؟"
+          },
+          "a": {
+            "en": "Absolutely. While it features a KDS for restaurants, its core architecture is easily adaptable for retail, pharmacies, or any other sector.",
+            "ar": "بالتأكيد. بنيته الأساسية مرنة جداً ومصممة لتتكيف بسهولة مع محلات التجزئة، الصيدليات، أو أي قطاع تجاري آخر."
+          }
+        }
+      ]
+    },
+    "highlights": []
+  }
+]

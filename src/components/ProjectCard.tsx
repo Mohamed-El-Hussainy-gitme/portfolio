@@ -36,8 +36,8 @@ export default function ProjectCard({ project, variant = 'standard' }: Props) {
           </div>
         </div>
         <div className="p-5">
-          <p className="text-xs text-slate-400 font-mono mb-1">
-            {isAr ? 'مشروع' : 'Project'} {String(project.universe || '').padStart(2, '0')}
+          <p className="text-xs text-cobalt font-mono font-semibold mb-1 uppercase tracking-wider">
+            {project.tags?.[0] || (isAr ? 'مشروع' : 'Project')}
           </p>
           <h3 className="font-inter-tight font-bold text-obsidian text-lg leading-tight mb-2">{name}</h3>
           <p className="text-sm text-slate-500 line-clamp-2 mb-4">{tagline}</p>
@@ -60,8 +60,8 @@ export default function ProjectCard({ project, variant = 'standard' }: Props) {
     >
       <div className="relative overflow-hidden aspect-video bg-slate-100">
         <LazyImage src={coverSrc} alt={coverAlt} className="w-full h-full group-hover:scale-105 transition-transform duration-500" />
-        <div className="absolute top-3 start-3 bg-white/90 backdrop-blur-sm text-xs font-mono font-bold text-slate-500 px-2 py-1 rounded-full">
-          PROJECT {String(project.universe || '').padStart(2, '0')}
+        <div className="absolute top-3 start-3 bg-white/90 backdrop-blur-sm text-xs font-mono font-bold text-cobalt px-3 py-1 rounded-full shadow-sm uppercase tracking-wider">
+          {project.tags?.[0] || 'PROJECT'}
         </div>
       </div>
       <div className="p-6">

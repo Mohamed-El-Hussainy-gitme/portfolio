@@ -23,8 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { fetchServices, upsertService, deleteService, serviceToAdminForm } from '@/lib/db';
-import SeoFieldsGroup from '@/components/admin/SeoFieldsGroup';
+import SeoFieldsGroup, { type SeoFormFields } from '@/components/admin/SeoFieldsGroup';
 import ImageUploadField from '@/components/admin/ImageUploadField';
+import StringArrayEditor from '@/components/admin/StringArrayEditor';
 import { getAssetPath } from '@/core/utils/assetPath';
 
 const EMPTY_FORM = {
@@ -49,12 +50,20 @@ const EMPTY_FORM = {
   includes_ar: [] as string[],
 };
 
+function FieldSet({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <fieldset className="border border-border rounded-lg p-4 space-y-4 bg-muted/10">
+      <legend className="px-2 font-heading text-lg text-primary">{title}</legend>
+      {children}
+    </fieldset>
+  );
+}
+
 export default function AdminServices() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [includesEn, setIncludesEn] = useState('');
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ['admin-services'],
@@ -70,7 +79,6 @@ export default function AdminServices() {
       setOpen(false);
       setEditing(null);
       setForm(EMPTY_FORM);
-      setIncludesEn('');
       toast.success('تم الحفظ بنجاح');
     },
     onError: (error: Error) => toast.error(error.message || 'فشل الحفظ'),
@@ -80,6 +88,7 @@ export default function AdminServices() {
     mutationFn: deleteService,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-services'] });
+      qc.invalidateQueries({ queryKey: ['services'] });
       toast.success('تم الحذف بنجاح');
     },
   });
@@ -89,13 +98,20 @@ export default function AdminServices() {
       setEditing(service);
       const f = serviceToAdminForm(service);
       setForm(f);
-      setIncludesEn(f.includes_en.join('\n'));
     } else {
       setEditing(null);
       setForm(EMPTY_FORM);
-      setIncludesEn('');
     }
     setOpen(true);
+  };
+
+  const seoValues: SeoFormFields = {
+    seo_title_en: form.seo_title_en,
+    seo_title_ar: form.seo_title_ar,
+    seo_description_en: form.seo_description_en,
+    seo_description_ar: form.seo_description_ar,
+    focus_keyword_en: form.focus_keyword_en,
+    focus_keyword_ar: form.focus_keyword_ar,
   };
 
   return (
@@ -120,7 +136,7 @@ export default function AdminServices() {
                   key={String(service.id)}
                   className="p-4 bg-card border border-border rounded-lg flex justify-between items-start gap-4 font-heading"
                 >
-                  <div className="flex gap-3 flex-1">
+                  <div className="flex gap-3 flex-1 min-w-0">
                     {f.cover_image ? (
                       <div className="w-14 h-14 rounded overflow-hidden border shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -131,15 +147,15 @@ export default function AdminServices() {
                         />
                       </div>
                     ) : null}
-                    <div>
-                      <h3 className="font-semibold">{f.title_en || f.title_ar}</h3>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-foreground">{f.title_en || f.title_ar}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-2">{f.description_en}</p>
                       <p className="text-xs text-muted-foreground mt-1">
                         {f.status} · {f.slug}
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 shrink-0">
                     <Button size="sm" variant="outline" onClick={() => handleOpen(service)}>
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -159,9 +175,9 @@ export default function AdminServices() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh]" dir="rtl">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-right">
+        <DialogContent className="max-w-4xl max-h-[95vh] flex flex-col p-0" dir="rtl">
+          <DialogHeader className="p-6 pb-2 shrink-0">
+            <DialogTitle className="font-heading text-right text-xl">
               {editing ? 'تعديل الخدمة' : 'إضافة خدمة جديدة'}
             </DialogTitle>
           </DialogHeader>
@@ -169,100 +185,119 @@ export default function AdminServices() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              const lines = includesEn.split('\n').map((s) => s.trim()).filter(Boolean);
               saveMutation.mutate({
                 ...form,
                 keyword_en: form.focus_keyword_en,
                 keyword_ar: form.focus_keyword_ar,
-                includes_en: lines,
-                includes_ar: lines,
               });
             }}
-            className="space-y-4 overflow-y-auto max-h-[70vh]"
+            className="flex-1 overflow-y-auto px-6 pb-6 space-y-6"
           >
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>العنوان (EN)</Label>
-                <Input
-                  value={form.title_en}
-                  onChange={(e) => setForm((f) => ({ ...f, title_en: e.target.value }))}
-                  required
-                />
+            <FieldSet title="الأساسيات">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>العنوان (EN)</Label>
+                  <Input
+                    value={form.title_en}
+                    onChange={(e) => setForm((f) => ({ ...f, title_en: e.target.value }))}
+                    required
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>العنوان (AR)</Label>
+                  <Input
+                    value={form.title_ar}
+                    onChange={(e) => setForm((f) => ({ ...f, title_ar: e.target.value }))}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>العنوان (AR)</Label>
-                <Input
-                  value={form.title_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, title_ar: e.target.value }))}
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-2 col-span-2">
-                <Label>Slug</Label>
-                <Input
-                  value={form.slug}
-                  onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2 col-span-2">
+                  <Label>Slug</Label>
+                  <Input
+                    value={form.slug}
+                    onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+                    dir="ltr"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الحالة</Label>
+                  <Select
+                    value={form.status}
+                    onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="published">منشور</SelectItem>
+                      <SelectItem value="draft">مسودة</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>الوصف (EN)</Label>
+                  <Textarea
+                    value={form.description_en}
+                    onChange={(e) => setForm((f) => ({ ...f, description_en: e.target.value }))}
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الوصف (AR)</Label>
+                  <Textarea
+                    value={form.description_ar}
+                    onChange={(e) => setForm((f) => ({ ...f, description_ar: e.target.value }))}
+                    rows={3}
+                  />
+                </div>
+              </div>
+            </FieldSet>
+
+            <FieldSet title="المخرجات (Includes)">
+              <div className="grid grid-cols-2 gap-4">
+                <StringArrayEditor
+                  label="المخرجات (EN)"
+                  items={form.includes_en}
+                  onChange={(items) => setForm((f) => ({ ...f, includes_en: items }))}
                   dir="ltr"
-                  required
+                  placeholder="Included feature..."
+                />
+                <StringArrayEditor
+                  label="المخرجات (AR)"
+                  items={form.includes_ar}
+                  onChange={(items) => setForm((f) => ({ ...f, includes_ar: items }))}
+                  dir="rtl"
+                  placeholder="ميزة مضمنة..."
                 />
               </div>
-              <div className="space-y-2">
-                <Label>الحالة</Label>
-                <Select
-                  value={form.status}
-                  onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="published">منشور</SelectItem>
-                    <SelectItem value="draft">مسودة</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            </FieldSet>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>الوصف (EN)</Label>
-                <Textarea
-                  value={form.description_en}
-                  onChange={(e) => setForm((f) => ({ ...f, description_en: e.target.value }))}
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>الوصف (AR)</Label>
-                <Textarea
-                  value={form.description_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, description_ar: e.target.value }))}
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>المخرجات (سطر لكل بند)</Label>
-              <Textarea value={includesEn} onChange={(e) => setIncludesEn(e.target.value)} rows={4} />
-            </div>
-
-            <ImageUploadField
-              label="صورة الغلاف"
-              value={form.cover_image}
-              onChange={(cover_image) => setForm((f) => ({ ...f, cover_image }))}
-            />
+            <FieldSet title="الصور">
+              <ImageUploadField
+                label="صورة الغلاف"
+                value={form.cover_image}
+                onChange={(cover_image) => setForm((f) => ({ ...f, cover_image }))}
+              />
+            </FieldSet>
 
             <SeoFieldsGroup
-              values={form}
+              values={seoValues}
               onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
 
-            <Button type="submit" disabled={saveMutation.isPending} className="w-full">
-              {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ'}
-            </Button>
+            <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t mt-6">
+              <Button type="submit" disabled={saveMutation.isPending} className="w-full font-heading h-12 text-lg">
+                {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ الخدمة'}
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

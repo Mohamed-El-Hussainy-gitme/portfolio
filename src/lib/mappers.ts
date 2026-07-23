@@ -23,8 +23,36 @@ function loc(en?: string | null, ar?: string | null): LocalizedText {
   return { en: en || '', ar: ar || en || '' };
 }
 
+function normalizeLocalizedText(value: unknown): LocalizedText {
+  if (typeof value === 'string') {
+    return { en: value, ar: value };
+  }
+
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    return {
+      en: typeof record.en === 'string' ? record.en : '',
+      ar: typeof record.ar === 'string' ? record.ar : typeof record.en === 'string' ? record.en : '',
+    };
+  }
+
+  return { en: '', ar: '' };
+}
+
+function normalizeFaqs(rawFaqs: unknown): Array<{ q: LocalizedText; a: LocalizedText }> {
+  if (!Array.isArray(rawFaqs)) return [];
+
+  return rawFaqs.map((faq) => {
+    const item = (faq as Record<string, unknown>) || {};
+    return {
+      q: normalizeLocalizedText(item.q ?? item.q_en ?? item.question),
+      a: normalizeLocalizedText(item.a ?? item.a_en ?? item.answer),
+    };
+  });
+}
+
 export function mapProjectRow(row: Record<string, unknown>): ProjectDefinition {
-  const faqs = (row.faqs as Array<Record<string, string>>) || [];
+  const faqs = normalizeFaqs(row.faqs);
   return {
     id: String(row.slug),
     universe: Number(row.universe) || 0,
@@ -67,11 +95,9 @@ export function mapProjectRow(row: Record<string, unknown>): ProjectDefinition {
         en: (row.case_study_steps_en as string[]) || [],
         ar: (row.case_study_steps_ar as string[]) || [],
       },
-      faqs: faqs.map((f: Record<string, unknown>) => ({
-        q: loc(f.q_en as string, f.q_ar as string),
-        a: loc(f.a_en as string, f.a_ar as string),
-      })),
+      faqs,
     },
+    isFeatured: Boolean(row.is_featured),
   };
 }
 

@@ -25,6 +25,8 @@ import {
 import { fetchProjects, upsertProject, deleteProject } from '@/lib/db';
 import SeoFieldsGroup, { type SeoFormFields } from '@/components/admin/SeoFieldsGroup';
 import ScreensEditor from '@/components/admin/ScreensEditor';
+import StringArrayEditor from '@/components/admin/StringArrayEditor';
+import FaqEditor, { type FaqItem } from '@/components/admin/FaqEditor';
 import { getAssetPath } from '@/core/utils/assetPath';
 import type { ProjectScreen } from '@/types/pageContent';
 
@@ -44,6 +46,25 @@ const EMPTY_FORM = {
   tech_stack: [] as string[],
   tags: [] as string[],
   screens: [] as ProjectScreen[],
+  case_study_problem_en: '',
+  case_study_problem_ar: '',
+  case_study_solution_en: '',
+  case_study_solution_ar: '',
+  case_study_outcome_en: '',
+  case_study_outcome_ar: '',
+  case_study_role_en: '',
+  case_study_role_ar: '',
+  case_study_stack_en: '',
+  case_study_stack_ar: '',
+  case_study_steps_en: [] as string[],
+  case_study_steps_ar: [] as string[],
+  faqs: [] as FaqItem[],
+  highlight_key_points_en: '',
+  highlight_key_points_ar: '',
+  highlight_focus_en: '',
+  highlight_focus_ar: '',
+  highlight_role_en: '',
+  highlight_role_ar: '',
   seo_title_en: '',
   seo_title_ar: '',
   seo_description_en: '',
@@ -57,6 +78,15 @@ function parseList(value: string): string[] {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+function FieldSet({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <fieldset className="border border-border rounded-lg p-4 space-y-4 bg-muted/10">
+      <legend className="px-2 font-heading text-lg text-primary">{title}</legend>
+      {children}
+    </fieldset>
+  );
 }
 
 export default function AdminProjects() {
@@ -118,6 +148,25 @@ export default function AdminProjects() {
         tech_stack: (project.tech_stack as string[]) ?? [],
         tags: (project.tags as string[]) ?? [],
         screens,
+        case_study_problem_en: String(project.case_study_problem_en ?? ''),
+        case_study_problem_ar: String(project.case_study_problem_ar ?? ''),
+        case_study_solution_en: String(project.case_study_solution_en ?? ''),
+        case_study_solution_ar: String(project.case_study_solution_ar ?? ''),
+        case_study_outcome_en: String(project.case_study_outcome_en ?? ''),
+        case_study_outcome_ar: String(project.case_study_outcome_ar ?? ''),
+        case_study_role_en: String(project.case_study_role_en ?? ''),
+        case_study_role_ar: String(project.case_study_role_ar ?? ''),
+        case_study_stack_en: String(project.case_study_stack_en ?? ''),
+        case_study_stack_ar: String(project.case_study_stack_ar ?? ''),
+        case_study_steps_en: (project.case_study_steps_en as string[]) ?? [],
+        case_study_steps_ar: (project.case_study_steps_ar as string[]) ?? [],
+        faqs: (project.faqs as FaqItem[]) ?? [],
+        highlight_key_points_en: String(project.highlight_key_points_en ?? ''),
+        highlight_key_points_ar: String(project.highlight_key_points_ar ?? ''),
+        highlight_focus_en: String(project.highlight_focus_en ?? ''),
+        highlight_focus_ar: String(project.highlight_focus_ar ?? ''),
+        highlight_role_en: String(project.highlight_role_en ?? ''),
+        highlight_role_ar: String(project.highlight_role_ar ?? ''),
         seo_title_en: String(project.seo_title_en ?? ''),
         seo_title_ar: String(project.seo_title_ar ?? ''),
         seo_description_en: String(project.seo_description_en ?? ''),
@@ -213,9 +262,9 @@ export default function AdminProjects() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh]" dir="rtl">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-right">
+        <DialogContent className="max-w-4xl max-h-[95vh] flex flex-col p-0" dir="rtl">
+          <DialogHeader className="p-6 pb-2 shrink-0">
+            <DialogTitle className="font-heading text-right text-xl">
               {editing ? 'تعديل المشروع' : 'إضافة مشروع جديد'}
             </DialogTitle>
           </DialogHeader>
@@ -230,115 +279,195 @@ export default function AdminProjects() {
                 screens: form.screens.filter((s) => s.src.trim()),
               });
             }}
-            className="space-y-4 overflow-y-auto max-h-[70vh] pr-1"
+            className="flex-1 overflow-y-auto px-6 pb-6 space-y-6"
           >
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label className="font-heading">الاسم (EN)</Label>
-                <Input
-                  value={form.name_en}
-                  onChange={(e) => setForm((f) => ({ ...f, name_en: e.target.value }))}
-                  required
-                />
+            <FieldSet title="الأساسيات">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>الاسم (EN)</Label>
+                  <Input value={form.name_en} onChange={(e) => setForm((f) => ({ ...f, name_en: e.target.value }))} required dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الاسم (AR)</Label>
+                  <Input value={form.name_ar} onChange={(e) => setForm((f) => ({ ...f, name_ar: e.target.value }))} />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label className="font-heading">الاسم (AR)</Label>
-                <Input
-                  value={form.name_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, name_ar: e.target.value }))}
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-2 col-span-2">
-                <Label className="font-heading">Slug</Label>
-                <Input
-                  value={form.slug}
-                  onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2 col-span-2">
+                  <Label>Slug</Label>
+                  <Input value={form.slug} onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} dir="ltr" required />
+                </div>
+                <div className="space-y-2">
+                  <Label>الحالة</Label>
+                  <Select value={form.status} onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="published">منشور</SelectItem>
+                      <SelectItem value="draft">مسودة</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tagline (EN)</Label>
+                  <Textarea value={form.tagline_en} onChange={(e) => setForm((f) => ({ ...f, tagline_en: e.target.value }))} rows={2} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tagline (AR)</Label>
+                  <Textarea value={form.tagline_ar} onChange={(e) => setForm((f) => ({ ...f, tagline_ar: e.target.value }))} rows={2} />
+                </div>
+                <div className="space-y-2">
+                  <Label>الوصف (EN)</Label>
+                  <Textarea value={form.description_en} onChange={(e) => setForm((f) => ({ ...f, description_en: e.target.value }))} rows={3} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الوصف (AR)</Label>
+                  <Textarea value={form.description_ar} onChange={(e) => setForm((f) => ({ ...f, description_ar: e.target.value }))} rows={3} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>التقنيات (مفصولة بفاصلة)</Label>
+                  <Input value={techInput} onChange={(e) => setTechInput(e.target.value)} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الوسوم</Label>
+                  <Input value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} dir="ltr" />
+                </div>
+              </div>
+            </FieldSet>
+
+            <FieldSet title="دراسة الحالة (Case Study)">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>المشكلة (EN)</Label>
+                  <Textarea value={form.case_study_problem_en} onChange={(e) => setForm((f) => ({ ...f, case_study_problem_en: e.target.value }))} rows={3} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>المشكلة (AR)</Label>
+                  <Textarea value={form.case_study_problem_ar} onChange={(e) => setForm((f) => ({ ...f, case_study_problem_ar: e.target.value }))} rows={3} />
+                </div>
+                <div className="space-y-2">
+                  <Label>الحل (EN)</Label>
+                  <Textarea value={form.case_study_solution_en} onChange={(e) => setForm((f) => ({ ...f, case_study_solution_en: e.target.value }))} rows={3} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الحل (AR)</Label>
+                  <Textarea value={form.case_study_solution_ar} onChange={(e) => setForm((f) => ({ ...f, case_study_solution_ar: e.target.value }))} rows={3} />
+                </div>
+                <div className="space-y-2">
+                  <Label>النتيجة (EN)</Label>
+                  <Textarea value={form.case_study_outcome_en} onChange={(e) => setForm((f) => ({ ...f, case_study_outcome_en: e.target.value }))} rows={3} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>النتيجة (AR)</Label>
+                  <Textarea value={form.case_study_outcome_ar} onChange={(e) => setForm((f) => ({ ...f, case_study_outcome_ar: e.target.value }))} rows={3} />
+                </div>
+                <div className="space-y-2">
+                  <Label>الدور (EN)</Label>
+                  <Input value={form.case_study_role_en} onChange={(e) => setForm((f) => ({ ...f, case_study_role_en: e.target.value }))} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الدور (AR)</Label>
+                  <Input value={form.case_study_role_ar} onChange={(e) => setForm((f) => ({ ...f, case_study_role_ar: e.target.value }))} />
+                </div>
+                <div className="space-y-2">
+                  <Label>التقنيات المستخدمة بالدراسة (EN)</Label>
+                  <Input value={form.case_study_stack_en} onChange={(e) => setForm((f) => ({ ...f, case_study_stack_en: e.target.value }))} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>التقنيات المستخدمة بالدراسة (AR)</Label>
+                  <Input value={form.case_study_stack_ar} onChange={(e) => setForm((f) => ({ ...f, case_study_stack_ar: e.target.value }))} dir="ltr" />
+                </div>
+              </div>
+            </FieldSet>
+
+            <FieldSet title="خطوات العمل والأسئلة الشائعة">
+              <div className="grid grid-cols-2 gap-4">
+                <StringArrayEditor
+                  label="خطوات العمل (EN)"
+                  items={form.case_study_steps_en}
+                  onChange={(items) => setForm((f) => ({ ...f, case_study_steps_en: items }))}
                   dir="ltr"
-                  required
+                  placeholder="Step..."
+                />
+                <StringArrayEditor
+                  label="خطوات العمل (AR)"
+                  items={form.case_study_steps_ar}
+                  onChange={(items) => setForm((f) => ({ ...f, case_study_steps_ar: items }))}
+                  dir="rtl"
+                  placeholder="الخطوة..."
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="font-heading">الحالة</Label>
-                <Select
-                  value={form.status}
-                  onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="published">منشور</SelectItem>
-                    <SelectItem value="draft">مسودة</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label className="font-heading">Tagline (EN)</Label>
-                <Textarea
-                  value={form.tagline_en}
-                  onChange={(e) => setForm((f) => ({ ...f, tagline_en: e.target.value }))}
-                  rows={2}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="font-heading">Tagline (AR)</Label>
-                <Textarea
-                  value={form.tagline_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, tagline_ar: e.target.value }))}
-                  rows={2}
-                />
-              </div>
-            </div>
+              <FaqEditor
+                items={form.faqs}
+                onChange={(items) => setForm((f) => ({ ...f, faqs: items }))}
+              />
+            </FieldSet>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label className="font-heading">التقنيات (مفصولة بفاصلة)</Label>
-                <Input value={techInput} onChange={(e) => setTechInput(e.target.value)} dir="ltr" />
+            <FieldSet title="الإضافات (Highlights)">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>النقاط الرئيسية (EN)</Label>
+                  <Textarea value={form.highlight_key_points_en} onChange={(e) => setForm((f) => ({ ...f, highlight_key_points_en: e.target.value }))} rows={2} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>النقاط الرئيسية (AR)</Label>
+                  <Textarea value={form.highlight_key_points_ar} onChange={(e) => setForm((f) => ({ ...f, highlight_key_points_ar: e.target.value }))} rows={2} />
+                </div>
+                <div className="space-y-2">
+                  <Label>التركيز (EN)</Label>
+                  <Input value={form.highlight_focus_en} onChange={(e) => setForm((f) => ({ ...f, highlight_focus_en: e.target.value }))} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>التركيز (AR)</Label>
+                  <Input value={form.highlight_focus_ar} onChange={(e) => setForm((f) => ({ ...f, highlight_focus_ar: e.target.value }))} />
+                </div>
+                <div className="space-y-2">
+                  <Label>الدور (EN)</Label>
+                  <Input value={form.highlight_role_en} onChange={(e) => setForm((f) => ({ ...f, highlight_role_en: e.target.value }))} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>الدور (AR)</Label>
+                  <Input value={form.highlight_role_ar} onChange={(e) => setForm((f) => ({ ...f, highlight_role_ar: e.target.value }))} />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label className="font-heading">الوسوم</Label>
-                <Input value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} dir="ltr" />
-              </div>
-            </div>
+            </FieldSet>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label className="font-heading">Live URL</Label>
-                <Input
-                  value={form.live_url}
-                  onChange={(e) => setForm((f) => ({ ...f, live_url: e.target.value }))}
-                  dir="ltr"
-                />
+            <FieldSet title="الروابط والصور">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Live URL</Label>
+                  <Input value={form.live_url} onChange={(e) => setForm((f) => ({ ...f, live_url: e.target.value }))} dir="ltr" />
+                </div>
+                <div className="space-y-2">
+                  <Label>GitHub URL</Label>
+                  <Input value={form.repo_url} onChange={(e) => setForm((f) => ({ ...f, repo_url: e.target.value }))} dir="ltr" />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label className="font-heading">GitHub</Label>
-                <Input
-                  value={form.repo_url}
-                  onChange={(e) => setForm((f) => ({ ...f, repo_url: e.target.value }))}
-                  dir="ltr"
-                />
-              </div>
-            </div>
-
-            <ScreensEditor
-              screens={form.screens}
-              onChange={(screens) => setForm((f) => ({ ...f, screens }))}
-            />
+              <ScreensEditor
+                screens={form.screens}
+                onChange={(screens) => setForm((f) => ({ ...f, screens }))}
+              />
+            </FieldSet>
 
             <SeoFieldsGroup
               values={seoValues}
               onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
 
-            <Button type="submit" disabled={saveMutation.isPending} className="w-full font-heading">
-              {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ'}
-            </Button>
+            <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t mt-6">
+              <Button type="submit" disabled={saveMutation.isPending} className="w-full font-heading h-12 text-lg">
+                {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ المشروع'}
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

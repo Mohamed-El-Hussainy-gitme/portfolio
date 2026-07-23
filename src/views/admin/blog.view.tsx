@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { fetchBlogPosts, upsertBlogPost, deleteBlogPost, blogToAdminForm } from '@/lib/db';
-import SeoFieldsGroup from '@/components/admin/SeoFieldsGroup';
+import SeoFieldsGroup, { type SeoFormFields } from '@/components/admin/SeoFieldsGroup';
 import ImageUploadField from '@/components/admin/ImageUploadField';
 import { getAssetPath } from '@/core/utils/assetPath';
 
@@ -47,6 +47,15 @@ const EMPTY_FORM = {
   focus_keyword_en: '',
   focus_keyword_ar: '',
 };
+
+function FieldSet({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <fieldset className="border border-border rounded-lg p-4 space-y-4 bg-muted/10">
+      <legend className="px-2 font-heading text-lg text-primary">{title}</legend>
+      {children}
+    </fieldset>
+  );
+}
 
 export default function AdminBlog() {
   const qc = useQueryClient();
@@ -97,6 +106,15 @@ export default function AdminBlog() {
     setOpen(true);
   };
 
+  const seoValues: SeoFormFields = {
+    seo_title_en: form.seo_title_en,
+    seo_title_ar: form.seo_title_ar,
+    seo_description_en: form.seo_description_en,
+    seo_description_ar: form.seo_description_ar,
+    focus_keyword_en: form.focus_keyword_en,
+    focus_keyword_ar: form.focus_keyword_ar,
+  };
+
   return (
     <>
       <PageHeader
@@ -117,17 +135,17 @@ export default function AdminBlog() {
               return (
                 <div
                   key={String(post.id)}
-                  className="p-4 bg-card border border-border rounded-lg flex justify-between gap-4"
+                  className="p-4 bg-card border border-border rounded-lg flex justify-between gap-4 font-heading"
                 >
-                  <div className="flex gap-3 flex-1">
+                  <div className="flex gap-3 flex-1 min-w-0">
                     {f.cover_image ? (
                       <div className="w-14 h-14 rounded overflow-hidden border shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={getAssetPath(f.cover_image)} alt="" className="w-full h-full object-cover" />
                       </div>
                     ) : null}
-                    <div>
-                      <h3 className="font-semibold">{f.title_en || f.title_ar}</h3>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-foreground">{f.title_en || f.title_ar}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-2">{f.summary_en}</p>
                       <span
                         className={`text-xs mt-2 inline-block px-2 py-1 rounded ${
@@ -140,7 +158,7 @@ export default function AdminBlog() {
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 shrink-0">
                     <Button size="sm" variant="outline" onClick={() => handleOpen(post)}>
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -160,9 +178,9 @@ export default function AdminBlog() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh]" dir="rtl">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-right">
+        <DialogContent className="max-w-4xl max-h-[95vh] flex flex-col p-0" dir="rtl">
+          <DialogHeader className="p-6 pb-2 shrink-0">
+            <DialogTitle className="font-heading text-right text-xl">
               {editing ? 'تعديل المقالة' : 'إضافة مقالة جديدة'}
             </DialogTitle>
           </DialogHeader>
@@ -178,107 +196,135 @@ export default function AdminBlog() {
                   .filter(Boolean),
               });
             }}
-            className="space-y-4 overflow-y-auto max-h-[70vh]"
+            className="flex-1 overflow-y-auto px-6 pb-6 space-y-6"
           >
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>العنوان (EN)</Label>
-                <Input
-                  value={form.title_en}
-                  onChange={(e) => setForm((f) => ({ ...f, title_en: e.target.value }))}
-                  required
-                />
+            <FieldSet title="الأساسيات">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>العنوان (EN)</Label>
+                  <Input
+                    value={form.title_en}
+                    onChange={(e) => setForm((f) => ({ ...f, title_en: e.target.value }))}
+                    required
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>العنوان (AR)</Label>
+                  <Input
+                    value={form.title_ar}
+                    onChange={(e) => setForm((f) => ({ ...f, title_ar: e.target.value }))}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>العنوان (AR)</Label>
-                <Input
-                  value={form.title_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, title_ar: e.target.value }))}
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-2 col-span-2">
-                <Label>Slug</Label>
-                <Input
-                  value={form.slug}
-                  onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
-                  dir="ltr"
-                  required
-                />
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2 col-span-2">
+                  <Label>Slug</Label>
+                  <Input
+                    value={form.slug}
+                    onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+                    dir="ltr"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الحالة</Label>
+                  <Select
+                    value={form.status}
+                    onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="published">منشورة</SelectItem>
+                      <SelectItem value="draft">مسودة</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>الحالة</Label>
-                <Select
-                  value={form.status}
-                  onValueChange={(v) => setForm((f) => ({ ...f, status: v as 'draft' | 'published' }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="published">منشورة</SelectItem>
-                    <SelectItem value="draft">مسودة</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>الملخص (EN)</Label>
-                <Textarea
-                  value={form.summary_en}
-                  onChange={(e) => setForm((f) => ({ ...f, summary_en: e.target.value }))}
-                  rows={2}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>الملخص (EN)</Label>
+                  <Textarea
+                    value={form.summary_en}
+                    onChange={(e) => setForm((f) => ({ ...f, summary_en: e.target.value }))}
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الملخص (AR)</Label>
+                  <Textarea
+                    value={form.summary_ar}
+                    onChange={(e) => setForm((f) => ({ ...f, summary_ar: e.target.value }))}
+                    rows={3}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>الملخص (AR)</Label>
-                <Textarea
-                  value={form.summary_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, summary_ar: e.target.value }))}
-                  rows={2}
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>المحتوى (EN)</Label>
-                <Textarea
-                  value={form.content_en}
-                  onChange={(e) => setForm((f) => ({ ...f, content_en: e.target.value }))}
-                  rows={5}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>تاريخ النشر</Label>
+                  <Input
+                    type="date"
+                    value={form.published_date}
+                    onChange={(e) => setForm((f) => ({ ...f, published_date: e.target.value }))}
+                    dir="ltr"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الوسوم (مفصولة بفاصلة)</Label>
+                  <Input value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} dir="ltr" />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>المحتوى (AR)</Label>
-                <Textarea
-                  value={form.content_ar}
-                  onChange={(e) => setForm((f) => ({ ...f, content_ar: e.target.value }))}
-                  rows={5}
-                />
+            </FieldSet>
+
+            <FieldSet title="المحتوى الكامل (Markdown / HTML)">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>المحتوى (EN)</Label>
+                  <Textarea
+                    value={form.content_en}
+                    onChange={(e) => setForm((f) => ({ ...f, content_en: e.target.value }))}
+                    rows={12}
+                    dir="ltr"
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>المحتوى (AR)</Label>
+                  <Textarea
+                    value={form.content_ar}
+                    onChange={(e) => setForm((f) => ({ ...f, content_ar: e.target.value }))}
+                    rows={12}
+                    dir="rtl"
+                    className="font-mono text-sm"
+                  />
+                </div>
               </div>
-            </div>
+            </FieldSet>
 
-            <div className="space-y-2">
-              <Label>الوسوم (مفصولة بفاصلة)</Label>
-              <Input value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} dir="ltr" />
-            </div>
+            <FieldSet title="الصور">
+              <ImageUploadField
+                label="صورة الغلاف"
+                value={form.cover_image}
+                onChange={(cover_image) => setForm((f) => ({ ...f, cover_image }))}
+              />
+            </FieldSet>
 
-            <ImageUploadField
-              label="صورة الغلاف"
-              value={form.cover_image}
-              onChange={(cover_image) => setForm((f) => ({ ...f, cover_image }))}
+            <SeoFieldsGroup
+              values={seoValues}
+              onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
             />
 
-            <SeoFieldsGroup values={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
-
-            <Button type="submit" disabled={saveMutation.isPending} className="w-full">
-              {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ'}
-            </Button>
+            <div className="sticky bottom-0 bg-background pt-4 pb-2 border-t mt-6">
+              <Button type="submit" disabled={saveMutation.isPending} className="w-full font-heading h-12 text-lg">
+                {saveMutation.isPending ? 'جاري الحفظ...' : 'حفظ المقالة'}
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

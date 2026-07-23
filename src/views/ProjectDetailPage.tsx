@@ -169,7 +169,7 @@ export default function ProjectDetailPage() {
                         className={`bg-white border border-border border-l-4 ${item.color} rounded-xl p-5`}
                       >
                         <p className="text-xs uppercase tracking-widest text-slate-400 mb-2">{item.label}</p>
-                        <p className="text-sm text-slate-700 leading-relaxed">{item.value}</p>
+                        <p className="text-sm text-slate-700 leading-relaxed break-words whitespace-normal">{item.value}</p>
                       </div>
                     ))}
                 </div>
@@ -181,11 +181,11 @@ export default function ProjectDetailPage() {
                 <h3 className="text-lg font-bold text-obsidian mb-4">{t.steps}</h3>
                 <ol className="space-y-2">
                   {steps.map((step, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
+                    <li key={i} className="flex items-start gap-3 text-sm text-slate-700 break-words whitespace-normal">
                       <span className="w-6 h-6 rounded-full bg-cobalt text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                         {i + 1}
                       </span>
-                      {step}
+                      <span>{step}</span>
                     </li>
                   ))}
                 </ol>
@@ -198,8 +198,8 @@ export default function ProjectDetailPage() {
                 <div className="space-y-3">
                   {caseStudy!.faqs.map((faq, i) => (
                     <div key={i} className="bg-surface border border-border rounded-xl p-5">
-                      <p className="font-semibold text-obsidian text-sm mb-1">{faq.q[language]}</p>
-                      <p className="text-sm text-slate-600">{faq.a[language]}</p>
+                      <p className="font-semibold text-obsidian text-sm mb-1 break-words whitespace-normal">{faq.q[language]}</p>
+                      <p className="text-sm text-slate-600 break-words whitespace-normal">{faq.a[language]}</p>
                     </div>
                   ))}
                 </div>

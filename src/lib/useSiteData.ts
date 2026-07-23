@@ -11,7 +11,7 @@ import {
   mapVerifiedReviewToDisplay,
 } from './mappers';
 import { projects as fallbackProjects } from '@/data/projects';
-import { SERVICES as fallbackServices } from '@/data/services';
+import { services as fallbackServices } from '@/data/services';
 import { blogPosts as fallbackBlog } from '@/data/blog';
 import { verifiedReviews as fallbackReviews } from '@/data/verifiedReviews';
 

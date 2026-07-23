@@ -11,7 +11,7 @@ export default function FeaturedProjectsSection() {
   const isAr = language === 'ar';
   const { data: projects = [] } = useProjects();
 
-  const featured = projects.filter((p) => p.slug === 'rose-ecommerce-website-development' || p.slug === 'growlik');
+  const featured = projects.filter((p) => p.isFeatured);
   const displayed = featured.length > 0 ? featured : projects.slice(0, 3);
 
   const t = {
