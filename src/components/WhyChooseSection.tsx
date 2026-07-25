@@ -9,28 +9,28 @@ export default function WhyChooseSection() {
 
   const items = [
     {
-      title: isAr ? 'تسليم على مراحل' : 'Milestone delivery',
-      desc: isAr ? 'مراجعة التقدم في كل مرحلة قبل الانتقال للتالية.' : 'Review progress at each milestone before moving on.',
+      title: isAr ? 'بفهم البزنس بتاعك' : 'Business-First Approach',
+      desc: isAr ? 'بصفتي مؤسس شركة (العلا)، ببرمج لك بناءً على احتياجك الفعلي في السوق مش مجرد كود وخلاص.' : 'As a founder myself (Al-Ola), I build solutions that actually serve your market needs.',
     },
     {
-      title: isAr ? 'دعم 30 يوماً' : '30-day support',
-      desc: isAr ? 'صيانة وتعديلات بسيطة بعد التسليم.' : 'Maintenance and minor fixes after launch.',
+      title: isAr ? 'نظام حقيقي مش قالب' : 'Custom Systems, Not Templates',
+      desc: isAr ? 'ببني مشروعك بالتقنية الأنسب لاحتياجك الفعلي، مش قالب جاهز بطيء.' : 'I build your project with whatever stack actually fits your needs — not a slow, generic template.',
     },
     {
-      title: isAr ? 'كود نظيف' : 'Clean code',
-      desc: isAr ? 'كود منظم وموثّق يسهّل التطوير لاحقاً.' : 'Structured, documented code for future updates.',
+      title: isAr ? 'تطوير شامل من الصفر' : 'End-to-End Development',
+      desc: isAr ? 'بنفذ الـ Front-end والـ Back-end كامل، لتسليم مشروع شغال 100% من مكان واحد.' : 'I handle both Front-end and Back-end, delivering a 100% functional product.',
     },
     {
-      title: isAr ? 'تواصل ثنائي اللغة' : 'Bilingual communication',
-      desc: isAr ? 'عربي وإنجليزي بوضوح في المتطلبات والتسليم.' : 'Clear Arabic and English throughout the project.',
+      title: isAr ? 'دعم فني وتواصل مباشر' : 'Direct Support',
+      desc: isAr ? 'أنا اللي ببرمج وأنا اللي برد عليك. مفيش وسطاء، ومفيش مماطلة في التعديلات.' : 'You deal directly with the developer who built your system. No middlemen.',
     },
     {
-      title: isAr ? 'SEO تقني' : 'Technical SEO',
-      desc: isAr ? 'أساسيات فهرسة وأداء مدمجة من البداية.' : 'Indexing and performance built in from day one.',
+      title: isAr ? 'SEO وأداء سريع' : 'Performance & SEO',
+      desc: isAr ? 'بهتم بسرعة الموقع وتهيئته لمحركات البحث من أول سطر كود عشان تظهر في جوجل.' : 'Fast load times and Google-ready indexing built-in from day one.',
     },
     {
-      title: isAr ? 'تسليم ملفات التصميم' : 'Design handoff',
-      desc: isAr ? 'ملفات Figma عند الحاجة مع المشروع.' : 'Figma files included when design is in scope.',
+      title: isAr ? 'تواصل واضح وشفاف' : 'Clear Communication',
+      desc: isAr ? 'بشرح لك كل خطوة، وبوثق الكود، وبسلمك المشروع كأنه منتجي الخاص.' : 'I explain every step, document the code, and treat your project like my own.',
     },
   ];
 

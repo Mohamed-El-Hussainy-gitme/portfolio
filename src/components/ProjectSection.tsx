@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "../core/i18n/LanguageContext";
 import { CinematicTitle } from "./CinematicTitle";
-import type { ProjectDefinition, ProjectHighlight, ProjectCaseStudy, Locale } from "../data/projects";
+import type { ProjectDefinition, HighlightItem, CaseStudy } from "../data/projects";
+import type { Locale } from "../core/i18n/locale";
 import { getAssetPath } from "../core/utils/assetPath";
 import { buildWhatsAppLink } from "../data/contact";
 
@@ -26,7 +27,7 @@ function inferFocusKeyword(techStack: string[], isArabic: boolean): string {
   return isArabic ? "تصميم مواقع" : "website design";
 }
 
-function getCaseStudy(project: ProjectDefinition, isArabic: boolean): ProjectCaseStudy {
+function getCaseStudy(project: ProjectDefinition, isArabic: boolean): CaseStudy {
   if (project.caseStudy) return project.caseStudy;
 
   const kw = project.focusKeyword || {
@@ -79,7 +80,7 @@ function getCaseStudy(project: ProjectDefinition, isArabic: boolean): ProjectCas
   };
 }
 
-function buildNarrative(locale: Locale, project: ProjectDefinition, cs: ProjectCaseStudy, focusKeyword: string): string[] {
+function buildNarrative(locale: Locale, project: ProjectDefinition, cs: CaseStudy, focusKeyword: string): string[] {
   const title = project.name[locale];
   const techLine = project.techStack.join(" • ");
 
@@ -104,7 +105,7 @@ function buildNarrative(locale: Locale, project: ProjectDefinition, cs: ProjectC
   ];
 }
 
-function renderFaqs(faqs: ProjectCaseStudy["faqs"] | undefined, locale: Locale) {
+function renderFaqs(faqs: CaseStudy["faqs"] | undefined, locale: Locale) {
   if (!faqs || faqs.length === 0) return null;
 
   const validFaqs = faqs.filter(
@@ -147,7 +148,7 @@ export const ProjectSection: React.FC<ProjectSectionProps> = ({ project }) => {
 
   const focusKeyword = project.focusKeyword?.[language] || inferFocusKeyword(project.techStack, isArabic);
 
-  const getHighlight = (id: ProjectHighlight["id"]) => project.highlights.find((h) => h.id === id);
+  const getHighlight = (id: HighlightItem["id"]) => project.highlights.find((h) => h.id === id);
 
   const keyPoints = getHighlight("keyPoints");
   const focus = getHighlight("focus");

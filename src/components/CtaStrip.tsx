@@ -8,11 +8,11 @@ export default function CtaStrip() {
   const { language, direction } = useLanguage();
   const isArabic = language === "ar";
 
-  const focusKeyword = isArabic ? "بناء ويب سايت" : "website development";
-  const title = isArabic ? "هل تريد بدء مشروعك الآن؟" : "Ready to start?";
+  const focusKeyword = isArabic ? "مشروع جديد" : "new project";
+  const title = isArabic ? "جاهز نبني مشروعك الجاي؟" : "Ready to build your next big thing?";
   const body = isArabic
-    ? `اكتب لي عبر واتساب وسأقترح خطة واضحة لـ ${focusKeyword} خلال نفس اليوم.`
-    : `Message me on WhatsApp and I will propose a clear plan for your ${focusKeyword} today.`;
+    ? `ابعث لي رسالة على واتساب نتكلم فيها عن متطلبات مشروعك، وهحطلك خطة تنفيذ واضحة.`
+    : `Message me on WhatsApp to discuss your business needs, and I'll give you a clear roadmap.`;
 
   const waLink = buildWhatsAppLink(
     isArabic
