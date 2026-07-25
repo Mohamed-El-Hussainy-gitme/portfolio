@@ -9,28 +9,40 @@ export default function WhyChooseSection() {
 
   const items = [
     {
-      title: isAr ? 'بفهم البزنس بتاعك' : 'Business-First Approach',
-      desc: isAr ? 'بصفتي مؤسس شركة (العلا)، ببرمج لك بناءً على احتياجك الفعلي في السوق مش مجرد كود وخلاص.' : 'As a founder myself (Al-Ola), I build solutions that actually serve your market needs.',
+      title: isAr ? 'بفهم احتياجك الحقيقي' : 'Business-First Approach',
+      desc: isAr
+        ? 'مش بس بنفذ الطلب — بفهم هدفك التجاري وبقترح الحل اللي يخدمك فعلاً في السوق.'
+        : "I don't just execute requests — I understand your business goal and propose what actually serves you.",
     },
     {
-      title: isAr ? 'نظام حقيقي مش قالب' : 'Custom Systems, Not Templates',
-      desc: isAr ? 'ببني مشروعك بالتقنية الأنسب لاحتياجك الفعلي، مش قالب جاهز بطيء.' : 'I build your project with whatever stack actually fits your needs — not a slow, generic template.',
+      title: isAr ? 'أختار الأنسب لك' : 'Right Tool for the Job',
+      desc: isAr
+        ? 'سواء كان الحل قالب جاهز أو تطوير من الصفر، بختار اللي يناسب وقتك وميزانيتك وهدفك.'
+        : 'Whether a template or custom build, I choose what fits your timeline, budget, and goal.',
     },
     {
       title: isAr ? 'تطوير شامل من الصفر' : 'End-to-End Development',
-      desc: isAr ? 'بنفذ الـ Front-end والـ Back-end كامل، لتسليم مشروع شغال 100% من مكان واحد.' : 'I handle both Front-end and Back-end, delivering a 100% functional product.',
+      desc: isAr
+        ? 'بنفذ الـ Front-end والـ Back-end كامل، لتسليم مشروع شغال 100% من مكان واحد.'
+        : 'I handle both Front-end and Back-end, delivering a 100% functional product from one place.',
     },
     {
       title: isAr ? 'دعم فني وتواصل مباشر' : 'Direct Support',
-      desc: isAr ? 'أنا اللي ببرمج وأنا اللي برد عليك. مفيش وسطاء، ومفيش مماطلة في التعديلات.' : 'You deal directly with the developer who built your system. No middlemen.',
+      desc: isAr
+        ? 'أنا اللي ببرمج وأنا اللي برد عليك. مفيش وسطاء، ومفيش مماطلة في التعديلات.'
+        : 'You deal directly with the developer who built your system. No middlemen, no delays.',
     },
     {
       title: isAr ? 'SEO وأداء سريع' : 'Performance & SEO',
-      desc: isAr ? 'بهتم بسرعة الموقع وتهيئته لمحركات البحث من أول سطر كود عشان تظهر في جوجل.' : 'Fast load times and Google-ready indexing built-in from day one.',
+      desc: isAr
+        ? 'بهتم بسرعة الموقع وتهيئته لمحركات البحث من أول سطر كود عشان تظهر في جوجل.'
+        : 'Fast load times and Google-ready indexing built-in from the very first line of code.',
     },
     {
       title: isAr ? 'تواصل واضح وشفاف' : 'Clear Communication',
-      desc: isAr ? 'بشرح لك كل خطوة، وبوثق الكود، وبسلمك المشروع كأنه منتجي الخاص.' : 'I explain every step, document the code, and treat your project like my own.',
+      desc: isAr
+        ? 'بشرح لك كل خطوة، وبوثق الكود، وبسلمك المشروع وكأنه منتجي الخاص.'
+        : 'I explain every step, document the code, and deliver your project as if it were my own.',
     },
   ];
 
