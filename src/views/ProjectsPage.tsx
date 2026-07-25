@@ -15,14 +15,15 @@ import { pageHeroField, pageSeoField } from "@/lib/pageContent";
 import PageHero, { HeroLink } from "@/components/layout/PageHero";
 
 const TAGS: Array<{ value: string; labelEn: string; labelAr: string }> = [
-  { value: "all", labelEn: "All", labelAr: "الكل" },
-  { value: "landing-page", labelEn: "Landing pages", labelAr: "صفحات هبوط" },
-  { value: "dashboard", labelEn: "Dashboards", labelAr: "لوحات تحكم" },
-  { value: "ecommerce", labelEn: "E-commerce", labelAr: "تجارة إلكترونية" },
-  { value: "seo", labelEn: "SEO", labelAr: "SEO" },
-  { value: "wordpress", labelEn: "WordPress", labelAr: "ووردبريس" },
-  { value: "3d", labelEn: "3D", labelAr: "ثلاثي الأبعاد" },
+  { value: "all",        labelEn: "All",                    labelAr: "الكل" },
+  { value: "saas",       labelEn: "SaaS & Web Apps",        labelAr: "منصات ويب" },
+  { value: "erp-crm-pos",labelEn: "CRM / ERP / POS",        labelAr: "أنظمة إدارة أعمال" },
+  { value: "corporate",  labelEn: "Corporate Websites",      labelAr: "مواقع شركات" },
+  { value: "ecommerce",  labelEn: "E-Commerce",              labelAr: "متاجر إلكترونية" },
+  { value: "rescue",     labelEn: "Project Rescue",          labelAr: "إنقاذ مشاريع" },
+  { value: "seo",        labelEn: "SEO & Performance",       labelAr: "SEO وأداء" },
 ];
+
 
 export default function ProjectsPage({ locale }: { locale: Locale }) {
   const { language, direction, href } = useLanguage();

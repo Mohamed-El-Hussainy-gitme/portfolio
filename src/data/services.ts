@@ -65,6 +65,104 @@ export const services: ServiceDefinition[] = [
     ],
   },
   {
+    slug: "business-management-systems",
+    icon: "layout-dashboard",
+    title: {
+      en: "Business Management Systems (CRM / ERP / POS)",
+      ar: "أنظمة إدارة الأعمال (CRM / ERP / POS)",
+    },
+    summary: {
+      en: "Building the operational backbone real businesses run on — CRM, ERP, and point-of-sale systems that unify inventory, invoicing, customers, and reporting in one dashboard (like Kenz, Al Khair, and AL OLA's logistics platform), instead of juggling disconnected tools.",
+      ar: "بناء العمود الفقري التشغيلي اللي بيدير بيه أصحاب البزنس شغلهم فعليًا — أنظمة CRM وERP ونقاط بيع بتوحّد المخزون والفواتير والعملاء والتقارير في لوحة تحكم واحدة (زي كنز والخير ومنصة العلا اللوجستية)، بدل التعامل مع أدوات متفرقة عن بعض.",
+    },
+    bullets: {
+      en: [
+        "Unified online + in-store POS with shared inventory",
+        "WhatsApp-automated CRM (agenda, deals, follow-ups)",
+        "Odoo-style systems built independently, no licensing",
+        "Driver/field logistics matching and dispatch dashboards",
+      ],
+      ar: [
+        "نقطة بيع أونلاين وأوفلاين موحدة بمخزون مشترك",
+        "أنظمة CRM بأتمتة واتساب (أجندة، صفقات، متابعات)",
+        "أنظمة على طراز أودو مبنية بشكل مستقل بدون ترخيص",
+        "لوحات تحكم لمطابقة وتوزيع مناديب ميدانيين",
+      ],
+    },
+    focusKeyword: {
+      en: "CRM ERP POS Systems",
+      ar: "أنظمة CRM ERP POS",
+    },
+    deliverables: [
+      { en: "Unified management dashboard (CRM/ERP/POS)", ar: "لوحة تحكم إدارية موحدة (CRM/ERP/POS)" },
+      { en: "Shared inventory and invoicing across channels", ar: "مخزون وفواتير موحدة عبر كل قنوات البيع" },
+      { en: "Automation integrations (WhatsApp, notifications)", ar: "تكاملات أتمتة (واتساب، إشعارات)" },
+      { en: "Sales, stock, and performance reports", ar: "تقارير مبيعات ومخزون وأداء" },
+    ],
+    outcomes: [
+      { en: "One system instead of scattered spreadsheets and tools", ar: "نظام واحد بدل إكسيل وأدوات متفرقة" },
+      { en: "Accurate real-time inventory across online and in-store sales", ar: "مخزون دقيق لحظيًا عبر البيع الأونلاين والداخلي" },
+      { en: "Faster customer follow-up through automation", ar: "متابعة أسرع للعملاء عن طريق الأتمتة" },
+      { en: "A system the owner can actually run day to day", ar: "نظام يقدر صاحب البزنس يديره فعليًا يوم بيوم" },
+    ],
+    process: [
+      { en: "Mapping the real business workflow", ar: "رسم سير العمل الفعلي للبزنس" },
+      { en: "Dashboard & data model architecture", ar: "هيكلة لوحة التحكم ونموذج البيانات" },
+      { en: "Core module development (inventory, invoicing, CRM)", ar: "بناء الوحدات الأساسية (مخزون، فواتير، CRM)" },
+      { en: "Automation & third-party integrations", ar: "ربط الأتمتة والتكاملات الخارجية" },
+      { en: "Handover and team training", ar: "التسليم وتدريب الفريق على الاستخدام" },
+    ],
+  },
+  {
+    slug: "corporate-websites",
+    icon: "building",
+    title: {
+      en: "Corporate & Business Websites",
+      ar: "مواقع الشركات والوكالات",
+    },
+    summary: {
+      en: "Full-stack websites for real companies and agencies (like BCC and Lamar) — built with a content dashboard the client's own team can use to add services, products, and clients, without needing me for every update.",
+      ar: "مواقع Full-Stack كاملة لشركات ووكالات حقيقية (زي BCC ولامار) — مبنية بلوحة تحكم محتوى يقدر فريق العميل نفسه يستخدمها لإضافة الخدمات والمنتجات والعملاء، بدون ما يحتاجوا لي في كل تحديث.",
+    },
+    bullets: {
+      en: [
+        "Editable content dashboards (services, products, clients)",
+        "Contact forms wired to real inquiry handling",
+        "Payment gateway integration where needed",
+        "Database security hardening (Row Level Security)",
+      ],
+      ar: [
+        "لوحات تحكم محتوى قابلة للتعديل (خدمات، منتجات، عملاء)",
+        "نماذج تواصل مربوطة فعليًا باستقبال الاستفسارات",
+        "ربط بوابات دفع لو محتاج المشروع",
+        "تأمين قاعدة البيانات (Row Level Security)",
+      ],
+    },
+    focusKeyword: {
+      en: "Corporate Website Development",
+      ar: "تطوير مواقع شركات",
+    },
+    deliverables: [
+      { en: "Full corporate website with admin dashboard", ar: "موقع شركة كامل بلوحة تحكم إدارية" },
+      { en: "Self-service content management for the client's team", ar: "إدارة محتوى ذاتية لفريق العميل" },
+      { en: "Working contact/inquiry form", ar: "نموذج تواصل/استفسارات شغال فعليًا" },
+      { en: "Secured, production-ready database", ar: "قاعدة بيانات مؤمنة وجاهزة للإنتاج" },
+    ],
+    outcomes: [
+      { en: "A professional online presence matching the company's scale", ar: "حضور احترافي أونلاين يعكس حجم الشركة" },
+      { en: "Content the client updates without touching code", ar: "محتوى يقدر العميل يحدثه بدون لمس الكود" },
+      { en: "Credibility with large institutional clients", ar: "مصداقية أمام عملاء مؤسسيين كبار" },
+      { en: "A secure, stable platform to build on later", ar: "منصة آمنة ومستقرة تقدر تُبنى عليها لاحقًا" },
+    ],
+    process: [
+      { en: "Identity & requirements discovery", ar: "استكشاف الهوية والمتطلبات" },
+      { en: "Site architecture & dashboard design", ar: "تصميم هيكلة الموقع ولوحة التحكم" },
+      { en: "Frontend & backend development", ar: "تطوير الفرونت إند والباك إند" },
+      { en: "Integrations (payments, forms, security)", ar: "التكاملات (دفع، نماذج، تأمين)" },
+      { en: "Launch and handover", ar: "الإطلاق والتسليم" },
+    ],
+  },
+  {
     slug: "ecommerce-development",
     icon: "shopping-cart",
     title: {
@@ -210,5 +308,5 @@ export const services: ServiceDefinition[] = [
       { en: "Indexing & GTM Setup", ar: "إعداد الفهرسة و Google Tag Manager" },
       { en: "Result Monitoring & Tweaking", ar: "مراقبة النتائج وإجراء التعديلات الدقيقة" },
     ],
-  }
+  },
 ];

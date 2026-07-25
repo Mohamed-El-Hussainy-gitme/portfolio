@@ -15,7 +15,7 @@ export default function FeaturedProjectsSection() {
   const displayed = featured.length > 0 ? featured : projects.slice(0, 3);
 
   const t = {
-    label: isAr ? 'مصفوفة الأدلة' : 'Evidence Matrix',
+    label: isAr ? 'أبرز الأعمال' : 'Featured Work',
     heading: isAr ? 'المشاريع المميزة' : 'Featured Projects',
     allProjects: isAr ? 'كل المشاريع' : 'All projects',
   };
