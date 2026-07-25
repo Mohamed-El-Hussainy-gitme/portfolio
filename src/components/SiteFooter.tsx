@@ -60,8 +60,8 @@ export default function SiteFooter() {
             </div>
             <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
               {isAr
-                ? 'مطور ويب متخصص في بناء المواقع بأداء عالٍ، SEO تقني، وتجربة مستخدم AR/EN.'
-                : 'Web developer focused on website development, clean SEO, and flawless RTL/LTR UX.'}
+                ? 'بنفذ مشاريع ويب من الصفر أو بالقوالب — أختار الأنسب لك. متخصص في SEO تقني، أداء عالٍ، وتجربة مستخدم عربية/إنجليزية.'
+                : 'I build web projects from scratch or with templates — whichever fits best. Specialized in technical SEO, high performance, and flawless AR/EN UX.'}
             </p>
             <div className="flex flex-wrap items-center gap-3 mt-5">
               {socialIcons.map(({ icon: Icon, href: socialHref, label }) => (
@@ -131,7 +131,7 @@ export default function SiteFooter() {
 
         <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <p>© 2026 {s?.owner_name || 'Mohamed El-Husseiny'}. All rights reserved.</p>
-          <p>Crafted for SEO/GEO and clean bilingual UX.</p>
+          <p>{isAr ? 'مطور ويب متكامل · SEO تقني · ثنائي اللغة' : 'Full-stack web developer · Technical SEO · Bilingual'}</p>
         </div>
       </div>
     </footer>

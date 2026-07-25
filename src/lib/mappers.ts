@@ -6,6 +6,7 @@ import type { VerifiedReview } from '@/data/verifiedReviews';
 export type DisplayReview = {
   id: string;
   platform: string;
+  reviewerName?: string;
   rating: number;
   reviewText: LocalizedText;
   reviewUrl?: string;
@@ -149,6 +150,7 @@ export function mapReviewRow(row: Record<string, unknown>): DisplayReview {
   return {
     id: String(row.id ?? ''),
     platform: String(row.platform ?? ''),
+    reviewerName: row.reviewer_name ? String(row.reviewer_name) : undefined,
     rating: Number(row.rating) || 5,
     reviewText: loc(row.review_text_en as string, row.review_text_ar as string),
     reviewUrl: row.review_url ? String(row.review_url) : undefined,
@@ -160,6 +162,7 @@ export function mapVerifiedReviewToDisplay(review: VerifiedReview): DisplayRevie
   return {
     id: review.id,
     platform: review.platform,
+    reviewerName: review.reviewerName,
     rating: review.rating,
     reviewText: review.reviewText,
     reviewUrl: review.platformUrl,

@@ -2,6 +2,7 @@ export type VerifiedReview = {
   id: string;
   platform: "Khamsat" | "Upwork";
   platformUrl: string;
+  reviewerName: string;
   rating: number;
   reviewText: { ar: string; en: string };
   screenshot?: { src: string; width: number; height: number };
@@ -21,6 +22,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1114962",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1114962",
+    reviewerName: "حسام ص.",
     rating: 5,
     reviewText: {
       ar: "تعامل أكثر من رائع، شخص محترف جدًا في مجال السيو و الموقع وملم بالتفاصيل بشكل واضح. ساعدني في تحسين موقعي بشكل ملحوظ، وشرح لي الأمور ببساطة وصبر، وكان دائمًا متعاونًا وسريع الرد.\nيعمل بضمير ويهتم فعلًا بنجاح العميل، وليس فقط بتنفيذ المطلوب. أنصح به بشدة، وبإذن الله سيكون بيننا تعاملات قادمة. شكرًا لك على مجهودك الكبير",
@@ -38,6 +40,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1115268",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1115268",
+    reviewerName: "حسام ص.",
     rating: 5,
     reviewText: {
       ar: "تعامل رائع جدًا\nالخدمة كانت ممتازة من حيث الجودة والالتزام بالوقت، والتواصل كان سلس وواضح من البداية حتى التسليم. أنصح بالتعامل معه بدون تردد، وبإذن الله لن يكون آخر تعامل بيننا.",
@@ -55,6 +58,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1133205",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1133205",
+    reviewerName: "A. Alshammari",
     rating: 5,
     reviewText: {
       ar: "مبرمج ممتاز ومتفهم لكثرة التغييرات جزاه الله خير وان شاء الله مو اخر تعامل",
@@ -72,6 +76,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1134116",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1134116",
+    reviewerName: "A. Alshammari",
     rating: 5,
     reviewText: {
       ar: "من لايشكر الناس لايشكر الله\nالشغل فوق الممتاز والوقت قياسي جدا\nمبرمج فاهم ومتفهم للتغيير المستمر وان شاء الله ماهو اخر تعامل\nبالتوفيق",
@@ -89,6 +94,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1138711",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1138711",
+    reviewerName: "Muhammad K.",
     rating: 5,
     reviewText: {
       ar: "يسعدني القول أن التعامل معك أستاذ محمد كان ممتع وتجربة جداً رائعة وسلسة واستيعابك للعميل أحييك عليه بشرح اصغر لأكبر تفصيل في عملك\nبالإضافة أن العمل كان إبداعي جزاك الله عني كل خير ووفقك الله لما هو قادم وبإذن الله التعامل بيننا دائم",
@@ -106,6 +112,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1138760",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1138760",
+    reviewerName: "D. Qx",
     rating: 5,
     reviewText: {
       ar: "مبرمج فنان محترم انصحكم في ي اخوان",
@@ -123,6 +130,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1138768",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1138768",
+    reviewerName: "D. Qx",
     rating: 5,
     reviewText: {
       ar: "شي جميل انصحكم في",
@@ -140,6 +148,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1140138",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1140138",
+    reviewerName: "Julian A.",
     rating: 5,
     reviewText: {
       ar: "تعامل راقي جداً وسرعة في التجاوب البائع حريص على رضا العميل وأنصح الجميع بالتعامل معه تجربة شراء استثنائية احترافية في التعامل وأمانة في الوصف ودقة في المواعيد",
@@ -157,6 +166,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1140411",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1140411",
+    reviewerName: "Julian A.",
     rating: 5,
     reviewText: {
       ar: "تجربة شراء رائعة! البائع قمة في الرقي والأمانة ومطابق تماماً للوصف. أنصح بالتعامل معه بشدة وسأكرر التجربة بالتأكيد خدمة احترافية وسريعة جداً. البائع كان ممتازاً . شكراً جزيلاً للبائع على اهتمامه وجودة خدمته",
@@ -174,6 +184,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1141223",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1141223",
+    reviewerName: "عبدالرحمن ع.",
     rating: 5,
     reviewText: {
       ar: "متعاون جدا",
@@ -191,6 +202,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1142531",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1142531",
+    reviewerName: "Sultan A.",
     rating: 5,
     reviewText: {
       ar: "شخص طيب متعاون  ويعطيك انت من الطلب اللي انت طالبه\nاشكرك علي سعه الصدر وهلي تعاملك الطيب",
@@ -208,6 +220,7 @@ export const verifiedReviews: VerifiedReview[] = [
     id: "khamsat-1142751",
     platform: "Khamsat",
     platformUrl: "https://khamsat.com/user/mohamed_hussainy/reviews/1142751",
+    reviewerName: "Julian A.",
     rating: 5,
     reviewText: {
       ar: "شكرا لك على على هذا التعامل الراقي",
